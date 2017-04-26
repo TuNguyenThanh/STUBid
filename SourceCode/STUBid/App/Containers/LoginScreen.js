@@ -1,86 +1,28 @@
 import React, { PropTypes } from 'react'
-import {
-  View,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Keyboard,
-  LayoutAnimation
-} from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, Animated, Easing, Dimensions, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
-import Styles from './Styles/LoginScreenStyles'
-import {Images, Metrics} from '../Themes'
 import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+//styles
+import styles from './Styles/LoginScreenStyles'
+import { Images } from '../Themes'
+
+const { width, height } =  Dimensions.get('window');
+const MARGIN = 40;
 
 class LoginScreen extends React.Component {
-  static propTypes = {
-    dispatch: PropTypes.func,
-    fetching: PropTypes.bool,
-    attemptLogin: PropTypes.func
-  }
-
-  isAttempting = false
-  keyboardDidShowListener = {}
-  keyboardDidHideListener = {}
-
   constructor (props) {
     super(props)
     this.state = {
       username: 'reactnative@infinite.red',
       password: 'password',
-      visibleHeight: Metrics.screenHeight,
-      topLogo: { width: Metrics.screenWidth }
-    }
-    this.isAttempting = false
-  }
-
-  componentWillReceiveProps (newProps) {
-    this.forceUpdate()
-    // Did the login attempt complete?
-    if (this.isAttempting && !newProps.fetching) {
-      NavigationActions.pop()
-    }
-  }
-
-  componentWillMount () {
-    // Using keyboardWillShow/Hide looks 1,000 times better, but doesn't work on Android
-    // TODO: Revisit this if Android begins to support - https://github.com/facebook/react-native/issues/3468
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow)
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide)
-  }
-
-  componentWillUnmount () {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
-  }
-
-  keyboardDidShow = (e) => {
-    // Animation types easeInEaseOut/linear/spring
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    let newSize = Metrics.screenHeight - e.endCoordinates.height
-    this.setState({
-      visibleHeight: newSize,
-      topLogo: {width: 100, height: 70}
-    })
-  }
-
-  keyboardDidHide = (e) => {
-    // Animation types easeInEaseOut/linear/spring
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    this.setState({
-      visibleHeight: Metrics.screenHeight,
-      topLogo: {width: Metrics.screenWidth}
-    })
-  }
-
-  handlePressLogin = () => {
-    const { username, password } = this.state
-    this.isAttempting = true
-    // attempt a login - a saga is listening to pick it up from here.
-    this.props.attemptLogin(username, password)
+      isLoading: false,
+    };
+    this.buttonAnimated = new Animated.Value(0);
+		this.growAnimated = new Animated.Value(0);
+		this._onPress = this._onPress.bind(this);
   }
 
   handleChangeUsername = (text) => {
@@ -91,66 +33,115 @@ class LoginScreen extends React.Component {
     this.setState({ password: text })
   }
 
+  _onPress() {
+		if (this.state.isLoading) return;
+
+		this.setState({ isLoading: true });
+		Animated.timing(
+			this.buttonAnimated,
+			{
+				toValue: 1,
+				duration: 200,
+				easing: Easing.linear
+			}
+		).start();
+
+		setTimeout(() => {
+			this._onGrow();
+		}, 2000);
+
+		setTimeout(() => {
+		  NavigationActions.launchScreen(); //chuyen man hinh
+		 	this.setState({ isLoading: false });
+		 	this.buttonAnimated.setValue(0);
+		 	this.growAnimated.setValue(0);
+		}, 2300);
+
+	}
+
+	_onGrow() {
+		Animated.timing(
+			this.growAnimated,
+			{
+				toValue: 1,
+				duration: 200,
+				easing: Easing.linear
+			}
+		).start();
+	}
+
   render () {
-    const { username, password } = this.state
-    const { fetching } = this.props
-    const editable = !fetching
-    const textInputStyle = editable ? Styles.textInput : Styles.textInputReadonly
-    return (
-      <ScrollView contentContainerStyle={{justifyContent: 'center'}} style={[Styles.container, {height: this.state.visibleHeight}]} keyboardShouldPersistTaps='always'>
-        <Image source={Images.logo} style={[Styles.topLogo, this.state.topLogo]} />
-        <View style={Styles.form}>
-          <View style={Styles.row}>
-            <Text style={Styles.rowLabel}>Username</Text>
-            <TextInput
-              ref='username'
-              style={textInputStyle}
-              value={username}
-              editable={editable}
-              keyboardType='default'
-              returnKeyType='next'
-              autoCapitalize='none'
-              autoCorrect={false}
-              onChangeText={this.handleChangeUsername}
-              underlineColorAndroid='transparent'
-              onSubmitEditing={() => this.refs.password.focus()}
-              placeholder='Username' />
-          </View>
+    const changeWidth = this.buttonAnimated.interpolate({
+	    inputRange: [0, 1],
+	    outputRange: [width - MARGIN, MARGIN]
+	  });
+	  const changeScale = this.growAnimated.interpolate({
+	    inputRange: [0, 1],
+	    outputRange: [1, MARGIN]
+	  });
 
-          <View style={Styles.row}>
-            <Text style={Styles.rowLabel}>Password</Text>
-            <TextInput
-              ref='password'
-              style={textInputStyle}
-              value={password}
-              editable={editable}
-              keyboardType='default'
-              returnKeyType='go'
-              autoCapitalize='none'
-              autoCorrect={false}
-              secureTextEntry
-              onChangeText={this.handleChangePassword}
-              underlineColorAndroid='transparent'
-              onSubmitEditing={this.handlePressLogin}
-              placeholder='Password' />
-          </View>
+    return(
+      <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
+        <Image style={styles.container} source={Images.background} >
+          {/*Form login*/}
+          <View style={styles.form}>
+            {/*logo*/}
+            <Image style={styles.logo} source={Images.logo} />
+            <Text style={styles.textForm}>ĐĂNG NHẬP</Text>
 
-          <View style={[Styles.loginRow]}>
-            <TouchableOpacity style={Styles.loginButtonWrapper} onPress={this.handlePressLogin}>
-              <View style={Styles.loginButton}>
-                <Text style={Styles.loginText}>Sign In</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={Styles.loginButtonWrapper} onPress={NavigationActions.pop}>
-              <View style={Styles.loginButton}>
-                <Text style={Styles.loginText}>Cancel</Text>
-              </View>
-            </TouchableOpacity>
+            {/*input-logo*/}
+            <View style={styles.viewInput}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Tên đăng nhập"
+                placeholderTextColor="#989899"
+                autoCapitalize={'none'}
+                autoCorrect={false}
+              />
+              <View style={styles.line} />
+              <TextInput
+                style={styles.inputStyle}
+                placeholder="Mật khẩu"
+                placeholderTextColor="#989899"
+                autoCapitalize={'none'}
+                secureTextEntry
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.viewForgotPass}>
+              <TouchableOpacity>
+                <Text style={styles.title}>Quên mật khẩu?</Text>
+              </TouchableOpacity>
+            </View>
+            {/*button-login*/}
+            <Animated.View style={{width: changeWidth}}>
+      				<TouchableOpacity style={styles.button}
+      					onPress={this._onPress}
+      					activeOpacity={1} >
+      						{this.state.isLoading ?
+                    <ActivityIndicator
+                      animating={this.state.isLoading}
+                      color="white"
+                      size="small"
+                    />
+      							:
+      							<Text style={styles.text}>ĐĂNG NHẬP</Text>
+      						}
+      				</TouchableOpacity>
+      				<Animated.View style={[ styles.circle, {transform: [{scale: changeScale}]} ]} />
+      			</Animated.View>
           </View>
+        </Image>
+
+        {/*footer-login*/}
+        <View style={styles.footer}>
+          <Text style={styles.title}>Bạn không có tài khoản?</Text>
+          <TouchableOpacity>
+            <Text style={styles.createAccount}>Tạo tài khoản mới</Text>
+          </TouchableOpacity>
         </View>
-
-      </ScrollView>
-    )
+      </KeyboardAwareScrollView>
+    );
   }
 }
 

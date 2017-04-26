@@ -36,6 +36,7 @@
     "react-native-device-info": "0.10.2",
     "react-native-drawer": "2.3.0",
     "react-native-i18n": "^1.0.0",
+    "react-native-keyboard-aware-scroll-view": "^0.2.8",
     "react-native-router-flux": "3.38.0",
     "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.7",
