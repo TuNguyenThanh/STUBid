@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
-
+import '../I18n/I18n'
 // create our store
 const store = createStore()
 

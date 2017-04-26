@@ -7,7 +7,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 //I18n
 import I18n from 'react-native-i18n'
-I18n.locale = 'vi';
 
 //styles
 import styles from './Styles/LoginScreenStyles'
@@ -55,7 +54,7 @@ class LoginScreen extends React.Component {
 		}, 2000);
 
 		setTimeout(() => {
-		  NavigationActions.launchScreen(); //chuyen man hinh
+		  NavigationActions.settingsScreen(); //chuyen man hinh
 		 	this.setState({ isLoading: false });
 		 	this.buttonAnimated.setValue(0);
 		 	this.growAnimated.setValue(0);
@@ -83,7 +82,7 @@ class LoginScreen extends React.Component {
 	    inputRange: [0, 1],
 	    outputRange: [1, MARGIN]
 	  });
-
+    const { language } = this.props;
     return(
       <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
         <Image style={styles.container} source={Images.background} >
@@ -91,13 +90,13 @@ class LoginScreen extends React.Component {
           <View style={styles.form}>
             {/*logo*/}
             <Image style={styles.logo} source={Images.logo} />
-            <Text style={styles.textForm}>{I18n.t('login')}</Text>
+            <Text style={styles.textForm}>{I18n.t('login', {locale: language})}</Text>
 
             {/*input-logo*/}
             <View style={styles.viewInput}>
               <TextInput
                 style={styles.inputStyle}
-                placeholder={I18n.t('username')}
+                placeholder={I18n.t('username', {locale: language})}
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 autoCorrect={false}
@@ -105,7 +104,7 @@ class LoginScreen extends React.Component {
               <View style={styles.line} />
               <TextInput
                 style={styles.inputStyle}
-                placeholder={I18n.t('password')}
+                placeholder={I18n.t('password', {locale: language})}
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 secureTextEntry
@@ -114,7 +113,7 @@ class LoginScreen extends React.Component {
             </View>
             <View style={styles.viewForgotPass}>
               <TouchableOpacity>
-                <Text style={styles.title}>{I18n.t('forgotPassword')}</Text>
+                <Text style={styles.title}>{I18n.t('forgotPassword', {locale: language})}</Text>
               </TouchableOpacity>
             </View>
             {/*button-login*/}
@@ -129,7 +128,7 @@ class LoginScreen extends React.Component {
                       size="small"
                     />
       							:
-      							<Text style={styles.text}>{I18n.t('login')}</Text>
+      							<Text style={styles.text}>{I18n.t('login', {locale: language})}</Text>
       						}
       				</TouchableOpacity>
       				<Animated.View style={[ styles.circle, {transform: [{scale: changeScale}]} ]} />
@@ -139,9 +138,9 @@ class LoginScreen extends React.Component {
 
         {/*footer-login*/}
         <View style={styles.footer}>
-          <Text style={styles.title}>{I18n.t('notAccount')}</Text>
+          <Text style={styles.title}>{I18n.t('notAccount', {locale: language})}</Text>
           <TouchableOpacity>
-            <Text style={styles.createAccount}>{I18n.t('creatAccount')}</Text>
+            <Text style={styles.createAccount}>{I18n.t('creatAccount', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
@@ -151,7 +150,8 @@ class LoginScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    fetching: state.login.fetching
+    fetching: state.login.fetching,
+    language: state.settings.language,
   }
 }
 

@@ -1,40 +1,13 @@
 import { put, select } from 'redux-saga/effects'
-import GithubActions from '../Redux/GithubRedux'
+import SettingsActions from '../Redux/SettingsRedux'
 import { is } from 'ramda'
 
 // exported to make available for tests
-export const selectAvatar = (state) => state.github.avatar
+export const selectLanguage = (state) => state.settings.language
 
 // process STARTUP actions
 export function * startup (action) {
-  if (__DEV__ && console.tron) {
-    // straight-up string logging
-    console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
-
-    // logging an object for better clarity
-    console.tron.log({
-      message: 'pass objects for better logging',
-      someGeneratorFunction: selectAvatar
-    })
-
-    // fully customized!
-    const subObject = { a: 1, b: [1, 2, 3], c: true }
-    subObject.circularDependency = subObject // osnap!
-    console.tron.display({
-      name: '🔥 IGNITE 🔥',
-      preview: 'You should totally expand this',
-      value: {
-        '💃': 'Welcome to the future!',
-        subObject,
-        someInlineFunction: () => true,
-        someGeneratorFunction: startup,
-        someNormalFunction: selectAvatar
-      }
-    })
-  }
-  const avatar = yield select(selectAvatar)
-  // only get if we don't have it yet
-  if (!is(String, avatar)) {
-    yield put(GithubActions.userRequest('GantMan'))
-  }
+  const language = yield select(selectLanguage)
+  // Always set the I18n locale to the language in the settings, or the views would render in the language of the device's locale and not that of the setting.
+  yield put(SettingsActions.changeLanguage(language))
 }

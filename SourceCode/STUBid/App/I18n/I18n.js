@@ -5,10 +5,11 @@ I18n.fallbacks = true
 
 // English language is the main language for fall back:
 I18n.translations = {
-  en: require('./languages/english.json')
+  en: require('./languages/english.json'),
+  vi: require('./languages/vi.json'),
 }
 
-let languageCode = 'vi';//I18n.locale.substr(0, 2)
+/*let languageCode = I18n.locale.substr(0, 2)//'vi';
 
 // All other translations for the app goes to the respective language file:
 switch (languageCode) {
@@ -146,4 +147,4 @@ switch (languageCode) {
   case 'zu':
     I18n.translations.zu = require('./languages/zu.json')
     break
-}
+}*/
