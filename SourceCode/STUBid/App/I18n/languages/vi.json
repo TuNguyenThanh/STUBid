@@ -1,1 +1,13 @@
-{}
+{
+  "signIn": "Sign In",
+  "logOut": "Log Out",
+  "forgotPassword": "Quên mật khẩu?",
+  "username": "Tên đăng nhập",
+  "password": "Mật khẩu",
+  "cancel": "Cancel",
+  "welcome": "Welcome",
+  "login": "ĐĂNG NHẬP",
+  "search": "Search",
+  "creatAccount": "Tạo tài khoản mới",
+  "notAccount": "Bạn không có tài khoản?",
+}

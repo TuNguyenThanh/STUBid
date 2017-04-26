@@ -5,6 +5,10 @@ import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
+//I18n
+import I18n from 'react-native-i18n'
+I18n.locale = 'vi';
+
 //styles
 import styles from './Styles/LoginScreenStyles'
 import { Images } from '../Themes'
@@ -87,13 +91,13 @@ class LoginScreen extends React.Component {
           <View style={styles.form}>
             {/*logo*/}
             <Image style={styles.logo} source={Images.logo} />
-            <Text style={styles.textForm}>ĐĂNG NHẬP</Text>
+            <Text style={styles.textForm}>{I18n.t('login')}</Text>
 
             {/*input-logo*/}
             <View style={styles.viewInput}>
               <TextInput
                 style={styles.inputStyle}
-                placeholder="Tên đăng nhập"
+                placeholder={I18n.t('username')}
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 autoCorrect={false}
@@ -101,7 +105,7 @@ class LoginScreen extends React.Component {
               <View style={styles.line} />
               <TextInput
                 style={styles.inputStyle}
-                placeholder="Mật khẩu"
+                placeholder={I18n.t('password')}
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 secureTextEntry
@@ -110,7 +114,7 @@ class LoginScreen extends React.Component {
             </View>
             <View style={styles.viewForgotPass}>
               <TouchableOpacity>
-                <Text style={styles.title}>Quên mật khẩu?</Text>
+                <Text style={styles.title}>{I18n.t('forgotPassword')}</Text>
               </TouchableOpacity>
             </View>
             {/*button-login*/}
@@ -125,7 +129,7 @@ class LoginScreen extends React.Component {
                       size="small"
                     />
       							:
-      							<Text style={styles.text}>ĐĂNG NHẬP</Text>
+      							<Text style={styles.text}>{I18n.t('login')}</Text>
       						}
       				</TouchableOpacity>
       				<Animated.View style={[ styles.circle, {transform: [{scale: changeScale}]} ]} />
@@ -135,9 +139,9 @@ class LoginScreen extends React.Component {
 
         {/*footer-login*/}
         <View style={styles.footer}>
-          <Text style={styles.title}>Bạn không có tài khoản?</Text>
+          <Text style={styles.title}>{I18n.t('notAccount')}</Text>
           <TouchableOpacity>
-            <Text style={styles.createAccount}>Tạo tài khoản mới</Text>
+            <Text style={styles.createAccount}>{I18n.t('creatAccount')}</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
