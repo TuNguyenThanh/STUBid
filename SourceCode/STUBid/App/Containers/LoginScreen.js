@@ -89,7 +89,7 @@ class LoginScreen extends React.Component {
           {/*Form login*/}
           <View style={styles.form}>
             {/*logo*/}
-            <Image style={styles.logo} source={Images.logo} />
+            <Image style={styles.logo} source={Images.logo} resizeMode="contain" />
             <Text style={styles.textForm}>{I18n.t('login', {locale: language})}</Text>
 
             {/*input-logo*/}
@@ -100,15 +100,22 @@ class LoginScreen extends React.Component {
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 autoCorrect={false}
+                underlineColorAndroid={'transparent'}
+                returnKeyType='next'
+                onSubmitEditing={() => this.password.focus()}
               />
               <View style={styles.line} />
               <TextInput
+                ref={(input) => this.password = input}
                 style={styles.inputStyle}
                 placeholder={I18n.t('password', {locale: language})}
                 placeholderTextColor="#989899"
                 autoCapitalize={'none'}
                 secureTextEntry
                 autoCorrect={false}
+                underlineColorAndroid={'transparent'}
+                returnKeyType='go'
+                onSubmitEditing={() => {}}
               />
             </View>
             <View style={styles.viewForgotPass}>

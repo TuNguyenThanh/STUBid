@@ -51,6 +51,8 @@
 		ACAC5197DA1045349CAC91F9 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F3362292FBD4BF5AA78979C /* libReact.a */; };
 		C00FFF5ED51D4E88977F6506 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4732D55EDD840A9852AC9FC /* libRNVectorIcons.a */; };
 		D152794983A4447E97E0DF1A /* libjschelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60F86A4DB28C4832B4BA7F9D /* libjschelpers.a */; };
+		E20A50741EB3985200085145 /* NukamisoLite.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E20A50731EB3985200085145 /* NukamisoLite.ttf */; };
+		E20A50761EB398EF00085145 /* VNFQuicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E20A50751EB398EF00085145 /* VNFQuicksand-Bold.ttf */; };
 		E64E5D6856E94ABD9CDD9791 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCDF15533FCB468FB82B908A /* EvilIcons.ttf */; };
 		EDCE5D186FA84EE2B4E897F2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 03554EDF494148719F7D28F4 /* MaterialIcons.ttf */; };
 /* End PBXBuildFile section */
@@ -325,6 +327,8 @@
 		C4B13D49949E488DAA140A6B /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		DC8BF0A7589049DDBD8237CB /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		DCDF15533FCB468FB82B908A /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		E20A50731EB3985200085145 /* NukamisoLite.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NukamisoLite.ttf; sourceTree = "<group>"; };
+		E20A50751EB398EF00085145 /* VNFQuicksand-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "VNFQuicksand-Bold.ttf"; sourceTree = "<group>"; };
 		E87A53374C2C4D43A252473D /* libcxxreact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libcxxreact.a; sourceTree = "<group>"; };
 		F4732D55EDD840A9852AC9FC /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		FA23CF6A742D4EFCB949AB67 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
@@ -469,6 +473,8 @@
 		13B07FAE1A68108700A75B9A /* STUBid */ = {
 			isa = PBXGroup;
 			children = (
+				E20A50751EB398EF00085145 /* VNFQuicksand-Bold.ttf */,
+				E20A50731EB3985200085145 /* NukamisoLite.ttf */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -699,7 +705,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 610;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -1028,6 +1034,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20A50761EB398EF00085145 /* VNFQuicksand-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				14BB6C6B75B64BFF8A07E177 /* Entypo.ttf in Resources */,
@@ -1037,6 +1044,7 @@
 				43FD37673DFD4E63AC4D5AA2 /* Ionicons.ttf in Resources */,
 				37E417EA7ABA4F3B95A5EB6D /* MaterialCommunityIcons.ttf in Resources */,
 				EDCE5D186FA84EE2B4E897F2 /* MaterialIcons.ttf in Resources */,
+				E20A50741EB3985200085145 /* NukamisoLite.ttf in Resources */,
 				705936B33E7B4E2F8C4E7E75 /* Octicons.ttf in Resources */,
 				139EB5B681B1437D9375F405 /* SimpleLineIcons.ttf in Resources */,
 				1C6BDC49DD304D949A735FC5 /* Zocial.ttf in Resources */,
@@ -1186,6 +1194,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STUBid.app/STUBid";
 			};
@@ -1220,6 +1229,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/STUBid.app/STUBid";
 			};
@@ -1439,15 +1449,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1480,8 +1494,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1489,6 +1505,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

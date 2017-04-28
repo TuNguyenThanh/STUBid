@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Metrics } from '../../Themes'
+import { Colors, Metrics, Fonts } from '../../Themes'
 
 export default StyleSheet.create({
   container: {
     width: Metrics.screenWidth,
     height: Metrics.screenHeight,
+    flex: 1,
   },
   form: {
     width: Metrics.screenWidth,
@@ -28,12 +29,14 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: '#FFF'
   },
   inputStyle: {
     height: 50,
     width: Metrics.screenWidth - 40,
     paddingLeft: 8,
+    fontFamily: Fonts.type.quicksand
   },
   line: {
     width: Metrics.screenWidth - 40,
@@ -52,11 +55,13 @@ export default StyleSheet.create({
     fontSize: 25,
     color: Colors.primary,
     marginTop: 20,
-    marginBottom: 20
+    marginBottom: 20,
+    fontFamily: Fonts.type.quicksand
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: Fonts.type.quicksand
   },
   button: {
 		alignItems: 'center',
@@ -81,6 +86,7 @@ export default StyleSheet.create({
 		color: 'white',
     fontSize: 18,
 		backgroundColor: 'transparent',
+    fontFamily: Fonts.type.quicksand
 	},
   footer: {
     marginTop: -40,
@@ -88,11 +94,13 @@ export default StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    color: Colors.text
+    color: Colors.text,
+    fontFamily: Fonts.type.quicksand
   },
   createAccount: {
     textAlign: 'center',
     marginBottom: 8,
     color: Colors.primary,
+    fontFamily: Fonts.type.quicksand
   },
 })
