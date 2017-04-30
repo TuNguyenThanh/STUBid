@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Scene, Router } from 'react-native-router-flux'
 import Styles from './Styles/NavigationContainerStyles'
-import { Colors } from '../Themes'
+import { Colors, Fonts } from '../Themes'
 import NavigationDrawer from './NavigationDrawer'
 
 // screens identified by the router
@@ -34,7 +34,7 @@ class NavigationRouter extends Component {
             key='detailProductScreen'
             component={DetailProductScreen}
             hideNavBar={false}
-            titleStyle={{color: Colors.primary}}
+            titleStyle={{width: 250, color: Colors.primary, fontFamily: Fonts.type.quicksand}}
             leftButtonIconStyle={{ tintColor: Colors.primary }}
             navigationBarStyle={{ borderBottomColor: '#FFF', backgroundColor: '#FFF' }}
           />

@@ -59,7 +59,7 @@ export default StyleSheet.create({
   },
   textCategory: {
     color: Colors.primary,
-    fontWeight: '700'
+    fontFamily: Fonts.type.quicksand
   },
   listView: {
     flexDirection: 'row',
@@ -90,13 +90,13 @@ export default StyleSheet.create({
     color: Colors.primary,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 4
+    marginBottom: 4,
+    fontFamily: Fonts.type.quicksand
   },
   textPriceNow: {
     color: Colors.primary,
-    fontWeight: '700',
+    fontWeight: '700'
   },
-
   bid: {
     borderColor: '#D8D8D8',
     borderWidth: StyleSheet.hairlineWidth,
@@ -113,7 +113,8 @@ export default StyleSheet.create({
     marginRight: 4
   },
   textAuction: {
-    color: 'white'
+    color: 'white',
+    fontFamily: Fonts.type.quicksand
   },
   btnAuction: {
     backgroundColor: Colors.primary,
