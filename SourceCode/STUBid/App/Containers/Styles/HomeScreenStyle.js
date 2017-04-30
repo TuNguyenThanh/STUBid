@@ -58,17 +58,19 @@ export default StyleSheet.create({
     borderRadius: 3
   },
   textCategory: {
-    color: '#646464'
+    color: Colors.primary,
+    fontWeight: '700'
   },
   listView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: 15
   },
   row: {
     width: ((Metrics.screenWidth / 2) - 15),
-  //  borderRadius: 2,
+    borderRadius: 2,
     borderColor: '#D8D8D8',
     borderWidth: StyleSheet.hairlineWidth,
     padding: 5,
@@ -82,18 +84,16 @@ export default StyleSheet.create({
   },
   imageProduct: {
     width: ((Metrics.screenWidth / 2) - 15) - 10,
-    height: ((Metrics.screenWidth / 2) - 15) - 10
+    height: ((Metrics.screenWidth / 2.8) - 15) - 10
   },
-
   textProduct: {
-    color: 'red',
+    color: Colors.primary,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 4
   },
-
   textPriceNow: {
-    color: 'red',
+    color: Colors.primary,
     fontWeight: '700',
   },
 
@@ -107,54 +107,20 @@ export default StyleSheet.create({
     marginBottom: 4,
     borderRadius: 2
   },
-
   icon: {
     width: 16,
     height: 16,
     marginRight: 4
   },
-
   textAuction: {
     color: 'white'
   },
-
-  bodyStyles: {
-    flex: 1,
-    backgroundColor: '#EBEBEB',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-
-  textLoadStyles: {
-    marginTop: -20,
-    color: '#646464'
-  },
-
   btnAuction: {
-    backgroundColor: '#EF5E92',
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 8,
     paddingBottom: 8,
     borderRadius: 2
   },
-  // viewChoose: {
-  //   height: 50,
-  //   flexDirection: 'row'
-  // },
-  // button: {
-  //   flex: 1,
-  //   margin: 8,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   borderWidth: 1,
-  //   borderColor: 'gray',
-  //   borderRadius: 5
-  // },
-  // line: {
-  //   width: 1,
-  //   backgroundColor: 'gray',
-  //   marginTop: 8,
-  //   marginBottom: 8
-  // }
 })

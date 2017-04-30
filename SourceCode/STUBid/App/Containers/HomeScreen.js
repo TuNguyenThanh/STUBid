@@ -1,11 +1,16 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView } from 'react-native'
 import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 // Styles
 import styles from './Styles/HomeScreenStyle'
-import { Images } from '../Themes'
+import { Images, Colors } from '../Themes'
 import Header from '../Components/Header'
+
+//I18n
+import I18n from 'react-native-i18n'
 
 class Home extends React.Component {
   constructor(props) {
@@ -21,13 +26,14 @@ class Home extends React.Component {
 
   componentDidMount() {
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 1', 'row 2', 'row 3', 'row 4']),
+      dataSource: this.state.dataSource.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 1', 'row 2', 'row 3', 'row 4','row 4']),
     });
   }
 
-  renderItem(item, rowID) {
+  renderItem(item, rowID, ) {
+    const { language } = this.props;
     return (
-      <TouchableOpacity style={styles.row}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: 'Máy tính xách tay HP'})}>
         <Image
           style={styles.imageProduct}
           resizeMode="contain"
@@ -47,18 +53,15 @@ class Home extends React.Component {
         <View style={styles.bid}>
           <Text>2.500.000</Text>
         </View>
-        <TouchableOpacity
-          style={styles.btnAuction}
-          onPress={() => {}}
-        >
-          <Text style={styles.textAuction}>Đấu giá</Text>
+        <TouchableOpacity style={styles.btnAuction} onPress={() => {}} >
+          <Text style={styles.textAuction}>{I18n.t('bid', {locale: language})}</Text>
         </TouchableOpacity>
-
       </TouchableOpacity>
     );
   }
 
   render () {
+    const { language } = this.props;
     const hideImage = this.animated.interpolate({
       inputRange: [0, 250],
       outputRange: [40, 0],
@@ -83,8 +86,16 @@ class Home extends React.Component {
       outputRange: [40, 0],
       extrapolate: 'clamp'
     });
+
+    const borderCategory = this.animated.interpolate({
+      inputRange: [0, 250],
+      outputRange: [1, 0],
+      extrapolate: 'clamp'
+    });
+
     const categoryStyle = {
-      height: hidenCategory
+      height: hidenCategory,
+      borderWidth: borderCategory
     }
 
     const menuInterpolate = this.animated.interpolate({
@@ -115,14 +126,14 @@ class Home extends React.Component {
 
           <Animated.View style={[styles.iconStyle, menuStyle]}>
             <TouchableOpacity>
-              <Image source={Images.edit} />
+              <Icon name="pencil" size={20} color={'#454545'} />
             </TouchableOpacity>
           </Animated.View>
         </View>
 
         <View style={styles.viewCategory}>
-          <Text style={styles.textCategory}>Category</Text>
-          <Image source={Images.down} />
+          <Text style={styles.textCategory}>{I18n.t('category', {locale: language})}</Text>
+          <Icon name="angle-right" size={20} color={Colors.primary} />
         </View>
 
         <ListView
@@ -146,6 +157,7 @@ class Home extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
   }
 }
 

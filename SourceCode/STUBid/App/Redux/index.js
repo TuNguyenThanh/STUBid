@@ -9,6 +9,7 @@ export default () => {
     login: require('./LoginRedux').reducer,
     search: require('./SearchRedux').reducer,
     settings: require('./SettingsRedux').reducer,
+    tabNavigator: require('./TabNavigatorRedux').reducer,
   })
 
   return configureStore(rootReducer, rootSaga)

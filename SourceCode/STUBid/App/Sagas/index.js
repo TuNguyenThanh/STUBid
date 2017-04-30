@@ -10,6 +10,7 @@ import { StartupTypes } from '../Redux/StartupRedux'
 // import { LoginTypes } from '../Redux/LoginRedux'
 // import { OpenScreenTypes } from '../Redux/OpenScreenRedux'
 import { SettingsTypes } from '../Redux/SettingsRedux'
+import { TabNavigatorTypes } from '../Redux/TabNavigatorRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -18,6 +19,7 @@ import { startup } from './StartupSagas'
 // import { getUserAvatar } from './GithubSagas'
 // import { openScreen } from './OpenScreenSagas'
 import { updateLanguage } from './SettingsSagas'
+import { changeHeight } from './TabNavigatorSagas'
 
 /* ------------- API ------------- */
 
@@ -38,6 +40,9 @@ export default function * root () {
   //  takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api),
 
     //setting
-    takeLatest(SettingsTypes.CHANGE_LANGUAGE, updateLanguage)
+    takeLatest(SettingsTypes.CHANGE_LANGUAGE, updateLanguage),
+
+    //Tab natigator
+    takeLatest(TabNavigatorTypes.CHANGE_HEIGHT, changeHeight),
   ]
 }

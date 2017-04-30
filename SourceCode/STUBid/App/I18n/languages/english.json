@@ -10,4 +10,10 @@
    "search": "Search",
    "creatAccount": "Create a new account",
    "notAccount": "Do not have an account?",
+   "home": "Home",
+   "search": "Search",
+   "myAuction": "My Auction",
+   "profile": "Profile",
+   "category": "Category",
+   "bid": "Bid"
 }
