@@ -25,7 +25,8 @@ const colors = {
 
   //
   text: '#505050',
-  primary: '#0e5aa8'
+  primary: '#0e5aa8',
+  lightgray: '#F6F6F6',
 }
 
 export default colors
