@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, Picker, Image, TouchableOpacity, ScrollView, Switch } from 'react-native'
 import { connect } from 'react-redux'
 import SettingsActions from '../Redux/SettingsRedux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
 import Modal from '../Components/Modal'
@@ -19,6 +20,7 @@ class Settings extends React.Component {
     this.state = {
       switchIsOn: true,
       openLanguage: false,
+      user: null
     };
   }
 
@@ -32,48 +34,22 @@ class Settings extends React.Component {
           titleStyle={styles.titleStyle}
         />
         <ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} >
-          <View style={styles.viewAvatar}>
-            <View style={{ flexDirection: 'row'}}>
-              <Image
-                style={styles.imgStyle}
-                source={Images.left}
-                resizeMode="contain"
-              />
-              <Image
-                source={{uri: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg'}}
-                style={styles.imgAvatar}
-              />
-              <Image
-                style={styles.imgStyle}
-                source={Images.right}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={styles.titleUser}>Nguyễn Thanh Tú</Text>
-          </View>
+          {
+            this.state.user &&
+            this.renderAvatarUser()
+          }
+
+          {
+            !this.state.user &&
+            this.renderNotUser()
+          }
 
           <View style={{ flex: 1}}>
-            {/*User setting*/}
-            <View style={styles.session}>
-              <Text style={styles.titleSession}>{I18n.t('user', { locale: language }).toUpperCase()}</Text>
-            </View>
-            <View style={styles.group}>
-              <TouchableOpacity style={styles.row}>
-                <Text style={styles.titleRow}>{I18n.t('editUser', { locale: language })}</Text>
-                <Icon name="angle-right" size={25} color={'lightgray'} />
-              </TouchableOpacity>
-              <View style={styles.line} />
-              <TouchableOpacity style={styles.row}>
-                <Text style={styles.titleRow}>{I18n.t('changePass', { locale: language })}</Text>
-                <Icon name="angle-right" size={25} color={'lightgray'} />
-              </TouchableOpacity>
-              <View style={styles.line} />
-              <TouchableOpacity style={styles.row}>
-                <Text style={styles.titleRow}>{I18n.t('logOut', { locale: language })}</Text>
-                <Icon name="angle-right" size={25} color={'lightgray'} />
-              </TouchableOpacity>
-            </View>
-
+            {
+              /*User setting*/
+              this.state.user &&
+              this.renderSettingUser()
+            }
             {/*App setting*/}
             <View style={styles.session}>
               <Text style={styles.titleSession}>{I18n.t('setting', { locale: language }).toUpperCase()}</Text>
@@ -122,6 +98,74 @@ class Settings extends React.Component {
           </View>
         </ScrollView>
         {this.renderModelChangeLanguage()}
+      </View>
+    );
+  }
+
+  renderAvatarUser() {
+    return(
+      <View style={styles.viewAvatar}>
+        <View style={{ flexDirection: 'row'}}>
+          <Image
+            style={styles.imgStyle}
+            source={Images.left}
+            resizeMode="contain"
+          />
+          <Image
+            source={{uri: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg'}}
+            style={styles.imgAvatar}
+          />
+          <Image
+            style={styles.imgStyle}
+            source={Images.right}
+            resizeMode="contain"
+          />
+        </View>
+        <Text style={styles.titleUser}>Nguyễn Thanh Tú</Text>
+      </View>
+    );
+  }
+
+  renderNotUser() {
+    const { language } = this.props;
+    return(
+      <View style={{ marginTop: 20}}>
+        <View style={styles.session}>
+          <Text style={styles.titleSession}>{I18n.t('user', { locale: language }).toUpperCase()}</Text>
+        </View>
+        <View style={styles.group}>
+          <TouchableOpacity style={styles.row} onPress={() => NavigationActions.loginScreen()}>
+            <Text style={styles.titleRow}>{I18n.t('login', { locale: language })}</Text>
+            <Icon name="angle-right" size={25} color={'lightgray'} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  renderSettingUser() {
+    const { language } = this.props;
+    return(
+      <View>
+        <View style={styles.session}>
+          <Text style={styles.titleSession}>{I18n.t('user', { locale: language }).toUpperCase()}</Text>
+        </View>
+        <View style={styles.group}>
+          <TouchableOpacity style={styles.row}>
+            <Text style={styles.titleRow}>{I18n.t('editUser', { locale: language })}</Text>
+            <Icon name="angle-right" size={25} color={'lightgray'} />
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.row}>
+            <Text style={styles.titleRow}>{I18n.t('changePass', { locale: language })}</Text>
+            <Icon name="angle-right" size={25} color={'lightgray'} />
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.row}>
+            <Text style={styles.titleRow}>{I18n.t('logOut', { locale: language })}</Text>
+            <Icon name="angle-right" size={25} color={'lightgray'} />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

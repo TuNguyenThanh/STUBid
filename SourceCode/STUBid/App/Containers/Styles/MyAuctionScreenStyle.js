@@ -11,4 +11,9 @@ export default StyleSheet.create({
     color: Colors.primary,
     fontFamily: Fonts.type.quicksand
   },
+  contentEmpty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

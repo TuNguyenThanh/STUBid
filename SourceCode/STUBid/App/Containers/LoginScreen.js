@@ -54,7 +54,7 @@ class LoginScreen extends React.Component {
 		}, 2000);
 
 		setTimeout(() => {
-		  NavigationActions.settingsScreen(); //chuyen man hinh
+		  NavigationActions.pop(); //chuyen man hinh
 		 	this.setState({ isLoading: false });
 		 	this.buttonAnimated.setValue(0);
 		 	this.growAnimated.setValue(0);
