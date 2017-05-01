@@ -39,14 +39,14 @@ class Search extends React.Component {
         />
 
         <View style={styles.viewDetail}>
-          <Text style={styles.titleProduct} numberOfLines={2} >May tinh xach tay HP nadh jhfwh hwefb frfr rv v  </Text>
-          <View style={[styles.viewTemp, {marginBottom: 8, marginTop: 8}]}>
+          <Text style={styles.titleProduct} numberOfLines={2} >May tinh xach tay HP nadg jhfwh hwefb frfg rv v  </Text>
+          <View style={styles.viewTemp}>
             <View style={styles.viewIcon}>
               <Icon name="dollar" size={15} color={Colors.primary} />
             </View>
             <Text style={styles.titlePriceNow}>2.500.000</Text>
           </View>
-          <View style={[styles.viewTemp, {marginBottom: 8}]}>
+          <View style={styles.viewTemp}>
             <View style={styles.viewIcon}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>

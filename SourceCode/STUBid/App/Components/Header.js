@@ -35,7 +35,7 @@ const Header = (props) => (
         }
         {
           !props.imageTitle &&
-          <Text style={[styles.titleText, { color: props.titleColor }]}>
+          <Text style={[styles.titleText, props.titleStyle]}>
             {props.title}
           </Text>
         }

@@ -15,5 +15,13 @@
   "myAuction": "Đấu giá",
   "profile": "Thông tin",
   "category": "Loại sản phẩm",
-  "bid": "Đấu giá"
+  "bid": "Đấu giá",
+  "about": "Thông tin ứng dụng",
+  "user": "Người dùng",
+  "editUser": "Chỉnh sửa thông tin",
+  "changePass": "Thay đổi mật khẩu",
+  "setting": "Cài đặt",
+  "language": "Ngôn ngữ",
+  "notification": "Thông báo",
+  "version": "Phiên bản"
 }

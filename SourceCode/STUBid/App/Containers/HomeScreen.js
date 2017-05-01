@@ -30,7 +30,7 @@ class Home extends React.Component {
     });
   }
 
-  renderItem(item, rowID, ) {
+  renderItem(item, rowID) {
     const { language } = this.props;
     return (
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: 'Máy tính xách tay HP'})}>

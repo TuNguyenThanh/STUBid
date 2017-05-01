@@ -40,6 +40,7 @@ export default StyleSheet.create({
     backgroundColor: '#FFF',
     height: 40,
     margin: 15,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -56,6 +57,7 @@ export default StyleSheet.create({
     color: Colors.primary
   },
   listviewStyle: {
+    paddingTop: 8,
     paddingLeft: 15,
     paddingRight: 15,
   },
@@ -76,7 +78,8 @@ export default StyleSheet.create({
     padding: 8
   },
   viewTemp: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop:  Metrics.screenHeight / 120
   },
   viewIcon: {
     width: 20
@@ -90,10 +93,10 @@ export default StyleSheet.create({
     marginTop: -3
   },
   titleProduct: {
-    height: 40,
+    height: Metrics.screenHeight / 14,
     textAlign: 'justify',
     fontFamily: Fonts.type.quicksand,
-    marginTop: -3
+    marginTop: -8
   },
   titlePriceNow: {
     color: Colors.primary,
