@@ -11,6 +11,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  imgStyle: {
+    width: 80,
+    height: 120
+  },
   imgAvatar: {
     width: Metrics.screenHeight / 5,
     height: Metrics.screenHeight / 5,
@@ -56,14 +60,43 @@ export default StyleSheet.create({
     height: 1,
     marginLeft: 20
   },
+  viewChooseLanguage: {
+    height: 30,
+    flexDirection: 'row',
+    marginTop: 20
+  },
+  titleLang: {
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand,
+    fontSize: 18
+  },
+  button: {
+    flex: 1,
+    borderColor: 'lightgray',
+    borderWidth: 1,
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  titleButton: {
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand,
+  },
+  iconLang: {
+    width: 20,
+    height: 20,
+    marginRight: 8
+  },
   header: {
     fontSize: 20,
     textAlign: 'left',
     marginVertical: 10,
     marginLeft: 10,
   },
-  picker: {
-    flex: 1,
-    marginRight: 10,
-  }
+    picker: {
+      flex: 1,
+      marginRight: 10,
+      backgroundColor: '#FFF'
+    }
 })

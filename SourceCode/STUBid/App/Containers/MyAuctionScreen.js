@@ -1,20 +1,33 @@
 import React from 'react'
-import { ScrollView, Text, KeyboardAvoidingView } from 'react-native'
+import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import Header from '../Components/Header'
 
 // Styles
 import styles from './Styles/MyAuctionScreenStyle'
 
-class MyAuction extends React.Component {
+//I18n
+import I18n from 'react-native-i18n'
 
-  render () {
+class MyAuction extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  render() {
+    const { language } = this.props;
     return (
-      <ScrollView style={styles.container}>
-        <KeyboardAvoidingView behavior='position'>
-          <Text>MyAuction Screen</Text>
-        </KeyboardAvoidingView>
-      </ScrollView>
+      <View style={styles.container}>
+        <Header
+          title={I18n.t('myAuction', { locale: language })}
+          bgColor={'#FFF'}
+          titleStyle={styles.titleStyle}
+        />
+        <View style={{ flex: 1, marginTop: 15}}>
+          <Text>My Auction Screen</Text>
+        </View>
+      </View>
     )
   }
 
@@ -22,6 +35,7 @@ class MyAuction extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
   }
 }
 

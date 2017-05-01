@@ -24,6 +24,10 @@ const images = {
   //
   menu: require('../Images/menu.png'),
   hourglass: require('../Images/hourglass.png'),
+  iconVN: require('../Images/iconVN.png'),
+  iconEN: require('../Images/iconEN.png'),
+  left: require('../Images/left.png'),
+  right: require('../Images/right.png'),
 }
 
 export default images

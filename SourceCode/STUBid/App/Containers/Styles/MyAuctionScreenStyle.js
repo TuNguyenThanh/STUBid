@@ -1,6 +1,14 @@
 import { StyleSheet } from 'react-native'
-import { ApplicationStyles } from '../../Themes/'
+import { ApplicationStyles, Colors, Fonts, Metrics } from '../../Themes/'
 
 export default StyleSheet.create({
-  ...ApplicationStyles.screen
+  ...ApplicationStyles.screen,
+  container: {
+    flex: 1,
+    backgroundColor: Colors.lightgray
+  },
+  titleStyle: {
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand
+  },
 })

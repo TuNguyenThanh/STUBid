@@ -23,6 +23,17 @@
   "setting": "Settings",
   "language": "Language",
   "notification": "Notification",
-  "version": "Version"
-
+  "version": "Version",
+  "changeLanguage": "Change Language",
+  "vi": "Vietnam",
+  "en": "English",
+  "chooseCategory": "Choose Category",
+  "all":"All",
+  "vehicles":"Vehicles",
+  "mobile":"Mobile",
+  "laptop":"Laptop",
+  "houseware":"Houseware",
+  "dtationery":"Dtationery",
+  "document":"Document",
+  "other":"Other",
 }
