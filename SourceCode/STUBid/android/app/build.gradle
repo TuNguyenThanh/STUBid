@@ -95,6 +95,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [onesignal_app_id: "2fd5abc4-b432-42d8-806f-b8e54358c340",
+                                onesignal_google_project_number: "REMOTE"]
     }
     splits {
         abi {
@@ -126,6 +128,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile project(':react-native-i18n')
     compile project(':react-native-vector-icons')
     compile project(':react-native-device-info')
