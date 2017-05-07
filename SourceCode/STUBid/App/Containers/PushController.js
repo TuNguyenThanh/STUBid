@@ -36,7 +36,6 @@ class PushController extends Component {
     console.log('Data: ', openResult.notification.payload.additionalData);
     console.log('isActive: ', openResult.notification.isAppInFocus);
     console.log('openResult: ', openResult);
-    console.log(openResult.notification.payload.additionalData.data.objectId);
   }
 
   onRegistered(notifData) {
