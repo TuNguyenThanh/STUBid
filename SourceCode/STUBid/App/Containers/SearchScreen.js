@@ -109,6 +109,7 @@ class Search extends React.Component {
         <View style={styles.viewSearch}>
           <TextInput
             style={styles.inputStyle}
+            underlineColorAndroid={'transparent'}
             autoCapitalize={'none'}
             autoCorrect={false}
             placeholder={I18n.t('search', {locale: language})}
@@ -160,7 +161,7 @@ class Search extends React.Component {
           alignItems: 'center'
         }}
       >
-        <View style={{ backgroundColor: '#F5F5F5', width: 60, height: 60 , marginTop: -40, borderRadius: 30, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={styles.viewIcon}>
           <Icon name="list-alt" size={30} color={Colors.primary} />
         </View>
         <Text style={styles.titleModalCategory}>{I18n.t('chooseCategory', {locale: language})}</Text>
@@ -170,7 +171,6 @@ class Search extends React.Component {
           renderRow={this.renderRowCategory.bind(this)}
           contentContainerStyle={styles.listView}
         />
-
       </Modal>
     );
   }

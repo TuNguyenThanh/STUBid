@@ -20,7 +20,7 @@ class Settings extends React.Component {
     this.state = {
       switchIsOn: true,
       openLanguage: false,
-      user: null
+      user: 'f'
     };
   }
 

@@ -40,8 +40,10 @@ export default StyleSheet.create({
   },
   group: {
     backgroundColor: '#FFF',
-    borderWidth: 1,
-    borderColor: '#D8D8D8',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopColor: '#D8D8D8',
+    borderBottomColor: '#D8D8D8',
     marginBottom: 20
   },
   row: {

@@ -64,6 +64,7 @@ export default StyleSheet.create({
   row: {
   //  borderRadius: 2,
   //  shadowRadius: 2,
+    backgroundColor: '#FFF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -138,5 +139,11 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-
+  viewIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

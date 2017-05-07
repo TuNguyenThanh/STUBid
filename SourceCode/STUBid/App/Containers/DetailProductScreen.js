@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 
 import Tab1 from './Tab1Screen'
@@ -26,6 +27,9 @@ class DetailProduct extends React.Component {
           <Tab1 tabLabel="Đấu giá" />
           <Tab2 tabLabel="Chi tiết" />
         </ScrollableTabView>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.titleButton}>Đấu giá</Text>
+        </TouchableOpacity>
       </View>
     )
   }
