@@ -76,14 +76,15 @@ export default StyleSheet.create({
   },
   viewDetail: {
     flex: 1,
-    padding: 8
+    padding: 8,
+    backgroundColor: 'red'
   },
   viewTemp: {
     flexDirection: 'row',
     marginTop:  Metrics.screenHeight / 120
   },
   viewIcon: {
-    width: 20
+    width: 20,
   },
   viewPriceBid: {
     borderColor: '#D8D8D8',

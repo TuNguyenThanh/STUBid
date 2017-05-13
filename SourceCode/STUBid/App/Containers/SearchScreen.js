@@ -51,24 +51,26 @@ class Search extends React.Component {
             </View>
             <Text style={styles.titlePriceNow}>2.500.000</Text>
           </View>
-          <View style={styles.viewTemp}>
-            <View style={styles.viewIcon}>
-              <Icon name="hourglass-half" size={15} color={Colors.primary} />
-            </View>
-            <Text style={styles.titleTime}>19:45:00</Text>
-          </View>
-          <View style={styles.viewTemp}>
-            <View style={styles.viewIcon}>
-              <Icon name="legal" size={15} color={Colors.primary} />
-            </View>
-            <View style={styles.viewPriceBid}>
-              <Text style={styles.titlePriceNext}>2.600.000</Text>
-            </View>
-          </View>
+
         </View>
       </TouchableOpacity>
     );
   }
+
+  // <View style={styles.viewTemp}>
+  //   <View style={styles.viewIcon}>
+  //     <Icon name="hourglass-half" size={15} color={Colors.primary} />
+  //   </View>
+  //   <Text style={styles.titleTime}>19:45:00</Text>
+  // </View>
+  // <View style={styles.viewTemp}>
+  //   <View style={styles.viewIcon}>
+  //     <Icon name="legal" size={15} color={Colors.primary} />
+  //   </View>
+  //   <View style={styles.viewPriceBid}>
+  //     <Text style={styles.titlePriceNext}>2.600.000</Text>
+  //   </View>
+  // </View>
 
   render () {
     const { language } = this.props;
