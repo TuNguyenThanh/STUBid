@@ -15,7 +15,8 @@ export default StyleSheet.create({
   },
   logo: {
     width: 200,
-    height: 100
+    height: 100,
+    marginTop: -50
   },
   viewInput: {
     width: Metrics.screenWidth - 40,

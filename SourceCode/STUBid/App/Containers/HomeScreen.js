@@ -141,8 +141,8 @@ class Home extends React.Component {
         </View>
 
         <TouchableOpacity style={styles.viewCategory} onPress={() => this.setState({openModalCategory: true})}>
-          <Text style={styles.textCategory}>{I18n.t('category', {locale: language})}</Text>
-          <Icon name="angle-right" size={20} color={Colors.primary} />
+          <Text style={styles.textCategory}>{I18n.t('category', {locale: language})}: {I18n.t(this.state.categorySelected, {locale: language})}</Text>
+          <Icon name="list-alt" size={20} color={Colors.primary} />
         </TouchableOpacity>
 
         <ListView

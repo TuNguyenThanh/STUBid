@@ -40,8 +40,38 @@ class Tab1 extends React.Component {
             this.renderImage()
           }
         </Swiper>
-        <View style={{ flex: 1 }}>
-          <Text>Tab 1 screen</Text>
+        <View style={styles.viewDetail}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={styles.item}>
+              <Icon name="user" size={20} color={Colors.primary} style={styles.iconRight}/>
+              <Text style={styles.fontStyle}>Nguoi ban</Text>
+            </View>
+            <View style={styles.item}>
+              <Icon name="phone" size={20} color={Colors.primary} style={styles.iconRight}/>
+              <Text style={styles.fontStyle}>0903016975</Text>
+            </View>
+          </View>
+          <View style={styles.item}>
+            <Icon name="clock-o" size={20} color={Colors.primary} style={styles.iconRight}/>
+            <Text style={styles.fontStyle}>2017-05-20 10:30:00</Text>
+          </View>
+          <View style={styles.itemRight}>
+            <Text style={styles.fontStyle}>Nguoi ra gia cao nhat</Text>
+            <Icon name="user-secret" size={20} color={Colors.primary} style={styles.iconLeft}/>
+          </View>
+          <View style={styles.itemRight}>
+            <Text style={styles.fontStyle}>8.300.000 VND</Text>
+            <Icon name="legal" size={20} color={Colors.primary} style={styles.iconLeft}/>
+          </View>
+          <View style={styles.viewCountDown}>
+            <Icon name="hourglass-half" size={20} color={Colors.primary} style={styles.iconRight}/>
+            <Text style={styles.fontStyle}>21:35:00</Text>
+          </View>
+          <View style={styles.itemCenter}>
+            <View style={styles.viewNextPrice}>
+              <Text style={[styles.fontStyle, styles.priceBidStyle]}>8.500.000</Text>
+            </View>
+          </View>
         </View>
       </View>
     )

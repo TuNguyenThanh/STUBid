@@ -36,4 +36,7 @@
   "dtationery":"Dtationery",
   "document":"Document",
   "other":"Other",
+  "auction": "Auction",
+  "detailProduct": "Detail Product",
+  "buyNow": "Buy now",
 }

@@ -12,9 +12,13 @@ import Tab2 from './Tab2Screen'
 import styles from './Styles/DetailProductScreenStyle'
 import { Colors } from '../Themes'
 
+//I18n
+import I18n from 'react-native-i18n'
+
 class DetailProduct extends React.Component {
 
-  render () {
+  render() {
+    const { language } = this.props;
     return (
       <View style={styles.container}>
         <ScrollableTabView
@@ -23,13 +27,20 @@ class DetailProduct extends React.Component {
           tabBarUnderlineStyle={{ backgroundColor: Colors.primary, borderRadius: 5 }}
           tabBarActiveTextColor={Colors.primary}
           tabBarInactiveTextColor={'#900'}
+          tabBarTextStyle={styles.fontStyle}
         >
-          <Tab1 tabLabel="Đấu giá" />
-          <Tab2 tabLabel="Chi tiết" />
+          <Tab1 tabLabel={I18n.t('auction', {locale: language})} />
+          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} />
         </ScrollableTabView>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.titleButton}>Đấu giá</Text>
-        </TouchableOpacity>
+        <View style={styles.viewBid}>
+          <TouchableOpacity style={styles.button} onPress={() => alert('Đấu giá')}>
+            <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
+          </TouchableOpacity>
+          <View style={styles.line} />
+          <TouchableOpacity style={styles.button} onPress={() => alert('Mua ngay')}>
+            <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -38,6 +49,7 @@ class DetailProduct extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
   }
 }
 

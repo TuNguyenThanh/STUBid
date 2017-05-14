@@ -7,15 +7,26 @@ export default StyleSheet.create({
     backgroundColor: Colors.lightgray,
     paddingTop:  Metrics.navBarHeight
   },
-  button: {
+  viewBid: {
     height: 50,
     backgroundColor: Colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'row'
   },
   titleButton: {
     color: '#FFF',
     fontFamily: Fonts.type.quicksand,
     fontSize: 21
-  }
+  },
+  button: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  line: {
+    width:1,
+    backgroundColor: '#FFF'
+  },
+  fontStyle: {
+    fontFamily: Fonts.type.quicksand,
+  },
 })

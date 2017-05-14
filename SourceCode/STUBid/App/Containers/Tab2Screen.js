@@ -12,9 +12,7 @@ class Tab2 extends React.Component {
   render () {
     return (
       <ScrollView style={styles.container}>
-        <KeyboardAvoidingView behavior='position'>
-          <Text>Tab2 Screen</Text>
-        </KeyboardAvoidingView>
+        <Text style={styles.textStyle}>Tab2 Screen</Text>
       </ScrollView>
     )
   }
