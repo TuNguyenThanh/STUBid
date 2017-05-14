@@ -77,13 +77,12 @@ export default StyleSheet.create({
   viewDetail: {
     flex: 1,
     padding: 8,
-    backgroundColor: 'red'
   },
   viewTemp: {
     flexDirection: 'row',
-    marginTop:  Metrics.screenHeight / 120
+    marginTop:  Metrics.screenHeight / 120,
   },
-  viewIcon: {
+  iconStyle: {
     width: 20,
   },
   viewPriceBid: {

@@ -5,13 +5,14 @@ export default {
     flex: 1
   },
   navBar: {
-    backgroundColor: Colors.background
+    borderBottomColor: '#FFF',
+    backgroundColor: '#FFF',
   },
   title: {
     color: Colors.snow
   },
   leftButton: {
-    tintColor: Colors.snow
+    tintColor: Colors.primary
   },
   rightButton: {
     color: Colors.snow

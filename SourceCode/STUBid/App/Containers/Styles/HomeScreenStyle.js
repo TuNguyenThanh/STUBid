@@ -124,4 +124,37 @@ export default StyleSheet.create({
     paddingBottom: 8,
     borderRadius: 2
   },
+  viewIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  listViewCategory: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  titleModalCategory: {
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand,
+    fontSize: 18,
+    marginTop: -15,
+    marginBottom: 10
+  },
+  rowCategory: {
+    width: (Metrics.screenWidth / 2.6),
+    borderRadius: 2,
+    borderColor: '#D8D8D8',
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 5,
+    backgroundColor: '#FFFFFF',
+    marginTop: 8,
+    marginLeft: 2,
+    marginRight: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

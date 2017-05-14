@@ -4,7 +4,8 @@ import { ApplicationStyles, Colors, Fonts, Metrics } from '../../Themes/'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.lightgray
+    backgroundColor: Colors.lightgray,
+    marginBottom: 50
   },
   viewAvatar: {
     marginTop: 15,

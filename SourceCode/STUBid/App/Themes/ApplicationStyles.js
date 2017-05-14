@@ -9,7 +9,8 @@ const ApplicationStyles = {
   screen: {
     mainContainer: {
       flex: 1,
-      backgroundColor: Colors.lightgray
+      backgroundColor: Colors.lightgray,
+      marginBottom: 50
     },
     backgroundImage: {
       position: 'absolute',

@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 //I18n
 import I18n from 'react-native-i18n'
 
 //styles
 import styles from './Styles/LoginScreenStyles'
-import { Images } from '../Themes'
+import { Images, Colors } from '../Themes'
 
 const { width, height } =  Dimensions.get('window');
 const MARGIN = 40;
@@ -86,6 +87,9 @@ class LoginScreen extends React.Component {
     return(
       <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
         <Image style={styles.container} source={Images.background} >
+          <TouchableOpacity style={styles.backButton} onPress={() => NavigationActions.pop()}>
+            <Icon name="chevron-circle-left" size={35} color={Colors.primary}  />
+          </TouchableOpacity>
           {/*Form login*/}
           <View style={styles.form}>
             {/*logo*/}

@@ -103,4 +103,9 @@ export default StyleSheet.create({
     color: Colors.primary,
     fontFamily: Fonts.type.quicksand
   },
+  backButton: {
+    width: 30,
+    marginTop: 30,
+    marginLeft: 10
+  }
 })
