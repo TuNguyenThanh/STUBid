@@ -10,10 +10,10 @@ import LaunchScreen from '../Containers/LaunchScreen'
 import LoginScreen from '../Containers/LoginScreen'
 import SettingsScreen from '../Containers/SettingsScreen'
 import HomeScreen from '../Containers/HomeScreen'
-import Main from '../Containers/Main'
 import SearchScreen from '../Containers/SearchScreen'
 import MyAuctionScreen from '../Containers/MyAuctionScreen'
 import DetailProductScreen from '../Containers/DetailProductScreen'
+import EditProfileScreen from '../Containers/EditProfileScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -53,7 +53,7 @@ class TabIcon extends React.Component {
         <Text style={{color: color}}>{I18n.t(title, {locale: language})}</Text>
         {
           this.props.selected &&
-          <View style={{ backgroundColor: Colors.primary, width: 70, height: 5,borderRadius: 5}} />
+          <View style={{ backgroundColor: Colors.primary, width: 70, height: 5, borderRadius: 5, marginTop: 5}} />
         }
       </View>
     );
@@ -66,6 +66,7 @@ class NavigationRouter extends Component {
   }
 
   render () {
+    const { language } = this.props;
     return (
       <Router>
         <Scene key='drawerChildrenWrapper' navigationBarStyle={Styles.navBar} titleStyle={Styles.title} leftButtonIconStyle={Styles.leftButton} rightButtonTextStyle={Styles.rightButton}>
@@ -86,6 +87,10 @@ class NavigationRouter extends Component {
           </Scene>
 
           <Scene key='loginScreen' component={LoginScreen} hideNavBar />
+          <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false}
+            titleStyle={{width: 250, color: Colors.primary, fontFamily: Fonts.type.quicksand}}
+            navigationBarStyle={Styles.navBarCustom}
+          />
           <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false}
             titleStyle={{width: 250, color: Colors.primary, fontFamily: Fonts.type.quicksand}}
           />

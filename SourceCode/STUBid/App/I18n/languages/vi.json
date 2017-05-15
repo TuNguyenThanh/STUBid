@@ -39,4 +39,11 @@
   "auction": "Đấu giá",
   "detailProduct": "Chi tiết sản phẩm",
   "buyNow": "Mua ngay",
+  "firstName": "Tên",
+  "lastName": "Họ",
+  "change": "Thay đổi",
+  "save": "Lưu",
+  "selectImageFrom": "Chọn hình ảnh từ",
+  "photo": "Hình chụp",
+  "camera": "Máy ảnh",
 }

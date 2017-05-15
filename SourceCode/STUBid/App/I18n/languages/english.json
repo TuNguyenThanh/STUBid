@@ -39,4 +39,11 @@
   "auction": "Auction",
   "detailProduct": "Detail Product",
   "buyNow": "Buy now",
+  "firstName": "First name",
+  "lastName": "Last name",
+  "change": "Change",
+  "save": "Save",
+  "selectImageFrom": "Select image from",
+  "photo": "Photo",
+  "camera": "Camera",
 }

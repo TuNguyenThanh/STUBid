@@ -20,7 +20,7 @@ class Settings extends React.Component {
     this.state = {
       switchIsOn: true,
       openLanguage: false,
-      user: null
+      user: 'user'
     };
   }
 
@@ -151,7 +151,7 @@ class Settings extends React.Component {
           <Text style={styles.titleSession}>{I18n.t('user', { locale: language }).toUpperCase()}</Text>
         </View>
         <View style={styles.group}>
-          <TouchableOpacity style={styles.row}>
+          <TouchableOpacity style={styles.row} onPress={() => NavigationActions.editProfileScreen({title: I18n.t('editUser', { locale: language })} )}>
             <Text style={styles.titleRow}>{I18n.t('editUser', { locale: language })}</Text>
             <Icon name="angle-right" size={25} color={'lightgray'} />
           </TouchableOpacity>
