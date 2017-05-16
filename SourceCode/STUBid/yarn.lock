@@ -2842,6 +2842,10 @@ ignite-ir-boilerplate-2016@^0.2.2:
   dependencies:
     ramda "^0.23.0"
 
+ignite-maps@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/ignite-maps/-/ignite-maps-0.1.3.tgz#82b775723dffe543bebcdbb978d78b000e9209ef"
+
 ignite-vector-icons@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ignite-vector-icons/-/ignite-vector-icons-0.2.1.tgz#c8056f7ce344e058ae99664aaf5509a0c322cd1b"
@@ -2917,7 +2921,7 @@ interpret@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.3.tgz#cbc35c62eeee73f19ab7b10a801511401afc0f90"
 
-invariant@^2.0.0, invariant@^2.2.0, invariant@^2.2.1:
+invariant@^2.0.0, invariant@^2.2.0, invariant@^2.2.1, invariant@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
@@ -4554,6 +4558,16 @@ react-native-i18n@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-i18n/-/react-native-i18n-1.0.0.tgz#0c407d9ebb846aae1aa5e05de6503008553f02fd"
 
+react-native-keyboard-aware-scroll-view@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.2.8.tgz#e9843c0d7467a2e6a2a737883bd9c2b7c7e38e35"
+  dependencies:
+    react-timer-mixin "^0.13.3"
+
+react-native-maps@0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.13.0.tgz#f3d791a06d36d553bcc177514ee52fdea45474c0"
+
 react-native-mock@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-native-mock/-/react-native-mock-0.3.1.tgz#13d22433c5351a8a7fb8aedd7862b614d087851c"
@@ -4571,6 +4585,12 @@ react-native-mock@^0.3.1:
     react-timer-mixin "^0.13.3"
     warning "^2.1.0"
 
+react-native-onesignal@^3.0.3:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-3.0.4.tgz#dd81d55741636252e55b3cc2d10b6eb36e5c9b25"
+  dependencies:
+    invariant "^2.2.2"
+
 react-native-router-flux@3.38.0:
   version "3.38.0"
   resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-3.38.0.tgz#f5f8ec2875b46f96f61006ff502d0d80268e6ce2"
@@ -4578,6 +4598,17 @@ react-native-router-flux@3.38.0:
     react-native-experimental-navigation "0.26.x"
     react-native-tabs "^1.0.9"
     react-static-container "1.0.1"
+
+react-native-scrollable-tab-view@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/react-native-scrollable-tab-view/-/react-native-scrollable-tab-view-0.7.4.tgz#623a047cbfab35a27b8689095af524e9aac74b62"
+  dependencies:
+    react-static-container "^1.0.1"
+    react-timer-mixin "^0.13.3"
+
+react-native-swiper@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.5.4.tgz#a85535b5374ef8d605a7a720e447ac46816ac448"
 
 react-native-tab-view@^0.0.57:
   version "0.0.57"
@@ -4704,7 +4735,7 @@ react-redux@5.0.4:
     loose-envify "^1.1.0"
     prop-types "^15.0.0"
 
-react-static-container@1.0.1:
+react-static-container@1.0.1, react-static-container@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-static-container/-/react-static-container-1.0.1.tgz#694c0dd68a896b879519afb548399cc1989c9ab0"
 
