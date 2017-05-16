@@ -23,7 +23,7 @@ npm install
 - Type: Broadcast
 - Description: Server send auctions data to all socket every second
 - Response:
-```json
+```javascript
 {
     "id": number,
     "createdDate": string,
