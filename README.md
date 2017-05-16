@@ -1,7 +1,7 @@
 # STUBid
 Ứng dụng đấu giá bán đồ cũ cho sinh viên
 
-# Installation dependencies
+# Install dependencies
 ```bash
 npm install
 ```
