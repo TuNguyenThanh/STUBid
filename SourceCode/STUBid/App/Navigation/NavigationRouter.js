@@ -14,6 +14,7 @@ import SearchScreen from '../Containers/SearchScreen'
 import MyAuctionScreen from '../Containers/MyAuctionScreen'
 import DetailProductScreen from '../Containers/DetailProductScreen'
 import EditProfileScreen from '../Containers/EditProfileScreen'
+import InfoAppScreen from '../Containers/InfoAppScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -83,17 +84,13 @@ class NavigationRouter extends Component {
             </Scene>
             <Scene key="tab4" title="profile" icon={TabIcon}>
               <Scene key='settingsScreen' component={SettingsScreen} hideNavBar />
+              <Scene key='infoAppScreen' component={InfoAppScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
             </Scene>
           </Scene>
 
           <Scene key='loginScreen' component={LoginScreen} hideNavBar />
-          <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false}
-            titleStyle={{width: 250, color: Colors.primary, fontFamily: Fonts.type.quicksand}}
-            navigationBarStyle={Styles.navBarCustom}
-          />
-          <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false}
-            titleStyle={{width: 250, color: Colors.primary, fontFamily: Fonts.type.quicksand}}
-          />
+          <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false} titleStyle={Styles.title} />
         </Scene>
       </Router>
     )

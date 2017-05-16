@@ -1,4 +1,4 @@
-import {Colors} from '../../Themes/'
+import { Colors, Fonts } from '../../Themes/'
 
 export default {
   container: {
@@ -9,7 +9,9 @@ export default {
     backgroundColor: '#FFF',
   },
   title: {
-    color: Colors.snow
+    width: 250,
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand
   },
   leftButton: {
     tintColor: Colors.primary
@@ -21,6 +23,8 @@ export default {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    elevation: 2
+    elevation: 2,
+    borderBottomColor: '#FFF',
+    backgroundColor: '#FFF',
   },
 }

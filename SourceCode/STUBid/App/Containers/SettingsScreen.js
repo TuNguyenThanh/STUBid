@@ -81,7 +81,7 @@ class Settings extends React.Component {
               <Text style={styles.titleSession}>{I18n.t('about', { locale: language }).toUpperCase()}</Text>
             </View>
             <View style={styles.group}>
-              <TouchableOpacity style={styles.row}>
+              <TouchableOpacity style={styles.row} onPress={() => NavigationActions.infoAppScreen({ title: I18n.t('about', { locale: language }) })}>
                 <Text style={styles.titleRow}>{I18n.t('about', { locale: language })}</Text>
                 <Icon name="angle-right" size={25} color={'lightgray'} />
               </TouchableOpacity>
