@@ -5,21 +5,20 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.lightgray,
-    marginTop: Metrics.navBarHeight
-  },
-  contentStyle: {
-    flex: 1,
-    padding: 20
+    marginTop: Metrics.navBarHeight,
+    width: Metrics.screenWidth,
+    height: Metrics.screenHeight - Metrics.navBarHeight,
   },
   viewImage: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   imgStyle: {
     width: Metrics.screenHeight / 5,
     height: Metrics.screenHeight / 5,
-    borderRadius: (Metrics.screenHeight / 5)/2
+    borderRadius: (Metrics.screenHeight / 5)/2,
+    zIndex: 0
   },
   rowInput: {
     height: 40,
@@ -85,5 +84,10 @@ export default StyleSheet.create({
     color: '#FFF',
     fontFamily: Fonts.type.quicksand,
     marginLeft: 8
-  }
+  },
+  iconChooseImageStyle: {
+    marginTop: -20,
+    marginLeft: 50,
+    zIndex: 1
+  },
 })

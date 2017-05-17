@@ -39,6 +39,10 @@ export default StyleSheet.create({
     color: 'gray',
     fontFamily: Fonts.type.quicksand
   },
+  titleLangStyle: {
+    color: 'gray',
+    fontFamily: Fonts.type.quicksand
+  },
   group: {
     backgroundColor: '#FFF',
     borderTopWidth: 1,
@@ -97,9 +101,9 @@ export default StyleSheet.create({
     marginVertical: 10,
     marginLeft: 10,
   },
-    picker: {
-      flex: 1,
-      marginRight: 10,
-      backgroundColor: '#FFF'
-    }
+  picker: {
+    flex: 1,
+    marginRight: 10,
+    backgroundColor: '#FFF'
+  }
 })

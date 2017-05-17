@@ -5,7 +5,7 @@ import SettingsActions from '../Redux/SettingsRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
-import Modal from '../Components/Modal'
+import Modal2Choose from '../Components/Modal2Choose'
 
 // Styles
 import styles from './Styles/SettingsScreenStyle'
@@ -57,7 +57,7 @@ class Settings extends React.Component {
             <View style={styles.group}>
               <TouchableOpacity style={styles.row} onPress={() => this.setState({openLanguage: true})} >
                 <Text style={styles.titleRow}>{I18n.t('language', { locale: language })}</Text>
-                <Text style={{color: 'gray'}}>
+                <Text style={styles.titleLangStyle}>
                   {
                     language == 'vi' ?
                     I18n.t('vi', { locale: language }) :
@@ -178,48 +178,30 @@ class Settings extends React.Component {
   }
 
   renderModelChangeLanguage() {
-    const { language } = this.props;
-    return(
-      <Modal
+    return (
+      <Modal2Choose
+        logo={<Icon name="globe" size={30} color={Colors.primary} />}
+        title={'changeLanguage'}
+        titleA={'vi'}
+        iconA={
+          <Image
+            source={Images.iconVN}
+            style={styles.iconLang}
+          />
+        }
+        titleB={'en'}
+        iconB={
+          <Image
+            source={Images.iconEN}
+            style={styles.iconLang}
+          />
+        }
         open={this.state.openLanguage}
-        offset={0}
-        overlayBackground={'rgba(0, 0, 0, 0.75)'}
-        animationDuration={200}
-        animationTension={40}
-        modalDidOpen={() => console.log('modal did open')}
-        modalDidClose={() => this.setState({openLanguage: false})}
-        closeOnTouchOutside={true}
-        containerStyle={{
-          justifyContent: 'center',
-        }}
-        modalStyle={{
-          borderRadius: 2,
-          margin: 20,
-          padding: 10,
-          backgroundColor: '#F5F5F5',
-          alignItems: 'center'
-        }}>
-          <Text style={styles.titleLang}>{I18n.t('changeLanguage', { locale: language })}</Text>
-          <View style={styles.viewChooseLanguage}>
-            <TouchableOpacity style={styles.button} onPress={() => this.changeLanguage('vi')}>
-              <Image
-                style={styles.iconLang}
-                source={Images.iconVN}
-              />
-              <Text style={styles.titleButton}>Vi</Text>
-            </TouchableOpacity>
-
-            <View style={{ width: 10, height: 10}} />
-            <TouchableOpacity style={styles.button} onPress={() => this.changeLanguage('en')}>
-              <Image
-                style={styles.iconLang}
-                source={Images.iconEN}
-              />
-              <Text style={styles.titleButton}>EN</Text>
-            </TouchableOpacity>
-          </View>
-      </Modal>
-    );
+        modalDidClose={() => this.setState({ openLanguage: false })}
+        onPressA={() => this.changeLanguage('vi')}
+        onPressB={() => this.changeLanguage('en')}
+      />
+    )
   }
 
 }

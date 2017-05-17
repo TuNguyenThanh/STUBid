@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView } f
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import Modal from '../Components/Modal'
+import Header from '../Components/Header'
+import ModalCategory from '../Components/ModalCategory'
+
 // Styles
 import styles from './Styles/HomeScreenStyle'
 import { Images, Colors } from '../Themes'
-import Header from '../Components/Header'
 
 //I18n
 import I18n from 'react-native-i18n'
@@ -19,7 +20,6 @@ class Home extends React.Component {
       openModalCategory: false,
       categorySelected: 'all',
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      dataSourceCategory: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       badge: 0,
     };
   }
@@ -29,9 +29,10 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    const { language } = this.props;
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 1', 'row 2', 'row 3', 'row 4','row 4']),
-      dataSourceCategory: this.state.dataSourceCategory.cloneWithRows(['all', 'vehicles', 'mobile', 'laptop', 'houseware', 'dtationery', 'document']),
+      data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
     });
   }
 
@@ -134,7 +135,7 @@ class Home extends React.Component {
           </View>
 
           <Animated.View style={[styles.iconStyle, menuStyle]}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => NavigationActions.uploadProductScreen()}>
               <Icon name="pencil" size={20} color={Colors.primary} />
             </TouchableOpacity>
           </Animated.View>
@@ -164,55 +165,14 @@ class Home extends React.Component {
   }
 
   renderModalCategory() {
-    const { language } = this.props;
     return(
-      <Modal
+      <ModalCategory
+        title={'chooseCategory'}
         open={this.state.openModalCategory}
-        offset={0}
-        overlayBackground={'rgba(0, 0, 0, 0.75)'}
-        animationDuration={200}
-        animationTension={40}
-        modalDidOpen={() => console.log('modal did open')}
-        modalDidClose={() => this.setState({openModalCategory: false})}
-        closeOnTouchOutside={true}
-        containerStyle={{
-          justifyContent: 'center',
-        }}
-        modalStyle={{
-          borderRadius: 2,
-          margin: 20,
-          padding: 10,
-          backgroundColor: '#F5F5F5',
-          alignItems: 'center'
-        }}
-      >
-        <View style={styles.viewIcon}>
-          <Icon name="list-alt" size={30} color={Colors.primary} />
-        </View>
-        <Text style={styles.titleModalCategory}>{I18n.t('chooseCategory', {locale: language})}</Text>
-        <ListView
-          enableEmptySections
-          dataSource={this.state.dataSourceCategory}
-          renderRow={this.renderRowCategory.bind(this)}
-          contentContainerStyle={styles.listViewCategory}
-        />
-      </Modal>
-    );
-  }
-
-  handleCategoryItem(item) {
-    this.setState({
-      openModalCategory: false,
-      categorySelected: item
-    })
-  }
-
-  renderRowCategory(item) {
-    const { language } = this.props;
-    return(
-      <TouchableOpacity style={styles.rowCategory} onPress={this.handleCategoryItem.bind(this, item)}>
-        <Text>{I18n.t(item, {locale: language})}</Text>
-      </TouchableOpacity>
+        modalDidClose={() => this.setState({ openModalCategory: false })}
+        data={this.state.data}
+        onPressItem={(item) => this.setState({ openModalCategory: false, categorySelected: item }) }
+      />
     );
   }
 }

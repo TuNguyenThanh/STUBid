@@ -46,4 +46,11 @@
   "selectImageFrom": "Select image from",
   "photo": "Photo",
   "camera": "Camera",
+  "productName":"Product name",
+  "productStartPrice": "Product Start Price",
+  "productCeilPrice": "Product Ceil Price",
+  "productDescription": "Product Description",
+  "productCategory": "Product Category",
+  "productImage": "Product Image",
+  "next": "Next",
 }

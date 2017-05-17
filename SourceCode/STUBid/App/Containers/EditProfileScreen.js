@@ -3,7 +3,7 @@ import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Modal from '../Components/Modal'
+import Modal2Choose from '../Components/Modal2Choose'
 
 // Styles
 import styles from './Styles/EditProfileScreenStyle'
@@ -26,9 +26,7 @@ class EditProfile extends React.Component {
   }
 
   handleChangeAvatar() {
-    this.setState({
-      openModalChooseImage: true
-    });
+    this.setState({ openModalChooseImage: true });
   }
 
   handleSaveProfile() {
@@ -38,16 +36,16 @@ class EditProfile extends React.Component {
   render () {
     const { language } = this.props;
     return (
-      <View style={styles.container}>
-        <KeyboardAwareScrollView style={styles.contentStyle} scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }}>
+      <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
+        <View style={styles.container}>
           {/*Avatar*/}
           <View style={styles.viewImage}>
             <Image
               style={styles.imgStyle}
               source={{uri: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg'}}
             />
-            <TouchableOpacity onPress={() => this.handleChangeAvatar()}>
-              <Icon name="camera-retro" size={30} style={{marginTop: -20, marginLeft: 70}} />
+            <TouchableOpacity style={styles.iconChooseImageStyle} onPress={() => this.handleChangeAvatar()}>
+              <Icon name="camera-retro" size={30} />
             </TouchableOpacity>
           </View>
 
@@ -155,52 +153,40 @@ class EditProfile extends React.Component {
             </View>
           </View>
 
-        </KeyboardAwareScrollView>
-        <TouchableOpacity style={styles.button} onPress={this.handleSaveProfile.bind(this)}>
-          <Text style={styles.textButton}>{I18n.t('change', {locale: language})}</Text>
-        </TouchableOpacity>
+          <View style={{flex: 1}}/>
+
+          <TouchableOpacity style={styles.button} onPress={this.handleSaveProfile.bind(this)}>
+            <Text style={styles.textButton}>{I18n.t('change', {locale: language})}</Text>
+          </TouchableOpacity>
+        </View>
         { this.renderModalChooseImage()}
-      </View>
+      </KeyboardAwareScrollView>
     )
   }
 
+  handlePhoto() {
+    this.setState({ openModalChooseImage: false });
+  }
+
+  handleCamera() {
+    this.setState({ openModalChooseImage: false });
+  }
+
   renderModalChooseImage() {
-    const { language } = this.props;
-    return(
-      <Modal
+    return (
+      <Modal2Choose
+        logo={<Icon name="camera-retro" size={30} color={Colors.primary} />}
+        title={'selectImageFrom'}
+        titleA={'photo'}
+        iconA={<Icon name="picture-o" size={25} color={'#FFF'} />}
+        titleB={'camera'}
+        iconB={<Icon name="camera" size={25} color={'#FFF'} />}
         open={this.state.openModalChooseImage}
-        offset={0}
-        overlayBackground={'rgba(0, 0, 0, 0.75)'}
-        animationDuration={200}
-        animationTension={40}
-        modalDidClose={() => this.setState({openModalChooseImage: false})}
-        closeOnTouchOutside={true}
-        containerStyle={{ justifyContent: 'center'}}
-        modalStyle={{
-          borderRadius: 2,
-          margin: 20,
-          padding: 10,
-          backgroundColor: '#F5F5F5',
-          alignItems: 'center'
-        }}
-      >
-        <View style={styles.viewIcon}>
-          <Icon name="camera-retro" size={30} color={Colors.primary} />
-        </View>
-        <Text style={styles.titleModal}>{I18n.t('selectImageFrom', {locale: language})}</Text>
-        <View style={styles.viewBody}>
-          <TouchableOpacity style={styles.buttonModal}>
-            <Icon name="picture-o" size={25} color={'#FFF'} />
-            <Text style={styles.textButtonModal}>{I18n.t('photo', {locale: language})}</Text>
-          </TouchableOpacity>
-          <View style={{ width:10 }} />
-          <TouchableOpacity style={styles.buttonModal}>
-            <Icon name="camera" size={25} color={'#FFF'} />
-            <Text style={styles.textButtonModal}>{I18n.t('camera', {locale: language})}</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    );
+        modalDidClose={() => this.setState({ openModalChooseImage: false })}
+        onPressA={() => this.handlePhoto()}
+        onPressB={() => this.handleCamera()}
+      />
+    )
   }
 }
 
