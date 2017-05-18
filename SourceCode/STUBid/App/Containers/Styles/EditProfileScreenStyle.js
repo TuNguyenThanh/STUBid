@@ -13,6 +13,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    marginTop: 20,
   },
   imgStyle: {
     width: Metrics.screenHeight / 5,

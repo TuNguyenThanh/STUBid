@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, Image, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ImagePicker from 'react-native-customized-image-picker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Modal2Choose from '../Components/Modal2Choose'
 
@@ -12,9 +13,11 @@ import { Images, Colors } from '../Themes'
 //I18n
 import I18n from 'react-native-i18n'
 
+var _this;
 class EditProfile extends React.Component {
   constructor(props){
     super(props);
+    _this = this;
     this.state = {
       firstName: 'Tú',
       lastName: 'Nguyễn Thanh',
@@ -22,6 +25,8 @@ class EditProfile extends React.Component {
       email: 'thanhtu.dev@gmail.com',
       atm: '2338 3232 6565 3425',
       openModalChooseImage: false,
+      urlImage: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg',
+
     };
   }
 
@@ -42,7 +47,7 @@ class EditProfile extends React.Component {
           <View style={styles.viewImage}>
             <Image
               style={styles.imgStyle}
-              source={{uri: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg'}}
+              source={{uri: this.state.urlImage}}
             />
             <TouchableOpacity style={styles.iconChooseImageStyle} onPress={() => this.handleChangeAvatar()}>
               <Icon name="camera-retro" size={30} />
@@ -166,10 +171,26 @@ class EditProfile extends React.Component {
 
   handlePhoto() {
     this.setState({ openModalChooseImage: false });
+    ImagePicker.openPicker({
+      compressQuality: 70,
+    }).then(image => {
+      setTimeout(() => {
+        _this.changeImage(image);
+      }, 1000);
+    }).catch((e) => console.log(e));;
   }
 
   handleCamera() {
     this.setState({ openModalChooseImage: false });
+    ImagePicker.openPicker({
+      compressQuality: 70,
+      isCamera: true,
+      openCameraOnStart: true,
+    }).then(image => {
+      setTimeout(() => {
+        _this.changeImage(image);
+      }, 1000);
+    }).catch((e) => console.log(e));;
   }
 
   renderModalChooseImage() {
@@ -187,6 +208,23 @@ class EditProfile extends React.Component {
         onPressB={() => this.handleCamera()}
       />
     )
+  }
+
+  changeImage(image) {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('youHaveSelected', {locale: language}) +' 1 '+ I18n.t('photos', {locale: language}),
+      I18n.t('areYouSure', {locale: language}),
+      [
+        {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
+        {text: I18n.t('ok', {locale: language}), onPress: () => {
+          this.setState({
+            urlImage: image.path
+          });
+        }},
+      ],
+      { cancelable: false }
+    );
   }
 }
 
