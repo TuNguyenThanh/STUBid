@@ -1,7 +1,7 @@
 # STUBid
 Ứng dụng đấu giá bán đồ cũ cho sinh viên
 
-# Installation dependencies
+# Install dependencies
 ```bash
 npm install
 ```
@@ -23,7 +23,7 @@ npm install
 - Type: Broadcast
 - Description: Server send auctions data to all socket every second
 - Response:
-```json
+```javascript
 {
     "id": number,
     "createdDate": string,
