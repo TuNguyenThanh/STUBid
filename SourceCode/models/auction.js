@@ -1,6 +1,5 @@
-var config = require('../config'),
-    { timeLeftFormat } = require('../helper/time'),
-    { query } = require('../helper/db'),
+var { timeLeftFormat } = require('../helpers/time'),
+    { query } = require('../helpers/db'),
     { DOMAIN_NAME } = require('../config');
 
 var auctions = [];
@@ -72,7 +71,7 @@ exports.loadAuctions = () => {
         result.rows.forEach(function(element) {
             let auction = element.row_to_json;
             auction.product.images.forEach(e => {
-                e.url = `${DOMAIN_NAME}/image/product/${e.name}`
+                e.url = `${DOMAIN_NAME}/images/product/${e.name}`
             })
             auctions.push(auction);
             auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);

@@ -1,5 +1,5 @@
 var config = require('./config');
-var auction = require('./model/auction');
+var auction = require('./models/auction');
 auction.loadAuctions();
 
 // http request configuration
@@ -14,7 +14,7 @@ server.listen(config.PORT, () => {
   })
 });
 
-app.get('/Products', (req,res) => res.send(auction.getAuctions()))
+app.get('/Auctions', (req,res) => res.send(auction.getAuctions()))
 
 // socket.io configuration
 var io = require('socket.io')(server);

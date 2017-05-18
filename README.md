@@ -8,47 +8,21 @@ npm install
 
 # Start the server
 ```bash
-npm install
+npm start
 ```
 
-# Usage
-## API
-| Method | Route | Description | Params | 
-| ------ | ----- | ----------- | ------ |
-| ------ | ----- | ----------- | ------ |
-| Response: |
-
-## Socket.IO keys
-#### SERVER-SEND-AUCTIONS
-- Type: Broadcast
-- Description: Server send auctions data to all socket every second
-- Response:
-```javascript
-{
-    "id": number,
-    "createdDate": string,
-    "activatedDate": string,
-    "duration": number,
-    "startPrice": number,
-    "ceilingPrice": number,
-    "currentPrice": number,
-    "bidIncreasement": number,
-    "product": {
-        "name": string,
-        "description": string,
-        "category": {
-            "id": number,
-            "name": string,
-            "description": string
-        },
-        "images": [
-            {
-                "id": number,
-                "name": string,
-                "url": string
-            }
-        ]
-    },
-    "timeLeft": string
-}
+# Server directory structure
+```bash
+├── server.js
+├── config.js
+├── package.json
+├── controllers // contains routes handlers
+|   ├── 
+├── models // contains data managers
+|   ├── auction.js
+|   ├── product.js
+|   └── user.js
+└── helpers
+    ├── db.js // database connector (not published for security purposes)
+    └── time.js // time formatter
 ```
