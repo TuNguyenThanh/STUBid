@@ -1,46 +1,63 @@
 var config = require('../config'),
-    { timeLeftFormat } = require('../helpers/time');
+    { timeLeftFormat } = require('../helper/time'),
+    { query } = require('../helper/db');
 
 var auctions = [];
 var auctionsTimeLeft = [];
-var fakedData = [{
-    id: 1,
-    createdDate: "2017-05-16 15:16:46+07",
-    activatedDate: "2017-05-16 15:14:20+07",
-    duration: 72, //hours
-    startPrice: 2000, //x1000 VND
-    ceilingPrice: 5000, //x1000 VND
-    currentPrice: 2200, //x1000 VND
-    bidIncreasement: 200, //x1000 VND
-    product: {
-        name: "Điện thoại Sony Xperia XA1",
-        description: "Xperia XA1 là bản nâng cấp của chiếc Xperia XA đã khá thành công ở thị trường nước ta, với thiết kế khá tương đồng siêu phẩm Xperia XZ, cấu hình được trang bị cao hơn và camera có chất lượng tốt hơn.",
-        category: {
-            id: 1,
-            name: "Công nghệ",
-            description: "Các sản phẩm công nghệ"
-        },
-        images: [
-            {
-                id: 1,
-                name: "sony-xperia-xa1.1.png"
-            },
-            {
-                id: 2,
-                name: "sony-xperia-xa1.2.png"
-            }
-        ]
-    }
-}]
 
 exports.loadAuctions = () => {
     let now = Date.now();
-    fakedData.forEach(e => {
-        e.product.images.forEach(element => {
-            element.url = `${config.DOMAIN_NAME}/image/product/${element.name}`
-        });
-        auctions.push(e)
-        auctionsTimeLeft[e.id] = now - new Date(e.activatedDate).getTime();
+    let sql = `
+            SELECT row_to_json(auction)
+            FROM (
+                SELECT *,
+                (
+                    SELECT row_to_json(product)
+                    FROM (
+                        SELECT *, (
+                            SELECT array_to_json(array_agg(row_to_json(image)))
+                            FROM "Image" AS image
+                            WHERE image."productId" = "Product"."productId"
+                        ) AS images
+                        FROM "Product"
+                    ) AS product
+                ) AS product,
+                (
+                    SELECT row_to_json(bid)
+                    FROM (
+                        SELECT
+                        "BidHistory".timestamp,
+                        "BidHistory".price,
+                        (
+                            SELECT row_to_json(bidder)
+                            FROM (
+                                SELECT
+                                "Account"."accountId",
+                                "Profile".*
+                                FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                                WHERE "Account"."accountId" = "BidHistory"."bidderAccountId"
+                            ) AS bidder
+                        ) AS bidder
+                        FROM "BidHistory"
+                    ) AS bid
+                ) AS "highestBid"
+                FROM "Auction"
+            ) AS auction
+        `,
+        params = [];
+    query(sql,params)
+    .then(result => {
+        // console.log(result.rows);
+        result.rows.forEach(function(element) {
+            let auction = element.row_to_json;
+            auctions.push(auction);
+            auctionsTimeLeft[auction.auctionId] = (Date.now() - new Date(auction.activatedDate).getTime())/1000;
+        }, this);
+        console.log('loaded ' + result.rowCount + ' auctions');
+        console.log(auctionsTimeLeft);
+    })
+    .catch(error => {
+        console.log(error);
     })
 }
 
