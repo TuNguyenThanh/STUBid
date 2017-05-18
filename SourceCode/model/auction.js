@@ -1,9 +1,27 @@
 var config = require('../config'),
     { timeLeftFormat } = require('../helper/time'),
-    { query } = require('../helper/db');
+    { query } = require('../helper/db'),
+    { DOMAIN_NAME } = require('../config');
 
 var auctions = [];
-var auctionsTimeLeft = [];
+var auctionsTimeLeft = {};
+setInterval(() => countDown(), 1000);
+
+function countDown() {
+    for (var i = auctions.length - 1; i >= 0; i--) {
+        var element = auctions[i],
+            timeLeft = auctionsTimeLeft[element.auctionId];
+        if (timeLeft > 0) {
+            timeLeft--;
+            auctionsTimeLeft[element.auctionId] = timeLeft;
+            element.timeLeft = timeLeftFormat(timeLeft);
+        }
+        else {
+            delete auctionsTimeLeft[element.auctionId];
+            auctions.splice(i,1);
+        }
+    }
+}
 
 exports.loadAuctions = () => {
     let now = Date.now();
@@ -16,8 +34,11 @@ exports.loadAuctions = () => {
                     FROM (
                         SELECT *, (
                             SELECT array_to_json(array_agg(row_to_json(image)))
-                            FROM "Image" AS image
-                            WHERE image."productId" = "Product"."productId"
+                            FROM (
+                                SELECT "imageId", name
+                                FROM "Image" AS image
+                                WHERE image."productId" = "Product"."productId"
+                            ) AS image
                         ) AS images
                         FROM "Product"
                     ) AS product
@@ -50,25 +71,19 @@ exports.loadAuctions = () => {
         // console.log(result.rows);
         result.rows.forEach(function(element) {
             let auction = element.row_to_json;
+            auction.product.images.forEach(e => {
+                e.url = `${DOMAIN_NAME}/image/product/${e.name}`
+            })
             auctions.push(auction);
-            auctionsTimeLeft[auction.auctionId] = (Date.now() - new Date(auction.activatedDate).getTime())/1000;
+            auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);
         }, this);
         console.log('loaded ' + result.rowCount + ' auctions');
-        console.log(auctionsTimeLeft);
     })
     .catch(error => {
         console.log(error);
     })
-}
+};
 
 exports.getAuctions = () => {
-    for (var i = 0; i < auctions.length; i++) {
-        var element = auctions[i],
-            timeLeft = auctionsTimeLeft[element.id];
-        if (timeLeft > 0) {
-            timeLeft--;
-            element.timeLeft = timeLeftFormat(timeLeft);
-        }
-    }
     return auctions;
-}
+};

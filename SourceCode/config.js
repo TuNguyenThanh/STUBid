@@ -1,5 +1,4 @@
 var PORT = process.env.PORT || 3000,
-    DOMAIN_NAME = '',
-    IP = '';
+    DOMAIN_NAME = 'https://sbid.herokuapp.com';
 
-module.exports = { IP, PORT, DOMAIN_NAME };
+module.exports = { PORT, DOMAIN_NAME };
