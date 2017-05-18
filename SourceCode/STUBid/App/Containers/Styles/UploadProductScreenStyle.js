@@ -83,4 +83,12 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     marginLeft: 10
   },
+  contentContainerStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  scrollViewStyle: {
+    flex: 1
+  },
 })

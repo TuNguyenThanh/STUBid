@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import ImagePicker from 'react-native-customized-image-picker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Input from '../Components/Input'
 import ButtonChoose from '../Components/ButtonChoose'
@@ -15,9 +16,11 @@ import { Colors } from '../Themes/'
 //I18n
 import I18n from 'react-native-i18n'
 
+var _this;
 class UploadProduct extends React.Component {
   constructor(props) {
     super(props);
+    _this = this;
     this.state = {
       productName: '',
       productStartPrice: '',
@@ -93,17 +96,34 @@ class UploadProduct extends React.Component {
           />
 
           <View style={styles.viewImage}>
-            <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
+              {
+                this.state.arrImageChoose.length != 0 &&
+                <TouchableOpacity onPress={() => this.cancelImageChoose()}>
+                  <Text style={styles.titleStyle}>{I18n.t('cancel', {locale: language})}</Text>
+                </TouchableOpacity>
+              }
+            </View>
             {
-              this.state.arrImageChoose.length != 0 ?
-              <Image
-                style={{flex: 1}}
-                resizeMode="contain"
-                source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-              /> :
+              this.state.arrImageChoose.length == 0 &&
               <TouchableOpacity style={styles.viewIconImage} onPress={() => this.setState({ openModalChooseImage: true }) }>
                 <Icon name="picture-o" size={100} color={Colors.primary} />
               </TouchableOpacity>
+            }
+            {
+              this.state.arrImageChoose.length != 0 &&
+              <ScrollView
+                horizontal
+                contentContainerStyle={styles.contentContainerStyle}
+                style={styles.scrollViewStyle}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+              >
+                {
+                  this.renderMultiImage(this.state.arrImageChoose)
+                }
+              </ScrollView>
             }
           </View>
 
@@ -146,12 +166,75 @@ class UploadProduct extends React.Component {
     )
   }
 
+  renderMultiImage(arrImage) {
+    let arrPush = [];
+    arrImage.map((img, index) => {
+      arrPush.push(
+        <Image
+          key={index}
+          style={styles.imgStyle}
+          source={{ uri: img }}
+        />
+      );
+    });
+    return arrPush;
+  }
+
   handlePhoto() {
     this.setState({ openModalChooseImage: false });
+    ImagePicker.openPicker({
+      multiple: true,
+      maxSize: 5,
+      compressQuality: 70,
+    }).then(images => {
+      setTimeout(() => {
+        _this.changeImage(images);
+      }, 1000);
+    }).catch((e) => console.log(e));;
   }
 
   handleCamera() {
     this.setState({ openModalChooseImage: false });
+    ImagePicker.openPicker({
+      multiple: true,
+      isCamera: true,
+      openCameraOnStart: true,
+      maxSize: 5,
+      compressQuality: 70,
+    }).then(images => {
+      setTimeout(() => {
+        _this.changeImage(images);
+      }, 1000);
+    }).catch((e) => console.log(e));;
+  }
+
+  changeImage(arrImage) {
+    const { language } = this.props;
+    let arrImageTemp = [];
+    if(arrImage.length !=0 ) {
+      for(let i = 0; i< arrImage.length; i++) {
+        arrImageTemp.push(arrImage[i].path);
+      }
+      Alert.alert(
+        I18n.t('youHaveSelected', {locale: language}) +' '+arrImageTemp.length+' '+ I18n.t('photos', {locale: language}),
+        I18n.t('areYouSure', {locale: language}),
+        [
+          {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
+            this.setState({
+              arrImageChoose: this.state.arrImageChoose.concat(arrImageTemp),
+            });
+          }},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      alert('0 Image selected')
+    }
+  }
+
+  cancelImageChoose() {
+    this.setState({ arrImageChoose: [] });
   }
 }
 
