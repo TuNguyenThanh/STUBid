@@ -13,7 +13,7 @@ This is the API server for the STUBid project. It's a service process HTTP reque
 |   ├── product.js
 |   └── user.js
 └── helpers
-    ├── db.js // database connector (not published for security purposes)
+    ├── db.js // database connector (config not published for security purposes)
     └── time.js // time formatter
 ```
 

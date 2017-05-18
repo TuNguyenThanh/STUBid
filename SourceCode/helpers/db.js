@@ -1,9 +1,9 @@
 var pg = require('pg');
 var config = {
-  user: 'nekpmupamlixdp',
-  database: 'dbjr1pl26qp5v',
-  password: '469c710d217a284605d4d970365b2a3b820c9591b7a00361b07a7ed1fab2cd85',
-  host: 'ec2-54-228-255-234.eu-west-1.compute.amazonaws.com',
+  user: 'user',
+  database: 'database',
+  password: 'password',
+  host: 'host',
   port: 5432,
   max: 10,
   idleTimeoutMillis: 30000,

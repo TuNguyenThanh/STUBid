@@ -6,6 +6,8 @@ auction.loadAuctions();
 var express = require('express');
 var app = express();
 app.use(express.static('public'));
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
 var server = require('http').createServer(app);
 server.listen(config.PORT, () => {
   console.log('Server is running');
@@ -14,7 +16,8 @@ server.listen(config.PORT, () => {
   })
 });
 
-app.get('/Auctions', (req,res) => res.send(auction.getAuctions()))
+app.get('/Auctions', (req,res) => res.send(auction.getAuctions()));
+app.post('/Login', require('./controllers/login'));
 
 // socket.io configuration
 var io = require('socket.io')(server);
