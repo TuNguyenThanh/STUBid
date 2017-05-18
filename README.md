@@ -1,15 +1,5 @@
-# STUBid
-Ứng dụng đấu giá bán đồ cũ cho sinh viên
-
-# Install dependencies
-```bash
-npm install
-```
-
-# Start the server
-```bash
-npm start
-```
+# STUBid API Server
+This is the API server for the STUBid project. It's a service process HTTP request and use SocketIO for realtime countdown auctions.
 
 # Server directory structure
 ```bash
@@ -25,4 +15,18 @@ npm start
 └── helpers
     ├── db.js // database connector (not published for security purposes)
     └── time.js // time formatter
+```
+
+Note:
+- The server is built on Node.js v6.10.3
+- cd to [repo location]/**SourceCode** - the server directory - before run the scripts
+# Scripts
+### Install dependencies
+```bash
+npm install
+```
+
+### Start the server
+```bash
+npm start
 ```
