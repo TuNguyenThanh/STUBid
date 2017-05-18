@@ -77,5 +77,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-
+  imgStyle: {
+    width: (Metrics.screenWidth * 1.8) / 3,
+    height: 160,
+    resizeMode: 'contain',
+    marginLeft: 10
+  },
 })

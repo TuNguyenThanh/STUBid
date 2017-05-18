@@ -45,6 +45,7 @@
   "save": "Save",
   "selectImageFrom": "Select image from",
   "photo": "Photo",
+  "photos": "photos",
   "camera": "Camera",
   "productName":"Product name",
   "productStartPrice": "Product Start Price",
@@ -53,4 +54,7 @@
   "productCategory": "Product Category",
   "productImage": "Product Image",
   "next": "Next",
+  "youHaveSelected":"You have selected",
+  "areYouSure": "Are you sure you want to choose?",
+  "ok": "Ok",
 }
