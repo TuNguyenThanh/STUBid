@@ -1,5 +1,5 @@
 # STUBid API Server
-This is the API server for the STUBid project. It's a service process HTTP request and use SocketIO for realtime countdown auctions.
+This is the API server for the STUBid project. It's a service that runs process HTTP request and use SocketIO for realtime countdown auctions.
 
 # Server directory structure
 ```bash
