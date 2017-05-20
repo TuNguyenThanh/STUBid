@@ -2,8 +2,8 @@ var { timeLeftFormat } = require('../helpers/time'),
     { query } = require('../helpers/db'),
     { DOMAIN_NAME } = require('../config');
 
-var auctions = [];
-var auctionsTimeLeft = {};
+var auctions = [],
+    auctionsTimeLeft = {};
 setInterval(() => countDown(), 1000);
 
 function countDown() {
@@ -14,6 +14,7 @@ function countDown() {
             timeLeft--;
             auctionsTimeLeft[element.auctionId] = timeLeft;
             element.timeLeft = timeLeftFormat(timeLeft);
+            console.log(element.timeLeft);
         }
         else {
             delete auctionsTimeLeft[element.auctionId];
@@ -27,40 +28,79 @@ exports.loadAuctions = () => {
     let sql = `
             SELECT row_to_json(auction)
             FROM (
-                SELECT *,
+                SELECT
+                "Auction"."auctionId",
+                "Auction"."createdDate",
+                "Auction"."activatedDate",
+                "Auction"."duration",
+                "Auction"."startPrice",
+                "Auction"."ceilingPrice",
+                "Auction"."bidIncreasement",
+                "Auction"."comment",
+                "Auction"."state",
+                (
+                    SELECT row_to_json(seller)
+                    FROM (
+                        SELECT
+                        "Account"."accountId",
+                        "Profile"."firstName",
+                        "Profile"."lastName",
+                        "Profile"."phoneNumber",
+                        "Profile"."email",
+                        CONCAT('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar
+                        FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        WHERE "Account"."accountId" = "Auction"."sellerAccountId"
+                    ) AS seller
+                ) AS seller,
                 (
                     SELECT row_to_json(product)
                     FROM (
-                        SELECT *, (
+                        SELECT
+                        "Product"."productId",
+                        "Product"."name",
+                        "Product"."description",
+                        "Product"."searchKey",
+                        (
                             SELECT array_to_json(array_agg(row_to_json(image)))
                             FROM (
-                                SELECT "imageId", name
+                                SELECT "imageId", name, CONCAT ('${DOMAIN_NAME}/images/product/',name) AS url
                                 FROM "Image" AS image
                                 WHERE image."productId" = "Product"."productId"
                             ) AS image
-                        ) AS images
+                        ) AS images,
+                        (
+                            SELECT row_to_json(category)
+                            FROM "Category" AS category
+                            WHERE category."categoryId" = "Product"."categoryId"
+                        ) AS category
                         FROM "Product"
+                        WHERE "Product"."productId" = "Auction"."productId"
                     ) AS product
                 ) AS product,
                 (
                     SELECT row_to_json(bid)
                     FROM (
                         SELECT
-                        "BidHistory".timestamp,
+                        "Account"."accountId",
+                        "Profile"."firstName",
+                        "Profile"."lastName",
+                        "Profile"."phoneNumber",
+                        "Profile"."email",
+                        CONCAT('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar,
                         "BidHistory".price,
-                        (
-                            SELECT row_to_json(bidder)
-                            FROM (
-                                SELECT
-                                "Account"."accountId",
-                                "Profile".*
-                                FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
-                                WHERE "Account"."accountId" = "BidHistory"."bidderAccountId"
-                            ) AS bidder
-                        ) AS bidder
+                        "BidHistory".timestamp
                         FROM "BidHistory"
+                        INNER JOIN "Account" ON "Account"."accountId" = "BidHistory"."bidderAccountId"
+                        INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        ORDER BY price DESC
+                        LIMIT 1
                     ) AS bid
-                ) AS "highestBid"
+                ) AS "highestBidder",
+                (
+                    SELECT row_to_json(paymentAccount)
+                    FROM "PaymentAccount" AS paymentAccount
+                    WHERE paymentAccount."paymentAccountId" = "Auction"."paymentAccountId"
+                ) AS "paymentAccount"
                 FROM "Auction"
             ) AS auction
         `,
@@ -70,11 +110,8 @@ exports.loadAuctions = () => {
         // console.log(result.rows);
         result.rows.forEach(function(element) {
             let auction = element.row_to_json;
-            auction.product.images.forEach(e => {
-                e.url = `${DOMAIN_NAME}/images/product/${e.name}`
-            })
-            auctions.push(auction);
             auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);
+            auctions.push(auction);
         }, this);
         console.log('loaded ' + result.rowCount + ' auctions');
     })

@@ -1,6 +1,8 @@
 var config = require('./config');
 var auction = require('./models/auction');
 auction.loadAuctions();
+var category = require('./models/category');
+category.loadCategorys();
 
 // http request configuration
 var express = require('express');
@@ -17,7 +19,8 @@ server.listen(config.PORT, () => {
 });
 
 app.get('/Auctions', (req,res) => res.send(auction.getAuctions()));
-app.post('/Login', require('./controllers/login'));
+app.get('/Categorys', (req,res) => res.send(category.getCategorys()));
+app.post('/Accounts/login', require('./controllers/login'));
 
 // socket.io configuration
 var io = require('socket.io')(server);
