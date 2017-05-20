@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -18,7 +18,7 @@ import I18n from 'react-native-i18n'
 class DetailProduct extends React.Component {
 
   render() {
-    const { language } = this.props;
+    const { language, data } = this.props;
     return (
       <View style={styles.container}>
         <ScrollableTabView
@@ -29,19 +29,38 @@ class DetailProduct extends React.Component {
           tabBarInactiveTextColor={'#900'}
           tabBarTextStyle={styles.fontStyle}
         >
-          <Tab1 tabLabel={I18n.t('auction', {locale: language})} />
-          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} />
+          <Tab1 tabLabel={I18n.t('auction', {locale: language})} data={data} />
+          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} data={data} />
         </ScrollableTabView>
         <View style={styles.viewBid}>
-          <TouchableOpacity style={styles.button} onPress={() => alert('Đấu giá')}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleBid(data)}>
             <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.button} onPress={() => alert('Mua ngay')}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(data.ceilingPrice)}>
             <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
       </View>
+    )
+  }
+
+  handleBid(data) {
+    let price = data.highestBidder.price ? data.highestBidder.price : data.startPrice ;
+    price += data.bidIncreasement;
+    alert('bid ' + price);
+  }
+
+  handleBuyNow(ceilingPrice) {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('buyNow', {locale: language}),
+      I18n.t('buyProductPrice', {locale: language}) + ' ' + ceilingPrice + ' VNĐ ?',
+      [
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
+      ],
+      { cancelable: false }
     )
   }
 

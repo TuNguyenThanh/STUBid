@@ -9,10 +9,11 @@ import styles from './Styles/Tab2ScreenStyle'
 
 class Tab2 extends React.Component {
 
-  render () {
+  render() {
+    const { data } = this.props;
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.textStyle}>Tab2 Screen</Text>
+        <Text style={styles.textStyle}>{data.product.description}</Text>
       </ScrollView>
     )
   }

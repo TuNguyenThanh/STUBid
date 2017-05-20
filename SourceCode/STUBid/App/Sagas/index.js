@@ -1,4 +1,5 @@
 import { takeLatest } from 'redux-saga/effects'
+import AuctionsAPI from '../Services/AuctionsApi'
 //import API from '../Services/Api'
 //import FixtureAPI from '../Services/FixtureApi'
 //import DebugConfig from '../Config/DebugConfig'
@@ -11,6 +12,7 @@ import { StartupTypes } from '../Redux/StartupRedux'
 // import { OpenScreenTypes } from '../Redux/OpenScreenRedux'
 import { SettingsTypes } from '../Redux/SettingsRedux'
 import { TabNavigatorTypes } from '../Redux/TabNavigatorRedux'
+import { AuctionsTypes } from '../Redux/AuctionsRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -20,12 +22,14 @@ import { startup } from './StartupSagas'
 // import { openScreen } from './OpenScreenSagas'
 import { updateLanguage } from './SettingsSagas'
 import { changeHeight } from './TabNavigatorSagas'
+import { getAuctions } from './AuctionsSagas'
 
 /* ------------- API ------------- */
 
 // The API we use is only used from Sagas, so we create it here and pass along
 // to the sagas which need it.
 //const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
+const AuctionsApi = AuctionsAPI.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -44,5 +48,8 @@ export default function * root () {
 
     //Tab natigator
     takeLatest(TabNavigatorTypes.CHANGE_HEIGHT, changeHeight),
+
+    //Auctions
+    takeLatest(AuctionsTypes.AUCTIONS_REQUEST, getAuctions, AuctionsApi),
   ]
 }

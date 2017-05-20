@@ -37,6 +37,7 @@
     "react-native-device-info": "0.10.2",
     "react-native-drawer": "2.3.0",
     "react-native-i18n": "^1.0.0",
+    "react-native-image-placeholder": "^1.0.7",
     "react-native-keyboard-aware-scroll-view": "^0.2.8",
     "react-native-maps": "0.13.0",
     "react-native-onesignal": "^3.0.3",

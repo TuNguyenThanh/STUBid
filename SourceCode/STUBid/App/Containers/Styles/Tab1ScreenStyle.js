@@ -13,7 +13,7 @@ export default StyleSheet.create({
   slide: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'lightgray'
   },
   image: {
     width: Metrics.screenWidth,

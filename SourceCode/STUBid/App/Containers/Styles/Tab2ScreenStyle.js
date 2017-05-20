@@ -5,6 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.lightgray,
+    padding: 8
   },
   textStyle: {
     fontFamily: Fonts.type.quicksand,

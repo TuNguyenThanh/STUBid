@@ -10,6 +10,7 @@ export default () => {
     search: require('./SearchRedux').reducer,
     settings: require('./SettingsRedux').reducer,
     tabNavigator: require('./TabNavigatorRedux').reducer,
+    auctions: require('./AuctionsRedux').reducer,
   })
 
   return configureStore(rootReducer, rootSaga)

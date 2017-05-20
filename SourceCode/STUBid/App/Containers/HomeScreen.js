@@ -1,10 +1,12 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
+import AuctionsActions from '../Redux/AuctionsRedux'
+import ImageLoad from 'react-native-image-placeholder'
 
 // Styles
 import styles from './Styles/HomeScreenStyle'
@@ -22,44 +24,92 @@ class Home extends React.Component {
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       badge: 0,
     };
+    this.isLoadData = false;
   }
 
   componentWillMount() {
     this.animated = new Animated.Value(0);
+
+    //get data auctions
+    this.props.getAuctions(1);
+    this.isLoadData = true;
   }
 
   componentDidMount() {
     const { language } = this.props;
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 1', 'row 2', 'row 3', 'row 4','row 4']),
       data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { fetching, error, data, language } = nextProps.auctions;
+    if(!fetching && data && this.isLoadData) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data)
+      });
+      this.isLoadData = false;
+    }
+
+    //error - not internet
+    if(!fetching && error){
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      )
+    }
+  }
+
+  handleBid(data) {
+    let price = data.highestBidder.price ? data.highestBidder.price : data.startPrice ;
+    price += data.bidIncreasement;
+    alert('bid ' + price);
+  }
+
   renderItem(item, rowID) {
+    console.log(item);
     const { language } = this.props;
     return (
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: 'Máy tính xách tay HP'})}>
-        <Image
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item })}>
+        <ImageLoad
           style={styles.imageProduct}
+          placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+          loadingStyle={{ size: 'small', color: 'blue' }}
           resizeMode="contain"
-          source={{uri: 'http://sivitech.com/media/news/1502_HP-ENVY-17-s030nr-17-Inch-Notebook-e1483359950791.jpg'}}
+          source={{uri: item.product.images[0].url}}
         />
-        <Text style={styles.textProduct} numberOfLines={2}>Máy tính xách tay HP</Text>
+        <Text style={styles.textProduct} numberOfLines={2}>{item.product.name}</Text>
         <View style={styles.viewItem}>
-          <Text style={styles.textPriceNow}>2.000.000</Text>
+          <Text style={styles.textPriceNow}>
+          {
+            item.highestBidder.price ?
+            item.highestBidder.price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
+            item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+          }
+          </Text>
         </View>
         <View style={styles.viewItem}>
           <Image
             style={styles.icon}
             source={Images.hourglass}
           />
-          <Text>44:06:46</Text>
+          <Text>{item.timeLeft}</Text>
         </View>
         <View style={styles.bid}>
-          <Text>2.500.000</Text>
+          <Text>
+          {
+            item.highestBidder.price ?
+            (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
+            (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+          }
+          </Text>
         </View>
-        <TouchableOpacity style={styles.btnAuction} onPress={() => {}} >
+        <TouchableOpacity style={styles.btnAuction} onPress={() => this.handleBid(item)} >
           <Text style={styles.textAuction}>{I18n.t('bid', {locale: language})}</Text>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -113,6 +163,7 @@ class Home extends React.Component {
       paddingTop: menuInterpolate
     }
 
+    const { fetching } = this.props.auctions;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -146,19 +197,29 @@ class Home extends React.Component {
           <Icon name="list-alt" size={20} color={Colors.primary} />
         </TouchableOpacity>
 
-        <ListView
-          style={styles.content}
-          scrollEventThrottle={16}
-          onScroll={
-            Animated.event([
-              { nativeEvent: { contentOffset: { y: this.animated }}}
-            ])
-          }
-          enableEmptySections
-          contentContainerStyle={styles.listView}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
-        />
+        { fetching ?
+          <View style={styles.viewLoading}>
+            <ActivityIndicator
+              animating={fetching}
+              style={{height: 80}}
+              size="large"
+            />
+          </View>
+          :
+          <ListView
+            style={styles.content}
+            scrollEventThrottle={16}
+            onScroll={
+              Animated.event([
+                { nativeEvent: { contentOffset: { y: this.animated }}}
+              ])
+            }
+            enableEmptySections
+            contentContainerStyle={styles.listView}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
+          />
+        }
         { this.renderModalCategory()}
       </View>
     )
@@ -180,11 +241,13 @@ class Home extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    auctions: state.auctions,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getAuctions: (page) => dispatch(AuctionsActions.auctionsRequest(page)),
   }
 }
 

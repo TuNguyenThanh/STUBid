@@ -94,18 +94,19 @@ export default StyleSheet.create({
     fontFamily: Fonts.type.quicksand
   },
   textPriceNow: {
-    color: Colors.primary,
+    color: '#F00',
     fontWeight: '700'
   },
   bid: {
     borderColor: '#D8D8D8',
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 4,
-    borderRadius: 2
+    borderRadius: 2,
+    padding: 2
   },
   icon: {
     width: 16,
@@ -154,6 +155,11 @@ export default StyleSheet.create({
     marginTop: 8,
     marginLeft: 2,
     marginRight: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  viewLoading: {
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center'
   },
