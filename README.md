@@ -7,7 +7,7 @@ This is the API server for the STUBid project. It's a service that runs process 
 ├── config.js
 ├── package.json
 ├── controllers // contains routes handlers
-|   ├── 
+|   ├── login.js
 ├── models // contains data managers
 |   ├── auction.js
 |   ├── product.js

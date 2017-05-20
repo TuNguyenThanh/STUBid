@@ -14,7 +14,6 @@ function countDown() {
             timeLeft--;
             auctionsTimeLeft[element.auctionId] = timeLeft;
             element.timeLeft = timeLeftFormat(timeLeft);
-            console.log(element.timeLeft);
         }
         else {
             delete auctionsTimeLeft[element.auctionId];
