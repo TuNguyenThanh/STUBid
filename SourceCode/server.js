@@ -1,8 +1,6 @@
 var config = require('./config');
-var auction = require('./models/auction');
-auction.loadAuctions();
-var category = require('./models/category');
-category.loadCategorys();
+var { getAuctions } = require('./models/auction');
+var { getCategorys } = require('./models/category');
 
 // http request configuration
 var express = require('express');
@@ -18,13 +16,31 @@ server.listen(config.PORT, () => {
   })
 });
 
-app.get('/Auctions', (req,res) => res.send(auction.getAuctions()));
-app.get('/Categorys', (req,res) => res.send(category.getCategorys()));
+// app.get('/Auctions', require('./controllers/getAuctions'));
+app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
+app.get('/Categorys', (req,res) => res.send(getCategorys()));
 app.post('/Accounts/login', require('./controllers/login'));
 
 // socket.io configuration
-var io = require('socket.io')(server);
-let interval = setInterval(() => io.emit('SERVER-SEND-AUCTIONS', auction.getAuctions()), 1000);
+var io = require('socket.io')(server),
+    sockets = [];
+// let interval = setInterval(() => io.emit('SERVER-SEND-AUCTIONS', auction.getAuctions()), 1000);
+let interval = setInterval(() => {
+  sockets.forEach(socket => {
+    let page = socket.page,
+        auctions = [];
+    for (var i = 0; i < page; i++) {
+      auctions = auctions.concat(getAuctions(i))
+    }
+    socket.emit('SERVER-SEND-AUCTIONS', auctions);
+  })
+}, 1000);
 io.on('connection', function (socket) {
-  
+  socket.page = 1;
+  sockets.push(socket);
+
+  socket.on('CLIENT-SEND-PAGE', page => {
+    socket.page = page;
+    console.log(socket.page);
+  });
 });

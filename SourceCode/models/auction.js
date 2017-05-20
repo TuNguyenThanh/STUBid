@@ -2,27 +2,32 @@ var { timeLeftFormat } = require('../helpers/time'),
     { query } = require('../helpers/db'),
     { DOMAIN_NAME } = require('../config');
 
-var auctions = [],
+var auctions = {},
     auctionsTimeLeft = {};
+loadAuctions();
 setInterval(() => countDown(), 1000);
 
 function countDown() {
-    for (var i = auctions.length - 1; i >= 0; i--) {
-        var element = auctions[i],
-            timeLeft = auctionsTimeLeft[element.auctionId];
-        if (timeLeft > 0) {
-            timeLeft--;
-            auctionsTimeLeft[element.auctionId] = timeLeft;
-            element.timeLeft = timeLeftFormat(timeLeft);
+    Object.keys(auctions).forEach(key => {
+        let array = auctions[key];
+        for (var i = array.length - 1; i >= 0; i--) {
+            var element = array[i],
+                timeLeft = auctionsTimeLeft[element.auctionId];
+            if (timeLeft > 0) {
+                timeLeft--;
+                auctionsTimeLeft[element.auctionId] = timeLeft;
+                element.timeLeft = timeLeftFormat(timeLeft);
+            }
+            else {
+                delete auctionsTimeLeft[element.auctionId];
+                // update state in database
+                // reload auctions
+            }
         }
-        else {
-            delete auctionsTimeLeft[element.auctionId];
-            auctions.splice(i,1);
-        }
-    }
+    });
 }
 
-exports.loadAuctions = () => {
+function loadAuctions () {
     let now = Date.now();
     let sql = `
             SELECT row_to_json(auction)
@@ -85,7 +90,7 @@ exports.loadAuctions = () => {
                         "Profile"."lastName",
                         "Profile"."phoneNumber",
                         "Profile"."email",
-                        CONCAT('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar,
+                        CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar,
                         "BidHistory".price,
                         "BidHistory".timestamp
                         FROM "BidHistory"
@@ -106,11 +111,12 @@ exports.loadAuctions = () => {
         params = [];
     query(sql,params)
     .then(result => {
-        // console.log(result.rows);
-        result.rows.forEach(function(element) {
-            let auction = element.row_to_json;
+        result.rows.forEach((element, index) => {
+            let auction = element.row_to_json,
+                page = Math.floor(index/20);
             auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);
-            auctions.push(auction);
+            if(!auctions[page]) auctions[page] = [];
+            auctions[page].push(auction);
         }, this);
         console.log('loaded ' + result.rowCount + ' auctions');
     })
@@ -119,6 +125,9 @@ exports.loadAuctions = () => {
     })
 };
 
-exports.getAuctions = () => {
-    return auctions;
+exports.getAuctions = (page) => {
+    if (page != undefined) {
+        return auctions[page]
+    };
+    return [];
 };

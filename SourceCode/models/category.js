@@ -1,7 +1,8 @@
 var { query } = require('../helpers/db');
 var categorys = [];
+loadCategorys();
 
-exports.loadCategorys = () => {
+function loadCategorys() {
     let sql = `SELECT * FROM "Category"`;
     query(sql,[])
     .then(result => {
