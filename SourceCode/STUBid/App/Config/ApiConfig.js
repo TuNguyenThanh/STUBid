@@ -4,9 +4,9 @@ const headers = {
 
 };
 
- const timeOut = 30000;
+const timeOut = 30000;
 
- export default {
+export default {
   baseURL,
   timeOut,
   headers,

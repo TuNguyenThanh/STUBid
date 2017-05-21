@@ -51,7 +51,8 @@
     "redux-persist": "4.6.0",
     "redux-saga": "0.14.6",
     "reduxsauce": "0.4.1",
-    "seamless-immutable": "7.1.2"
+    "seamless-immutable": "7.1.2",
+    "socket.io-client": "^2.0.1"
   },
   "devDependencies": {
     "ava": "^0.18.2",

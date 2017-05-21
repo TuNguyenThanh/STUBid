@@ -5,11 +5,18 @@ import AuctionsActions from '../Redux/AuctionsRedux'
 export function * getAuctions(api, action) {
   // make the call to the api
   const { page } = action;
-  const response = yield call(api.getAuction, page);
-  if (response.ok) {
-    const data = response.data.result;
-    yield put(AuctionsActions.auctionsSuccess(data));
-  } else {
-    yield put(AuctionsActions.auctionsFailure(response.problem));
+  while (true) {
+    const response = yield call(api.getAuction, page);
+    yield put(AuctionsActions.auctionsSuccess(response));
   }
+
+  //fetch API JSON
+  // const response = yield call(api.getAuction, page);
+  // console.log(response);
+  // if (response.ok) {
+  //   //const data = response.data.result;
+  //   yield put(AuctionsActions.auctionsSuccess([]));
+  // } else {
+  //   yield put(AuctionsActions.auctionsFailure(response.problem));
+  // }
 }

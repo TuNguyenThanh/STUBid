@@ -16,9 +16,22 @@ import { Colors } from '../Themes'
 import I18n from 'react-native-i18n'
 
 class DetailProduct extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.auctions.data[this.props.rowID]
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { data } = nextProps.auctions;
+    this.setState({
+      data: data[this.props.rowID],
+    });
+  }
 
   render() {
-    const { language, data } = this.props;
+    const { language } = this.props;
     return (
       <View style={styles.container}>
         <ScrollableTabView
@@ -29,15 +42,15 @@ class DetailProduct extends React.Component {
           tabBarInactiveTextColor={'#900'}
           tabBarTextStyle={styles.fontStyle}
         >
-          <Tab1 tabLabel={I18n.t('auction', {locale: language})} data={data} />
-          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} data={data} />
+          <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} />
+          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} />
         </ScrollableTabView>
         <View style={styles.viewBid}>
-          <TouchableOpacity style={styles.button} onPress={() => this.handleBid(data)}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
             <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(data.ceilingPrice)}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data.ceilingPrice)}>
             <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
@@ -69,6 +82,7 @@ class DetailProduct extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    auctions: state.auctions,
   }
 }
 

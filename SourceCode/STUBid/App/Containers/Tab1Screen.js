@@ -19,14 +19,20 @@ class Tab1 extends React.Component {
     super(props);
     this.state = {
       arrImage: [],
+      data: this.props.auctions.data[this.props.rowID]
     };
+  }
 
-    console.log(this.props.data);
+  componentWillReceiveProps(nextProps) {
+    const { data } = nextProps.auctions;
+    this.setState({
+      data: data[this.props.rowID],
+    });
   }
 
   componentDidMount() {
     let arrHinh = [];
-    this.props.data.product.images.map((img) => {
+    this.state.data.product.images.map((img) => {
       arrHinh.push({ url: img.url })
     });
 
@@ -37,7 +43,7 @@ class Tab1 extends React.Component {
 
   render () {
     moment.locale(this.props.language);
-    const { data } = this.props;
+    const { data } = this.state;
     return (
       <View style={styles.container}>
         <Swiper height={(Metrics.screenWidth * 1.8)/3} autoplay>
@@ -60,7 +66,7 @@ class Tab1 extends React.Component {
             <Icon name="clock-o" size={20} color={Colors.primary} style={styles.iconRight}/>
             <Text style={styles.fontStyle}>
             {
-              moment().format('LLLL')
+              moment(data.activatedDate).format('LLLL')
             }
             </Text>
           </View>
@@ -105,17 +111,19 @@ class Tab1 extends React.Component {
 
   renderImage() {
     let arrImg = [];
-    this.state.arrImage.map((img, index) => {
-      arrImg.push(
-        <View style={styles.slide} key={index}>
-          <ImageLoad
-            style={styles.image}
-            source={{uri: img.url }}
-            resizeMode="contain"
-          />
-        </View>
-      );
-    });
+    if(this.state.arrImage) {
+      this.state.arrImage.map((img, index) => {
+        arrImg.push(
+          <View style={styles.slide} key={index}>
+            <ImageLoad
+              style={styles.image}
+              source={{uri: img.url }}
+              resizeMode="contain"
+            />
+          </View>
+        );
+      });
+    }
     return arrImg;
   }
 }
@@ -123,6 +131,7 @@ class Tab1 extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    auctions: state.auctions,
   }
 }
 

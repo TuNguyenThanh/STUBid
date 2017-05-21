@@ -24,7 +24,6 @@ class Home extends React.Component {
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       badge: 0,
     };
-    this.isLoadData = false;
   }
 
   componentWillMount() {
@@ -32,7 +31,6 @@ class Home extends React.Component {
 
     //get data auctions
     this.props.getAuctions(1);
-    this.isLoadData = true;
   }
 
   componentDidMount() {
@@ -45,11 +43,10 @@ class Home extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
     const { fetching, error, data, language } = nextProps.auctions;
-    if(!fetching && data && this.isLoadData) {
+    if(!fetching && data) {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data)
+        dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(data),
       });
-      this.isLoadData = false;
     }
 
     //error - not internet
@@ -72,10 +69,9 @@ class Home extends React.Component {
   }
 
   renderItem(item, rowID) {
-    console.log(item);
     const { language } = this.props;
     return (
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
         <ImageLoad
           style={styles.imageProduct}
           placeholderStyle={{ flex: 1, resizeMode: 'center'}}

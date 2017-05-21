@@ -8,9 +8,22 @@ import { connect } from 'react-redux'
 import styles from './Styles/Tab2ScreenStyle'
 
 class Tab2 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.auctions.data[this.props.rowID]
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { data } = nextProps.auctions;
+    this.setState({
+      data: data[this.props.rowID],
+    });
+  }
 
   render() {
-    const { data } = this.props;
+    const { data } = this.state;
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.textStyle}>{data.product.description}</Text>
@@ -22,6 +35,8 @@ class Tab2 extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
+    auctions: state.auctions,
   }
 }
 
