@@ -5,7 +5,6 @@ import AuctionsAPI from '../Services/AuctionsApi'
 
 import { StartupTypes } from '../Redux/StartupRedux'
 import { SettingsTypes } from '../Redux/SettingsRedux'
-import { TabNavigatorTypes } from '../Redux/TabNavigatorRedux'
 import { AuctionsTypes } from '../Redux/AuctionsRedux'
 import { SearchTypes } from '../Redux/SearchRedux'
 
@@ -13,7 +12,6 @@ import { SearchTypes } from '../Redux/SearchRedux'
 
 import { startup } from './StartupSagas'
 import { updateLanguage } from './SettingsSagas'
-import { changeHeight } from './TabNavigatorSagas'
 import { getAuctions } from './AuctionsSagas'
 import { getProducts, searchs } from './SearchSagas'
 
@@ -38,9 +36,6 @@ export default function * root () {
 
     //setting
     takeLatest(SettingsTypes.CHANGE_LANGUAGE, updateLanguage),
-
-    //Tab natigator
-    takeLatest(TabNavigatorTypes.CHANGE_HEIGHT, changeHeight),
 
     //Auctions
     takeLatest(AuctionsTypes.AUCTIONS_REQUEST, getAuctions, AuctionsApi),

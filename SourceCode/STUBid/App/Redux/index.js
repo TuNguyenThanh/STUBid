@@ -9,7 +9,6 @@ export default () => {
     login: require('./LoginRedux').reducer,
     searchs: require('./SearchRedux').reducer,
     settings: require('./SettingsRedux').reducer,
-    tabNavigator: require('./TabNavigatorRedux').reducer,
     auctions: require('./AuctionsRedux').reducer,
   })
 
