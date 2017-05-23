@@ -1,28 +1,21 @@
 import { takeLatest } from 'redux-saga/effects'
 import AuctionsAPI from '../Services/AuctionsApi'
-//import API from '../Services/Api'
-//import FixtureAPI from '../Services/FixtureApi'
-//import DebugConfig from '../Config/DebugConfig'
 
 /* ------------- Types ------------- */
 
 import { StartupTypes } from '../Redux/StartupRedux'
-// import { GithubTypes } from '../Redux/GithubRedux'
-// import { LoginTypes } from '../Redux/LoginRedux'
-// import { OpenScreenTypes } from '../Redux/OpenScreenRedux'
 import { SettingsTypes } from '../Redux/SettingsRedux'
 import { TabNavigatorTypes } from '../Redux/TabNavigatorRedux'
 import { AuctionsTypes } from '../Redux/AuctionsRedux'
+import { SearchTypes } from '../Redux/SearchRedux'
 
 /* ------------- Sagas ------------- */
 
 import { startup } from './StartupSagas'
-//import { login } from './LoginSagas'
-// import { getUserAvatar } from './GithubSagas'
-// import { openScreen } from './OpenScreenSagas'
 import { updateLanguage } from './SettingsSagas'
 import { changeHeight } from './TabNavigatorSagas'
 import { getAuctions } from './AuctionsSagas'
+import { getProducts, searchs } from './SearchSagas'
 
 /* ------------- API ------------- */
 
@@ -51,5 +44,8 @@ export default function * root () {
 
     //Auctions
     takeLatest(AuctionsTypes.AUCTIONS_REQUEST, getAuctions, AuctionsApi),
+
+    //Search - AuctionsApi
+    takeLatest(SearchTypes.GET_PRODUCTS_REQUEST, getProducts, AuctionsApi),
   ]
 }

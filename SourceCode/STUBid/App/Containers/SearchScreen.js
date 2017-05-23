@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Text, Animated, TouchableOpacity, Image, TextInput, ListView } from 'react-native'
+import { View, Text, Animated, TouchableOpacity, Image, TextInput, ListView, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
+import SearchActions from '../Redux/SearchRedux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ModalCategory from '../Components/ModalCategory'
+import ImageLoad from 'react-native-image-placeholder'
 
 // Styles
 import styles from './Styles/SearchScreenStyle'
@@ -24,45 +26,82 @@ class Search extends React.Component {
 
   componentWillMount() {
     this.animated = new Animated.Value(0);
+
+    this.props.getProducts(1);
   }
 
   componentDidMount() {
     const { language } = this.props;
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows(['row 1', 'row 2', 'row 3', 'row 4', 'row 1', 'row 2', 'row 3', 'row 4','row 4']),
       data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
     });
   }
 
-  renderItem(rowData, rowID) {
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { fetching, error, dataList, language } = nextProps.searchs;
+    if(!fetching && dataList) {
+      this.setState({
+        dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(dataList),
+      });
+    }
+
+    //error - not internet
+    if(!fetching && error){
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      )
+    }
+  }
+
+  renderItem(item, rowID) {
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: 'May tinh HP'})}>
-        <Image
-          style={{flex: 1}}
-          source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/0/07/Macbook_Pro_PSD.png'}}
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
+        <ImageLoad
+          style={styles.imgStyle}
+          placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+          loadingStyle={{ size: 'small', color: 'blue' }}
           resizeMode="contain"
+          source={{uri: item.product.images[0].url}}
         />
 
         <View style={styles.viewDetail}>
-          <Text style={styles.titleProduct} numberOfLines={2} >May tinh xach tay HP nadg jhfwh hwefb frfg rv v  </Text>
+          <Text style={styles.titleProduct} numberOfLines={2}>{item.product.name}</Text>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
               <Icon name="dollar" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titlePriceNow}>2.500.000</Text>
+            <Text style={styles.titlePriceNow}>
+            {
+              item.highestBidder.price ?
+              item.highestBidder.price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
+              item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+            }
+            </Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>19:45:00</Text>
+            <Text style={styles.titleTime}>{item.timeLeft}</Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
               <Icon name="legal" size={15} color={Colors.primary} />
             </View>
             <View style={styles.viewPriceBid}>
-              <Text style={styles.titlePriceNext}>2.600.000</Text>
+              <Text style={styles.titlePriceNext}>
+              {
+                item.highestBidder.price ?
+                (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
+                (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+              }
+              </Text>
             </View>
           </View>
         </View>
@@ -91,6 +130,7 @@ class Search extends React.Component {
       fontSize: fontInterpolate
     };
 
+    const { fetching } = this.props.searchs;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -121,18 +161,28 @@ class Search extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <ListView
-          style={styles.listviewStyle}
-          enableEmptySections
-          dataSource={this.state.dataSource}
-          renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
-          scrollEventThrottle={16}
-          onScroll={
-            Animated.event([
-              { nativeEvent: { contentOffset: { y: this.animated }}}
-            ])
-          }
-        />
+        { fetching ?
+          <View style={styles.viewLoading}>
+            <ActivityIndicator
+              animating={fetching}
+              style={{height: 80}}
+              size="large"
+            />
+          </View>
+          :
+          <ListView
+            style={styles.listviewStyle}
+            enableEmptySections
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
+            scrollEventThrottle={16}
+            onScroll={
+              Animated.event([
+                { nativeEvent: { contentOffset: { y: this.animated }}}
+              ])
+            }
+          />
+        }
         { this.renderModalCategory()}
       </View>
     )
@@ -155,11 +205,13 @@ class Search extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    searchs: state.searchs,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getProducts: (page) => dispatch(SearchActions.getProductsRequest(page)),
   }
 }
 

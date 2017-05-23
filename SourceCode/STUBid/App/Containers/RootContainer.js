@@ -20,7 +20,7 @@ class RootContainer extends Component {
   render () {
     return (
       <View style={styles.applicationView}>
-        <StatusBar barStyle='default' />
+        <StatusBar barStyle='default' backgroundColor="#FFF" />
         <PushController />
         <NavigationRouter />
       </View>

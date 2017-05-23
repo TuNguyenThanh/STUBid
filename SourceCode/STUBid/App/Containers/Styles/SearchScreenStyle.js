@@ -146,4 +146,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  imgStyle: {
+    flex: 1,
+    margin: 8
+  },
+  viewLoading: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

@@ -58,74 +58,77 @@ class UploadProduct extends React.Component {
     return (
       <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
         <View style={styles.container}>
+          <ScrollView style={styles.content}>
 
-          <Input
-            title={I18n.t('productName', {locale: language})}
-            placeholder={I18n.t('productName', {locale: language})}
-            value={this.state.productName}
-            onChangeText={(productName) => this.setState({ productName })}
-          />
+            <Input
+              title={I18n.t('productName', {locale: language})}
+              placeholder={I18n.t('productName', {locale: language})}
+              value={this.state.productName}
+              onChangeText={(productName) => this.setState({ productName })}
+            />
 
-          <Input
-            title={I18n.t('productStartPrice', {locale: language})}
-            placeholder={'1.000 vnd'}
-            keyboardType={'number-pad'}
-            value={this.state.productStartPrice}
-            onChangeText={(text) => this.onChangedProductStartPrice(text)}
-          />
+            <Input
+              title={I18n.t('productStartPrice', {locale: language})}
+              placeholder={'1.000 vnd'}
+              keyboardType={'number-pad'}
+              value={this.state.productStartPrice}
+              onChangeText={(text) => this.onChangedProductStartPrice(text)}
+            />
 
-          <Input
-            title={I18n.t('productCeilPrice', {locale: language})}
-            placeholder={'5.000 vnd'}
-            keyboardType={'number-pad'}
-            value={this.state.productCeilPrice}
-            onChangeText={(text) => this.onChangedProductCeilPrice(text)}
-          />
+            <Input
+              title={I18n.t('productCeilPrice', {locale: language})}
+              placeholder={'5.000 vnd'}
+              keyboardType={'number-pad'}
+              value={this.state.productCeilPrice}
+              onChangeText={(text) => this.onChangedProductCeilPrice(text)}
+            />
 
-          <Input
-            title={I18n.t('productDescription', {locale: language})}
-            placeholder={I18n.t('productDescription', {locale: language})}
-            value={this.state.productDescription}
-            onChangeText={(productDescription) => this.setState({ productDescription })}
-          />
+            <Input
+              title={I18n.t('productDescription', {locale: language})}
+              placeholder={I18n.t('productDescription', {locale: language})}
+              value={this.state.productDescription}
+              onChangeText={(productDescription) => this.setState({ productDescription })}
+            />
 
-          <ButtonChoose
-            title={I18n.t('productCategory', {locale: language})}
-            item={I18n.t(this.state.categorySelected, {locale: language})}
-            onPress={() => this.setState({openModalCategory: true})}
-          />
+            <ButtonChoose
+              title={I18n.t('productCategory', {locale: language})}
+              item={I18n.t(this.state.categorySelected, {locale: language})}
+              onPress={() => this.setState({openModalCategory: true})}
+            />
 
-          <View style={styles.viewImage}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
+            <View style={styles.viewImage}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
+                {
+                  this.state.arrImageChoose.length != 0 &&
+                  <TouchableOpacity onPress={() => this.cancelImageChoose()}>
+                    <Text style={styles.titleStyle}>{I18n.t('cancel', {locale: language})}</Text>
+                  </TouchableOpacity>
+                }
+              </View>
               {
-                this.state.arrImageChoose.length != 0 &&
-                <TouchableOpacity onPress={() => this.cancelImageChoose()}>
-                  <Text style={styles.titleStyle}>{I18n.t('cancel', {locale: language})}</Text>
+                this.state.arrImageChoose.length == 0 &&
+                <TouchableOpacity style={styles.viewIconImage} onPress={() => this.setState({ openModalChooseImage: true }) }>
+                  <Icon name="picture-o" size={100} color={Colors.primary} />
                 </TouchableOpacity>
               }
+              {
+                this.state.arrImageChoose.length != 0 &&
+                <ScrollView
+                  horizontal
+                  contentContainerStyle={styles.contentContainerStyle}
+                  style={styles.scrollViewStyle}
+                  showsHorizontalScrollIndicator={false}
+                  showsVerticalScrollIndicator={false}
+                >
+                  {
+                    this.renderMultiImage(this.state.arrImageChoose)
+                  }
+                </ScrollView>
+              }
             </View>
-            {
-              this.state.arrImageChoose.length == 0 &&
-              <TouchableOpacity style={styles.viewIconImage} onPress={() => this.setState({ openModalChooseImage: true }) }>
-                <Icon name="picture-o" size={100} color={Colors.primary} />
-              </TouchableOpacity>
-            }
-            {
-              this.state.arrImageChoose.length != 0 &&
-              <ScrollView
-                horizontal
-                contentContainerStyle={styles.contentContainerStyle}
-                style={styles.scrollViewStyle}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-              >
-                {
-                  this.renderMultiImage(this.state.arrImageChoose)
-                }
-              </ScrollView>
-            }
-          </View>
+
+          </ScrollView>
 
           <TouchableOpacity style={styles.button} onPress={() => {}}>
             <Text style={styles.textButton}>{I18n.t('next', {locale: language})}</Text>
@@ -246,6 +249,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    
   }
 }
 

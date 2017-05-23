@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import AuctionsActions from '../Redux/AuctionsRedux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
-import AuctionsActions from '../Redux/AuctionsRedux'
 import ImageLoad from 'react-native-image-placeholder'
 
 // Styles
@@ -79,7 +79,7 @@ class Home extends React.Component {
           resizeMode="contain"
           source={{uri: item.product.images[0].url}}
         />
-        <Text style={styles.textProduct} numberOfLines={2}>{item.product.name}</Text>
+        <Text style={[styles.textProduct, { height: 40 }]} numberOfLines={2}>{item.product.name}</Text>
         <View style={styles.viewItem}>
           <Text style={styles.textPriceNow}>
           {

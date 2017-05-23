@@ -10,6 +10,9 @@ export default StyleSheet.create({
     width: Metrics.screenWidth,
     height: Metrics.screenHeight - Metrics.navBarHeight,
   },
+  content: {
+    flex: 1
+  },
   button: {
     height: 50,
     backgroundColor: Colors.primary,
@@ -22,7 +25,7 @@ export default StyleSheet.create({
     fontSize: Normalize(21)
   },
   viewImage: {
-    flex: 1,
+    height: Metrics.screenHeight / 3,
     backgroundColor: '#FFF',
     marginBottom: 10,
     marginLeft: 10,

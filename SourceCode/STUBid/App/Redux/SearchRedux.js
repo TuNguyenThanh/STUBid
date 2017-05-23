@@ -1,50 +1,54 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
-import { filter } from 'ramda'
-import { startsWith } from 'ramdasauce'
-
-const LIST_DATA = ['sausage', 'blubber', 'pencil', 'cloud', 'moon', 'water', 'computer', 'school',
-  'network', 'hammer', 'walking', 'violently', 'mediocre', 'literature', 'chair', 'two', 'window',
-  'cords', 'musical', 'zebra', 'xylophone', 'penguin', 'home', 'dog', 'final', 'ink', 'teacher', 'fun',
-  'website', 'banana', 'uncle', 'softly', 'mega', 'ten', 'awesome', 'attatch', 'blue', 'internet', 'bottle',
-  'tight', 'zone', 'tomato', 'prison', 'hydro', 'cleaning', 'telivision', 'send', 'frog', 'cup', 'book',
-  'zooming', 'falling', 'evily', 'gamer', 'lid', 'juice', 'moniter', 'captain', 'bonding', 'loudly', 'thudding',
-  'guitar', 'shaving', 'hair', 'soccer', 'water', 'racket', 'table', 'late', 'media', 'desktop', 'flipper',
-  'club', 'flying', 'smooth', 'monster', 'purple', 'guardian', 'bold', 'hyperlink', 'presentation', 'world', 'national',
-  'comment', 'element', 'magic', 'lion', 'sand', 'crust', 'toast', 'jam', 'hunter', 'forest', 'foraging',
-  'silently', 'tawesomated', 'joshing', 'pong', 'RANDOM', 'WORD'
-]
 
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  search: ['searchTerm'],
-  cancelSearch: null
+  getProductsRequest: ['page'],
+  getProductsSuccess: ['dataList'],
+  getProductsFailure: ['error'],
+
+  searchRequest: ['keysearch'],
+  searchSuccess: ['dataSearch'],
+  searchFailure: ['error'],
 })
 
-export const TemperatureTypes = Types
+export const SearchTypes = Types
 export default Creators
 
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
-  searchTerm: '',
-  searching: false,
-  results: LIST_DATA
+  dataSearch: [],
+  dataList: [],
+  error: null,
+  fetching: false
 })
 
 /* ------------- Reducers ------------- */
 
-export const performSearch = (state, { searchTerm }) => {
-  const results = filter(startsWith(searchTerm), LIST_DATA)
-  return state.merge({ searching: true, searchTerm, results })
-}
+// we're attempting to login
+export const request = (state) => state.merge({ fetching: true })
 
-export const cancelSearch = (state) => INITIAL_STATE
+// we've successfully logged in
+export const loadSuccess = (state, { dataList }) => state.merge({ fetching: false, error: null, dataList })
+
+export const searchSuccess = (state, { dataSearch }) => state.merge({ fetching: false, error: null, dataSearch })
+
+// we've had a problem logging in
+export const failure = (state, { error }) => state.merge({ fetching: false, error })
+
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.SEARCH]: performSearch,
-  [Types.CANCEL_SEARCH]: cancelSearch
+  [Types.GET_PRODUCTS_REQUEST]: request,
+  [Types.GET_PRODUCTS_SUCCESS]: loadSuccess,
+  [Types.GET_PRODUCTS_FAILURE]: failure,
+  
+  [Types.SEARCH_REQUEST]: request,
+  [Types.SEARCH_SUCCESS]: searchSuccess,
+  [Types.SEARCH_FAILURE]: failure,
 })
+
+/* ------------- Selectors ------------- */

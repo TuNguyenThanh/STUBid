@@ -30,7 +30,9 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   itemCenter: {
-    flex: 1,
+    //flex: 1,
+    height: 40,
+    marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -49,8 +51,8 @@ export default StyleSheet.create({
   viewNextPrice: {
     paddingLeft: 30,
     paddingRight: 30,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'gray'
@@ -64,6 +66,6 @@ export default StyleSheet.create({
   priceBidStyle: {
     color: '#F00',
     fontWeight: 'bold',
-    fontSize: 15
+    fontSize: 15,
   }
 })
