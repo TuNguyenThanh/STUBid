@@ -3,6 +3,6 @@ exports.timeLeftFormat = (duration) => {
     var minutes = String(parseInt(duration / 60, 10));
     var seconds = duration - 60 * minutes;
 
-    var output = [hours, minutes, seconds].map(str => str.length==1?`0${str}`:str).join(":");
+    var output = [hours, minutes, seconds].map(number => number<10?`0${number}`:number).join(":");
     return output;
 }

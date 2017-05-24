@@ -40,8 +40,6 @@ function loadAuctions () {
                 "Auction"."startPrice",
                 "Auction"."ceilingPrice",
                 "Auction"."bidIncreasement",
-                "Auction"."comment",
-                "Auction"."state",
                 (
                     SELECT row_to_json(seller)
                     FROM (
@@ -49,9 +47,7 @@ function loadAuctions () {
                         "Account"."accountId",
                         "Profile"."firstName",
                         "Profile"."lastName",
-                        "Profile"."phoneNumber",
-                        "Profile"."email",
-                        CONCAT('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar
+                        "Profile"."phoneNumber"
                         FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
                         WHERE "Account"."accountId" = "Auction"."sellerAccountId"
                     ) AS seller
@@ -63,7 +59,6 @@ function loadAuctions () {
                         "Product"."productId",
                         "Product"."name",
                         "Product"."description",
-                        "Product"."searchKey",
                         (
                             SELECT array_to_json(array_agg(row_to_json(image)))
                             FROM (
@@ -89,8 +84,6 @@ function loadAuctions () {
                         "Profile"."firstName",
                         "Profile"."lastName",
                         "Profile"."phoneNumber",
-                        "Profile"."email",
-                        CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile"."avatar") AS avatar,
                         "BidHistory".price,
                         "BidHistory".timestamp
                         FROM "BidHistory"
@@ -99,12 +92,7 @@ function loadAuctions () {
                         ORDER BY price DESC
                         LIMIT 1
                     ) AS bid
-                ) AS "highestBidder",
-                (
-                    SELECT row_to_json(paymentAccount)
-                    FROM "PaymentAccount" AS paymentAccount
-                    WHERE paymentAccount."paymentAccountId" = "Auction"."paymentAccountId"
-                ) AS "paymentAccount"
+                ) AS "highestBidder"
                 FROM "Auction"
             ) AS auction
         `,

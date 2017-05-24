@@ -1,4 +1,5 @@
-var PORT = process.env.PORT || 3000,
-    DOMAIN_NAME = 'https://sbid.herokuapp.com';
+const   PORT = process.env.PORT || 3000,
+        DIRNAME = __dirname,
+        DOMAIN_NAME = 'https://sbid.herokuapp.com';
 
-module.exports = { PORT, DOMAIN_NAME };
+module.exports = { PORT, DIRNAME, DOMAIN_NAME };

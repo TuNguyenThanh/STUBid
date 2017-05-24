@@ -18,6 +18,7 @@ server.listen(config.PORT, () => {
 
 // app.get('/Auctions', require('./controllers/getAuctions'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
+app.post('/Auctions', require('./controllers/postAuction'));
 app.get('/Categorys', (req,res) => res.send(getCategorys()));
 app.post('/Accounts/login', require('./controllers/login'));
 
