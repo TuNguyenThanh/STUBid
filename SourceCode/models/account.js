@@ -63,10 +63,41 @@ exports.deleteAccount = (accountId) => {
 
 exports.login = (username, password) => {
     return new Promise((resolve,reject) => {
-        let sql = `SELECT * FROM "Account" WHERE username=$1 AND password=$2`,
+        let sql = `
+            SELECT
+            "Account"."accountId",
+            "Account"."username",
+            "Account"."isAdmin",
+            "Account"."bannedLevel",
+            "Account"."bannedDate",
+            "Account".point,
+            "Profile"."firstName",
+            "Profile"."lastName",
+            "Profile"."phoneNumber",
+            "Profile".email
+            FROM "Account" INNER JOIN "Profile" ON "Account"."profileId" = "Profile"."profileId"
+            WHERE username=$1 AND password=$2
+        `,
             params = [username, password];
         query(sql,params)
         .then(result => resolve({ rowCount: result.rowCount, rows: result.rows }))
+        .catch(error => reject(error));
+    })
+}
+
+exports.getBankRefs = (accountId) => {
+    return new Promise((resolve,reject) => {
+        let sql = `
+            SELECT
+            "Bank".name,
+            "BankRef"."bankNumber"
+            FROM "BankRef"
+            INNER JOIN "Bank" ON "BankRef"."bankId" = "Bank"."bankId"
+            INNER JOIN "Account" ON "BankRef"."accountId" = "Account"."accountId"
+            WHERE "Account"."accountId" = $1
+        `
+        query(sql,[accountId])
+        .then(result => resolve(result))
         .catch(error => reject(error));
     })
 }

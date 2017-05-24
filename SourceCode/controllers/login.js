@@ -31,9 +31,14 @@ module.exports = (req,res) => {
                     token: sign({
                         accountId: account.accountId,
                         username: account.username,
-                        isAdmin: account.isAdmin,
-                        profileId: account.profileId
-                    })
+                        isAdmin: account.isAdmin
+                    }),
+                    profile: {
+                        firstName: account.firstName,
+                        lastName: account.lastName,
+                        phoneNumber: account.phoneNumber,
+                        email: account.email,
+                    }
                 });
         }
         else {

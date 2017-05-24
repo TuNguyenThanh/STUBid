@@ -21,6 +21,7 @@ app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.post('/Auctions', require('./controllers/postAuction'));
 app.get('/Categorys', (req,res) => res.send(getCategorys()));
 app.post('/Accounts/login', require('./controllers/login'));
+app.get('/Accounts/bankRefs', require('./controllers/getBankRefs'));
 
 // socket.io configuration
 var io = require('socket.io')(server),
