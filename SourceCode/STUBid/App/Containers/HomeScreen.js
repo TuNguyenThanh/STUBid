@@ -2,6 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import AuctionsActions from '../Redux/AuctionsRedux'
+import CategoryActions from '../Redux/CategoryRedux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
@@ -20,10 +21,13 @@ class Home extends React.Component {
     super(props);
     this.state = {
       openModalCategory: false,
-      categorySelected: 'all',
+      categorySelected: { categoryId: -1, name: 'all' },
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      data: [],
       badge: 0,
     };
+    this.loadCategory = false;
+    this.clickBid = false;
   }
 
   componentWillMount() {
@@ -31,22 +35,28 @@ class Home extends React.Component {
 
     //get data auctions
     this.props.getAuctions(1);
-  }
 
-  componentDidMount() {
-    const { language } = this.props;
-    this.setState({
-      data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
-    });
+    //get data category
+    this.props.getProductCategory();
+    this.loadCategory = true;
   }
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
     const { fetching, error, data, language } = nextProps.auctions;
+    const { categoryProduct } = nextProps.category;
     if(!fetching && data) {
       this.setState({
-        dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(data),
+        dataSource: this.state.dataSource.cloneWithRows(data),
       });
+    }
+
+    if(!fetching && categoryProduct && this.loadCategory) {
+      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
+      this.setState({
+        data: categoryProductNew,
+      });
+      this.loadCategory = false;
     }
 
     //error - not internet
@@ -63,9 +73,43 @@ class Home extends React.Component {
   }
 
   handleBid(data) {
-    let price = data.highestBidder.price ? data.highestBidder.price : data.startPrice ;
+    this.clickBid = true;
+    //auctionId, accountId, priceBid
+    const { language } = this.props;
+    let price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
     price += data.bidIncreasement;
-    alert('bid ' + price);
+
+    const auctionId = data.auctionId;
+
+    if(this.clickBid) {
+      //check highestBidder id auctions
+      const highestBidder = data.highestBidder;
+      if(highestBidder.accountId == 3) {
+        Alert.alert(
+          data.product.name,
+          I18n.t('youAreHighestBidder', {locale: language}),
+          [
+            {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+          ],
+          { cancelable: false }
+        );
+      } else {
+        Alert.alert(
+          data.product.name,
+          I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.'),
+          [
+            {text: I18n.t('nextTime', {locale: language}), onPress: () => {}, style: 'cancel'},
+            {text: I18n.t('bid', {locale: language}), onPress: () => {
+              //bid product
+              this.props.bibProduct(auctionId, 3, price);
+            }},
+          ],
+          { cancelable: false }
+        );
+      }
+
+      this.clickBid = false;
+    }
   }
 
   renderItem(item, rowID) {
@@ -83,7 +127,7 @@ class Home extends React.Component {
         <View style={styles.viewItem}>
           <Text style={styles.textPriceNow}>
           {
-            item.highestBidder.price ?
+            item.highestBidder ?
             item.highestBidder.price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
             item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
           }
@@ -99,7 +143,7 @@ class Home extends React.Component {
         <View style={styles.bid}>
           <Text>
           {
-            item.highestBidder.price ?
+            item.highestBidder ?
             (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
             (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
           }
@@ -182,14 +226,14 @@ class Home extends React.Component {
           </View>
 
           <Animated.View style={[styles.iconStyle, menuStyle]}>
-            <TouchableOpacity onPress={() => NavigationActions.uploadProductScreen()}>
+            <TouchableOpacity onPress={() => NavigationActions.uploadProductNextScreen()}>
               <Icon name="pencil" size={20} color={Colors.primary} />
             </TouchableOpacity>
           </Animated.View>
         </View>
 
         <TouchableOpacity style={styles.viewCategory} onPress={() => this.setState({openModalCategory: true})}>
-          <Text style={styles.textCategory}>{I18n.t('category', {locale: language})}: {I18n.t(this.state.categorySelected, {locale: language})}</Text>
+          <Text style={styles.textCategory}>{I18n.t('category', {locale: language})}: {I18n.t(this.state.categorySelected.name, {locale: language})}</Text>
           <Icon name="list-alt" size={20} color={Colors.primary} />
         </TouchableOpacity>
 
@@ -228,7 +272,7 @@ class Home extends React.Component {
         open={this.state.openModalCategory}
         modalDidClose={() => this.setState({ openModalCategory: false })}
         data={this.state.data}
-        onPressItem={(item) => this.setState({ openModalCategory: false, categorySelected: item }) }
+        onPressItem={(item) => this.setState({ openModalCategory: false, categorySelected: item}) }
       />
     );
   }
@@ -238,12 +282,15 @@ const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
     auctions: state.auctions,
+    category: state.category,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getAuctions: (page) => dispatch(AuctionsActions.auctionsRequest(page)),
+    bibProduct: (auctionId, accountId, priceBid) => dispatch(AuctionsActions.bidProductRequest(auctionId, accountId, priceBid)),
+    getProductCategory: () => dispatch(CategoryActions.categoryProductRequest()),
   }
 }
 

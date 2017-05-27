@@ -11,7 +11,7 @@ import { Colors } from '../Themes/'
 //I18n
 import I18n from 'react-native-i18n'
 
-class ModalCategory extends React.Component {
+class ModalList extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -42,9 +42,11 @@ class ModalCategory extends React.Component {
         modalStyle={styles.modalStyle}
       >
         <View style={styles.viewIcon}>
-          <Icon name="list-alt" size={30} color={Colors.primary} />
+          {
+            this.props.logo
+          }
         </View>
-        <Text style={styles.titleModalCategory}>{I18n.t(this.props.title, {locale: language})}</Text>
+        <Text style={styles.titleModalCategory}>{this.props.title}</Text>
         <ListView
           enableEmptySections
           dataSource={this.state.dataSourceCategory}
@@ -59,7 +61,7 @@ class ModalCategory extends React.Component {
     const { language } = this.props;
     return(
       <TouchableOpacity style={styles.rowCategory} onPress={this.handleCategoryItem.bind(this, item)}>
-        <Text style={styles.titleItemStyle}>{I18n.t(item.name, {locale: language})}</Text>
+        <Text style={styles.titleItemStyle}>{item}</Text>
       </TouchableOpacity>
     );
   }
@@ -82,4 +84,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalCategory)
+export default connect(mapStateToProps, mapDispatchToProps)(ModalList)

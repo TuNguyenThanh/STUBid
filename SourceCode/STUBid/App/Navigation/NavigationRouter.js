@@ -14,6 +14,7 @@ import MyAuctionScreen from '../Containers/MyAuctionScreen'
 import DetailProductScreen from '../Containers/DetailProductScreen'
 import EditProfileScreen from '../Containers/EditProfileScreen'
 import InfoAppScreen from '../Containers/InfoAppScreen'
+import UploadProductNextScreen from '../Containers/UploadProductNextScreen'
 import UploadProductScreen from '../Containers/UploadProductScreen'
 
 //Styles
@@ -47,7 +48,8 @@ class NavigationRouter extends Component {
           <Scene key='loginScreen' component={LoginScreen} hideNavBar />
           <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
           <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false} titleStyle={Styles.title} />
-          <Scene key='uploadProductScreen' component={UploadProductScreen} title={'Upload product'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='uploadProductNextScreen' component={UploadProductNextScreen} title={'Step 1'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='uploadProductScreen' component={UploadProductScreen} title={'Step 2'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
 
         </Scene>
       </Router>

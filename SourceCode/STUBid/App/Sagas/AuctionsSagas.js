@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects'
+import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AuctionsActions from '../Redux/AuctionsRedux'
 
@@ -18,9 +18,24 @@ export function * getAuctions(api, action) {
   // const response = yield call(api.getAuction, page);
   // console.log(response);
   // if (response.ok) {
-  //   //const data = response.data.result;
-  //   yield put(AuctionsActions.auctionsSuccess([]));
+  //   const data = response.data.result;
+  //   yield put(AuctionsActions.auctionsSuccess(data));
   // } else {
   //   yield put(AuctionsActions.auctionsFailure(response.problem));
   // }
+}
+
+export function * bidProduct(api, action) {
+  const { auctionId, accountId, priceBid } = action;
+  try {
+    const response = yield call(api.bidProduct , auctionId, accountId, priceBid );
+    console.log(response);
+    if(response.ok) {
+      yield put(AuctionsActions.bidProductSuccess('success'));
+    } else {
+      yield put(AuctionsActions.bidProductFailure(response.problem));
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }

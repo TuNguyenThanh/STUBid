@@ -19,9 +19,10 @@ class Search extends React.Component {
     super(props);
     this.state = {
       openModalCategory: false,
-      categorySelected: 'all',
+      categorySelected: { categoryId: -1, name: 'all' },
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
+    this.loadCategory = true;
   }
 
   componentWillMount() {
@@ -30,20 +31,22 @@ class Search extends React.Component {
     this.props.getProducts(1);
   }
 
-  componentDidMount() {
-    const { language } = this.props;
-    this.setState({
-      data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
-    });
-  }
-
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
     const { fetching, error, dataList, language } = nextProps.searchs;
+    const { categoryProduct } = nextProps.category;
     if(!fetching && dataList) {
       this.setState({
-        dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(dataList),
+        dataSource: this.state.dataSource.cloneWithRows(dataList),
       });
+    }
+
+    if(categoryProduct && this.loadCategory) {
+      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
+      this.setState({
+        data: categoryProductNew,
+      });
+      this.loadCategory = false;
     }
 
     //error - not internet
@@ -78,7 +81,7 @@ class Search extends React.Component {
             </View>
             <Text style={styles.titlePriceNow}>
             {
-              item.highestBidder.price ?
+              item.highestBidder ?
               item.highestBidder.price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
               item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
             }
@@ -97,7 +100,7 @@ class Search extends React.Component {
             <View style={styles.viewPriceBid}>
               <Text style={styles.titlePriceNext}>
               {
-                item.highestBidder.price ?
+                item.highestBidder ?
                 (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
                 (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
               }
@@ -141,7 +144,7 @@ class Search extends React.Component {
               resizeMode={'contain'}
             ></Animated.Image>
             <TouchableOpacity onPress={() => this.setState({openModalCategory: true})}>
-              <Animated.Text style={[styles.title, titleStyle]}>{I18n.t(this.state.categorySelected, {locale: language})}</Animated.Text>
+              <Animated.Text style={[styles.title, titleStyle]}>{I18n.t(this.state.categorySelected.name, {locale: language})}</Animated.Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -206,6 +209,7 @@ const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
     searchs: state.searchs,
+    category: state.category,
   }
 }
 
