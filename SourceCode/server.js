@@ -6,6 +6,12 @@ var { getCategorys } = require('./models/category');
 var express = require('express');
 var app = express();
 app.use(express.static('public'));
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+});
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 var server = require('http').createServer(app);
