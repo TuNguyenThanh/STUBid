@@ -2,29 +2,26 @@ var { timeLeftFormat } = require('../helpers/time'),
     { query } = require('../helpers/db'),
     { DOMAIN_NAME } = require('../config');
 
-var auctions = {},
+var auctions = [],
     auctionsTimeLeft = {};
 loadAuctions();
 setInterval(() => countDown(), 1000);
 
 function countDown() {
-    Object.keys(auctions).forEach(key => {
-        let array = auctions[key];
-        for (var i = array.length - 1; i >= 0; i--) {
-            var element = array[i],
-                timeLeft = auctionsTimeLeft[element.auctionId];
-            if (timeLeft > 0) {
-                timeLeft--;
-                auctionsTimeLeft[element.auctionId] = timeLeft;
-                element.timeLeft = timeLeftFormat(timeLeft);
-            }
-            else {
-                delete auctionsTimeLeft[element.auctionId];
-                // update state in database
-                // reload auctions
-            }
+    for (var i = auctions.length - 1; i >= 0; i--) {
+        var element = auctions[i],
+            timeLeft = auctionsTimeLeft[element.auctionId];
+        if (timeLeft > 0) {
+            timeLeft--;
+            auctionsTimeLeft[element.auctionId] = timeLeft;
+            element.timeLeft = timeLeftFormat(timeLeft);
         }
-    });
+        else {
+            delete auctionsTimeLeft[element.auctionId];
+            // update state in database
+            // reload auctions
+        }
+    }
 }
 
 function loadAuctions () {
@@ -103,8 +100,7 @@ function loadAuctions () {
             let auction = element.row_to_json,
                 page = Math.floor(index/20);
             auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);
-            if(!auctions[page]) auctions[page] = [];
-            auctions[page].push(auction);
+            auctions.push(auction);
         }, this);
         console.log('loaded ' + result.rowCount + ' auctions');
     })
@@ -114,8 +110,51 @@ function loadAuctions () {
 };
 
 exports.getAuctions = (page) => {
-    if (page != undefined) {
-        return auctions[page]
-    };
+    if (page !== undefined) return auctions.slice(0, page*10 + 9);
     return [];
 };
+
+exports.bid = (auctionId, accountId, price) => {
+    return new Promise((resolve,reject) => {
+        var index, auction;
+        auction = auctions.find((e,i) => {
+            if (e.auctionId == auctionId) {
+                index = i;
+                return true;
+            }
+        });
+        if (!auction) return reject(new Error('auction does not exist'));
+        if (auction.highestBidder.price >= price) return reject(new Error('someone has bidded that price'));
+        var sql = `
+            WITH "latestBid" AS (
+                INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
+                VALUES (now(),$1,$2,$3)
+                RETURNING "bidderAccountId", price, timestamp
+            )
+            SELECT row_to_json(bid) AS "highestBidder"
+            FROM (
+                SELECT
+                "Account"."accountId",
+                "Profile"."firstName",
+                "Profile"."lastName",
+                "Profile"."phoneNumber",
+                "latestBid".price,
+                "latestBid".timestamp
+                FROM "latestBid"
+                INNER JOIN "Account" ON "Account"."accountId" = "latestBid"."bidderAccountId"
+                INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+            ) AS bid
+        `,
+        params = [price,auctionId,accountId];
+        query(sql,params)
+        .then(result => {
+            if (result.rowCount > 0) {
+                auction.highestBidder = result.rows[0].highestBidder;
+                resolve({ page: Math.ceil(index), auction });
+            }
+        })
+        .catch(error => {
+            reject(error);
+        })
+    })
+}

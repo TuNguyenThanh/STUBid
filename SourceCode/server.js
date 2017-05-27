@@ -18,6 +18,7 @@ server.listen(config.PORT, () => {
 
 // app.get('/Auctions', require('./controllers/getAuctions'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
+app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
 app.post('/Auctions', require('./controllers/postAuction'));
 app.get('/Categorys', (req,res) => res.send(getCategorys()));
 app.post('/Accounts/login', require('./controllers/login'));
@@ -26,15 +27,9 @@ app.get('/Accounts/bankRefs', require('./controllers/getBankRefs'));
 // socket.io configuration
 var io = require('socket.io')(server),
     sockets = [];
-// let interval = setInterval(() => io.emit('SERVER-SEND-AUCTIONS', auction.getAuctions()), 1000);
 let interval = setInterval(() => {
   sockets.forEach(socket => {
-    let page = socket.page,
-        auctions = [];
-    for (var i = 0; i < page; i++) {
-      auctions = auctions.concat(getAuctions(i))
-    }
-    socket.emit('SERVER-SEND-AUCTIONS', auctions);
+    socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page));
   })
 }, 1000);
 io.on('connection', function (socket) {
@@ -45,4 +40,6 @@ io.on('connection', function (socket) {
     socket.page = page;
     console.log(socket.page);
   });
+
+  socket.on('disconnect', () => sockets.splice(sockets.indexOf(socket)));
 });
