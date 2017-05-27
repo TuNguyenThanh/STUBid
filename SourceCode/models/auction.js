@@ -18,6 +18,7 @@ function countDown() {
         }
         else {
             delete auctionsTimeLeft[element.auctionId];
+            delete auctions[i];
             // update state in database
             // reload auctions
         }
