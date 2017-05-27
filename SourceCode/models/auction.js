@@ -87,6 +87,7 @@ function loadAuctions () {
                         FROM "BidHistory"
                         INNER JOIN "Account" ON "Account"."accountId" = "BidHistory"."bidderAccountId"
                         INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
                         ORDER BY price DESC
                         LIMIT 1
                     ) AS bid
@@ -110,8 +111,14 @@ function loadAuctions () {
     })
 };
 
-exports.getAuctions = (page) => {
-    if (page !== undefined) return auctions.slice(0, page*10 + 9);
+exports.getAuctions = (page, categoryId) => {
+    if (page !== undefined) {
+        if (categoryId && categoryId === -1)
+            return auctions.slice(0, page*10 + 9);
+        else {
+            return auctions.filter(e => { return e.product.category.categoryId == categoryId }).slice(0, page*10 + 9);
+        }
+    }
     return [];
 };
 
@@ -125,7 +132,7 @@ exports.bid = (auctionId, accountId, price) => {
             }
         });
         if (!auction) return reject(new Error('auction does not exist'));
-        if (auction.highestBidder.price >= price) return reject(new Error('someone has bidded that price'));
+        if (auction.highestBidder && auction.highestBidder.price >= price) return reject(new Error('someone has bidded that price'));
         var sql = `
             WITH "latestBid" AS (
                 INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
@@ -151,7 +158,10 @@ exports.bid = (auctionId, accountId, price) => {
         .then(result => {
             if (result.rowCount > 0) {
                 auction.highestBidder = result.rows[0].highestBidder;
-                resolve({ page: Math.ceil(index), auction });
+                let page = Math.floor(index/10) + 1;
+                    categoryId = auction.product.category.categoryId;
+                    pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
+                resolve({ auction, page, categoryId, pageInCategory });
             }
         })
         .catch(error => {

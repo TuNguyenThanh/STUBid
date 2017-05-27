@@ -74,7 +74,8 @@ exports.login = (username, password) => {
             "Profile"."firstName",
             "Profile"."lastName",
             "Profile"."phoneNumber",
-            "Profile".email
+            "Profile".email,
+            CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile".avatar) AS avatar
             FROM "Account" INNER JOIN "Profile" ON "Account"."profileId" = "Profile"."profileId"
             WHERE username=$1 AND password=$2
         `,

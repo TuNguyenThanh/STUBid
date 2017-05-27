@@ -5,17 +5,17 @@ module.exports = (req, res, sockets) => {
     bid(auctionId, accountId, price)
     .then(result => {
         sockets.forEach(socket => {
-            if (socket.page >= result.page)
-                socket.emit('SERVER-UPDATE-AUCTION', result.accountIdauction);
+            if (
+                (socket.categoryId == -1 && socket.page >= result.page)
+                || (socket.categoryId == result.categoryId && socket.page >= result.pageInCategory)
+            )
+                socket.emit('SERVER-UPDATE-AUCTION', result.auction);
         })
-        res.send({
-            ok: true
-        })
+        res.send()
     })
     .catch(error => {
         console.log(error);
         res.send({
-            ok: false,
             error: error
         })
     })

@@ -7,7 +7,7 @@ function loadCategorys() {
     query(sql,[])
     .then(result => {
         categorys = result.rows;
-        console.log('load ' + result.rowCount + ' categories');
+        console.log('loaded ' + result.rowCount + ' categories');
     })
     .catch(error => {
         console.log(error);
