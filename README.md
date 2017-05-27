@@ -30,3 +30,74 @@ npm install
 ```bash
 npm start
 ```
+
+### API
+|Method|Route|
+|-|-|
+|PATCH|'SERVER-UPDATE-AUCTION'|
+- Parameters:
+```javascript
+{
+	auctionId: number,
+	accountId: number,
+	price: number
+}
+```
+- Response:
+```javascript
+{
+    ok: boolean
+}
+```
+
+### Socket event
+|Type|Key|
+|-|-|
+|Litsen|'SERVER-UPDATE-AUCTION'|
+- Parameters:
+
+- Response:
+```javascript
+{
+    auctionId: number,
+    createdDate: string,
+    activatedDate: string,
+    duration: number,
+    startPrice: number,
+    ceilingPrice: number,
+    bidIncreasement: number,
+    seller: {
+        accountId: number,
+        firstName: string,
+        lastName: string,
+        phoneNumber: string
+    },
+    product: {
+        productId: number,
+        name: string,
+        description: string,
+        images: [
+            {
+                imageId: number,
+                name: string,
+                url: string
+            }
+        ],
+        category: {
+            categoryId: number,
+            name: string,
+            description: string,
+            createdDate: string
+        }
+    },
+    highestBidder: {
+        accountId: number,
+        firstName: string,
+        lastName: string,
+        phoneNumber: string,
+        price: number,
+        timestamp: string
+    },
+    timeLeft: string
+}
+```
