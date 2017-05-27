@@ -4,6 +4,7 @@ import SearchActions from '../Redux/SearchRedux'
 
 export function * getProducts(api, action) {
   // make the call to the api
+  const { page } = action;
   try {
     const { page } = action;
     while (true) {

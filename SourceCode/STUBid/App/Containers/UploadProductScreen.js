@@ -146,7 +146,7 @@ class UploadProduct extends React.Component {
   }
 
   handleUploadProduct() {
-    NavigationActions.tab1();
+    NavigationActions.tabbar({ type: 'reset' });
   }
 }
 
