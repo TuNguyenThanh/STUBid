@@ -34,7 +34,7 @@ npm start
 ### API
 |Method|Route|
 |-|-|
-|PATCH|'SERVER-UPDATE-AUCTION'|
+|PATCH|/Auctions/bid|
 - Parameters:
 ```javascript
 {
