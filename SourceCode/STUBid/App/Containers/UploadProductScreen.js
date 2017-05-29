@@ -25,8 +25,8 @@ class UploadProduct extends React.Component {
       dataTime: [12, 24, 48, 72],
 
       openModalPayment: false,
-      paymentMethodSeleted: 'Tien mat',
-      dataPayment: ['Tien mat', 'ATM'],
+      paymentMethodSeleted: 'SBid',
+      dataPayment: ['SBid', 'Banking', 'Buu dien'],
 
       openModalDeposit: false,
       depositMethodSeleted: 'SBid',

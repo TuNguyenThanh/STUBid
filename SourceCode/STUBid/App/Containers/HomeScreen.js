@@ -43,15 +43,16 @@ class Home extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, data, language } = nextProps.auctions;
+    const { fetching, error, data } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
+    const fetchingCategory = nextProps.category.fetching;
     if(!fetching && data) {
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(data),
       });
     }
 
-    if(!fetching && categoryProduct && this.loadCategory) {
+    if(!fetchingCategory && categoryProduct && this.loadCategory) {
       const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
       this.setState({
         data: categoryProductNew,
@@ -98,7 +99,7 @@ class Home extends React.Component {
           data.product.name,
           I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.'),
           [
-            {text: I18n.t('nextTime', {locale: language}), onPress: () => {}, style: 'cancel'},
+            {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
             {text: I18n.t('bid', {locale: language}), onPress: () => {
               //bid product
               this.props.bibProduct(auctionId, 3, price);
