@@ -5,6 +5,7 @@ import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import md5 from 'blueimp-md5'
 
 //styles
 import styles from './Styles/LoginScreenStyles'
@@ -37,6 +38,7 @@ class LoginScreen extends React.Component {
   _onPress() {
 		if (this.state.isLoading) return;
     const { username, password } = this.state;
+    console.log(md5(password));
     if (!username) {
       this.message('Bạn chưa điền tên đăng nhập');
     } else {

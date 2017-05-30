@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "apisauce": "0.11.0",
+    "blueimp-md5": "^2.7.0",
     "format-json": "1.0.3",
     "lodash": "4.17.4",
     "querystringify": "1.0.0",
