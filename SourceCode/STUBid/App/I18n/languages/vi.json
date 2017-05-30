@@ -67,4 +67,14 @@
   "later": "Để lần sau",
   "yesBid":  "Bạn có chắc muốn đấu giá cho sản phẩm này với giá",
   "youAreHighestBidder": "Bạn đang là người ra giá cao nhất",
+  "sendPassword": "Lấy lại mật khẩu",
+  "register": "Đăng ký",
+  "firstName": "Tên",
+  "lastName": "Họ",
+  "email": "Email",
+  "phoneNumber": "Số điện thoại",
+  "repeatPassword": "Nhập lại mật khẩu",
+  "verificationCode": "Mã xác nhận",
+  "getCode": "Nhận mã mới",
+  "confirm": "Xác nhận"
 }

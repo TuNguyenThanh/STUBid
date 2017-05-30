@@ -1,0 +1,98 @@
+import React from 'react'
+import { ScrollView, Text, View, Image, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { connect } from 'react-redux'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { Actions as NavigationActions } from 'react-native-router-flux'
+
+// Styles
+import styles from './Styles/ForgotPasswordScreenStyle'
+import { Images, Colors } from '../Themes'
+
+//I18n
+import I18n from 'react-native-i18n'
+
+class ForgotPassword extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+    };
+  }
+
+  handleSendForgotPassword(email) {
+    if (!this.validateEmail(email)) {
+      //email not invalid
+      Alert.alert(
+        'Email khong hop le',
+        'Vui long nhap lai email',
+        [
+          {text: 'OK', onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      alert('ok')
+    }
+  }
+
+  validateEmail(email) {
+    const check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return check.test(email);
+  }
+
+  render () {
+    const { language } = this.props;
+    return (
+      <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
+        <Image style={styles.container} source={Images.background} >
+          <TouchableOpacity style={styles.backButton} onPress={() => NavigationActions.pop()}>
+            <Icon name="chevron-circle-left" size={35} color={Colors.primary}  />
+          </TouchableOpacity>
+          {/*Form forgotPassword*/}
+          <View style={styles.form}>
+            {/*logo*/}
+            <Image style={styles.logo} source={Images.logo} resizeMode="contain" />
+            <Text style={styles.textForm}>{I18n.t('forgotPassword', {locale: language})}</Text>
+
+            {/*input-logo*/}
+            <View style={styles.viewInput}>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder={'Email'}
+                placeholderTextColor="#989899"
+                autoCapitalize={'none'}
+                autoCorrect={false}
+                underlineColorAndroid={'transparent'}
+                returnKeyType='go'
+                value={this.state.email}
+                onChangeText={(email) => this.setState({ email })}
+                onSubmitEditing={() => this.handleSendForgotPassword(this.state.email)}
+              />
+            </View>
+
+            {/*button-send*/}
+    				<TouchableOpacity style={styles.button} onPress={() => this.handleSendForgotPassword(this.state.email)}>
+    					<Text style={styles.buttonText}>{I18n.t('sendPassword', {locale: language})}</Text>
+    				</TouchableOpacity>
+          </View>
+        </Image>
+      </KeyboardAwareScrollView>
+
+    )
+  }
+
+}
+
+const mapStateToProps = (state) => {
+  return {
+    language: state.settings.language,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword)

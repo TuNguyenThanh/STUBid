@@ -16,6 +16,9 @@ import EditProfileScreen from '../Containers/EditProfileScreen'
 import InfoAppScreen from '../Containers/InfoAppScreen'
 import UploadProductNextScreen from '../Containers/UploadProductNextScreen'
 import UploadProductScreen from '../Containers/UploadProductScreen'
+import ForgotPasswordScreen from '../Containers/ForgotPasswordScreen'
+import CreactAccountScreen from '../Containers/CreactAccountScreen'
+import CheckCodeScreen from '../Containers/CheckCodeScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -46,6 +49,9 @@ class NavigationRouter extends Component {
           </Scene>
 
           <Scene key='loginScreen' component={LoginScreen} hideNavBar />
+          <Scene key='forgotPasswordScreen' component={ForgotPasswordScreen} hideNavBar />
+          <Scene key='checkCodeScreen' component={CheckCodeScreen} hideNavBar />
+          <Scene key='creactAccountScreen' component={CreactAccountScreen} direction="vertical" hideNavBar />
           <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
           <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false} titleStyle={Styles.title} />
           <Scene key='uploadProductNextScreen' component={UploadProductNextScreen} title={'Step 1'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />

@@ -25,6 +25,7 @@ class Home extends React.Component {
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       data: [],
       badge: 0,
+      isOpen: false
     };
     this.loadCategory = false;
     this.clickBid = false;

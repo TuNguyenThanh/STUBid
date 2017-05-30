@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react'
-import { View, Text, TextInput, TouchableOpacity, Image, Animated, Easing, Dimensions, ActivityIndicator } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, Animated, Easing, Dimensions, ActivityIndicator, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-//I18n
-import I18n from 'react-native-i18n'
-
 //styles
 import styles from './Styles/LoginScreenStyles'
 import { Images, Colors } from '../Themes'
+
+//I18n
+import I18n from 'react-native-i18n'
 
 const { width, height } =  Dimensions.get('window');
 const MARGIN = 40;
@@ -20,8 +20,8 @@ class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: 'reactnative@infinite.red',
-      password: 'password',
+      username: '',
+      password: '',
       isLoading: false,
     };
     this.buttonAnimated = new Animated.Value(0);
@@ -29,39 +29,76 @@ class LoginScreen extends React.Component {
 		this._onPress = this._onPress.bind(this);
   }
 
-  handleChangeUsername = (text) => {
-    this.setState({ username: text })
-  }
-
-  handleChangePassword = (text) => {
-    this.setState({ password: text })
+  check(text) {
+    var textRegex = /^[a-z0-9]+$/;
+    return textRegex.test(text);
   }
 
   _onPress() {
 		if (this.state.isLoading) return;
+    const { username, password } = this.state;
+    if (!username) {
+      this.message('Bạn chưa điền tên đăng nhập');
+    } else {
+      if(!this.check(username)) {
+        this.message('Tên đăng nhập chỉ được sử dụng a-z 0-9');
+      } else {
+        if(username.length < 6) {
+          this.message('Tên đăng nhập ít nhất 6 ký tự');
+        } else {
+          if(username.length >= 18) {
+            this.message('Tên đăng nhập tối đa 18 ký tự');
+          } else {
+            if (!password) {
+              this.message('Bạn chưa điền mật khẩu');
+            } else {
+              if (password.length < 6) {
+                this.message('Mật khẩu ít nhất 6 ký tự');
+              } else {
+                if(password.length >= 18) {
+                  this.message('Mật khẩu tối đa 18 ký tự');
+                } else {
+                  //check oke
 
-		this.setState({ isLoading: true });
-		Animated.timing(
-			this.buttonAnimated,
-			{
-				toValue: 1,
-				duration: 200,
-				easing: Easing.linear
-			}
-		).start();
+                  this.setState({ isLoading: true });
+              		Animated.timing(
+              			this.buttonAnimated,
+              			{
+              				toValue: 1,
+              				duration: 200,
+              				easing: Easing.linear
+              			}
+              		).start();
 
-		setTimeout(() => {
-			this._onGrow();
-		}, 2000);
+              		setTimeout(() => {
+              			this._onGrow();
+              		}, 2000);
 
-		setTimeout(() => {
-		  NavigationActions.pop(); //chuyen man hinh
-		 	this.setState({ isLoading: false });
-		 	this.buttonAnimated.setValue(0);
-		 	this.growAnimated.setValue(0);
-		}, 2300);
-
+              		setTimeout(() => {
+              		  NavigationActions.pop(); //chuyen man hinh
+              		 	this.setState({ isLoading: false });
+              		 	this.buttonAnimated.setValue(0);
+              		 	this.growAnimated.setValue(0);
+              		}, 2300);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
 	}
+
+  message(mess) {
+    Alert.alert(
+      'Thong bao',
+      mess,
+      [
+        {text: 'OK', onPress: () => {}},
+      ],
+      { cancelable: false }
+    );
+  }
 
 	_onGrow() {
 		Animated.timing(
@@ -106,6 +143,8 @@ class LoginScreen extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='next'
+                value={this.state.username}
+                onChangeText={(username) => this.setState({ username })}
                 onSubmitEditing={() => this.password.focus()}
               />
               <View style={styles.line} />
@@ -119,11 +158,13 @@ class LoginScreen extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='go'
-                onSubmitEditing={() => {}}
+                value={this.state.password}
+                onChangeText={(password) => this.setState({ password })}
+                onSubmitEditing={() => this._onPress()}
               />
             </View>
             <View style={styles.viewForgotPass}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => NavigationActions.forgotPasswordScreen()}>
                 <Text style={styles.title}>{I18n.t('forgotPassword', {locale: language})}</Text>
               </TouchableOpacity>
             </View>
@@ -150,7 +191,7 @@ class LoginScreen extends React.Component {
         {/*footer-login*/}
         <View style={styles.footer}>
           <Text style={styles.title}>{I18n.t('notAccount', {locale: language})}</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => NavigationActions.creactAccountScreen()}>
             <Text style={styles.createAccount}>{I18n.t('creatAccount', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
