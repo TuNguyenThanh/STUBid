@@ -91,7 +91,12 @@ function loadAuctions () {
                         ORDER BY price DESC
                         LIMIT 1
                     ) AS bid
-                ) AS "highestBidder"
+                ) AS "highestBidder",
+                (
+                    SELECT count("BidHistory"."bidHistoryId")
+                    FROM "BidHistory"
+                    WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
+                ) AS "bids"
                 FROM "Auction"
             ) AS auction
         `,
