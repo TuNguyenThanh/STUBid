@@ -16,7 +16,7 @@ class CheckCode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: '',
+      code: '123456',
     };
   }
 
@@ -31,8 +31,8 @@ class CheckCode extends React.Component {
       if(code.length != 6) {
         this.message('Code khong hop le')
       } else {
-        alert(code);
-        NavigationActions.loginScreen({ type: 'reset', screen: 'CHECK_CODE' });
+        //alert(code);
+        NavigationActions.pop({refresh:{}});
       }
     }
   }

@@ -26,6 +26,13 @@ class CreactAccount extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps){
+    const { sceneKey } = nextProps;
+    if(sceneKey == 'creactAccountScreen') {
+      NavigationActions.pop();
+    }
+  }
+
   handleRegister() {
     const { firstName, lastName, email, phone, username, password, rePassword } = this.state;
     if (!firstName) {

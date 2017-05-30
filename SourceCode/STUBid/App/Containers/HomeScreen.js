@@ -8,6 +8,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
 import ImageLoad from 'react-native-image-placeholder'
+import IO from 'socket.io-client/dist/socket.io'
 
 // Styles
 import styles from './Styles/HomeScreenStyle'
@@ -35,11 +36,20 @@ class Home extends React.Component {
     this.animated = new Animated.Value(0);
 
     //get data auctions
-    this.props.getAuctions(1);
+  //  this.props.getAuctions(1);
 
     //get data category
     this.props.getProductCategory();
     this.loadCategory = true;
+  }
+
+  componentDidMount() {
+    const socket = IO('https://sbid.herokuapp.com/');
+    socket.on('SERVER-SEND-AUCTIONS', (data) => {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data),
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -47,11 +57,11 @@ class Home extends React.Component {
     const { fetching, error, data } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
     const fetchingCategory = nextProps.category.fetching;
-    if(!fetching && data) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
-      });
-    }
+    // if(!fetching && data) {
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(data),
+    //   });
+    // }
 
     if(!fetchingCategory && categoryProduct && this.loadCategory) {
       const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);

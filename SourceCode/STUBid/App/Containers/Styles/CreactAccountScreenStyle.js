@@ -14,9 +14,9 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 200,
-    height: 100,
-    marginTop: -100
+    width: 128,
+    height: 60,
+    marginTop: -150
   },
   backButton: {
     width: 30,

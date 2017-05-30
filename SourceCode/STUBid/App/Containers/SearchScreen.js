@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ModalCategory from '../Components/ModalCategory'
 import ImageLoad from 'react-native-image-placeholder'
+import IO from 'socket.io-client/dist/socket.io'
 
 // Styles
 import styles from './Styles/SearchScreenStyle'
@@ -28,19 +29,18 @@ class Search extends React.Component {
   componentWillMount() {
     this.animated = new Animated.Value(0);
 
-    this.props.getProducts(1);
+    // this.props.getProducts(1);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.forceUpdate();
-    const { fetching, error, dataList, language } = nextProps.searchs;
-    const { categoryProduct } = nextProps.category;
-    if(!fetching && dataList) {
+  componentDidMount() {
+    const socket = IO('https://sbid.herokuapp.com/');
+    socket.on('SERVER-SEND-AUCTIONS', (data) => {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(dataList),
+        dataSource: this.state.dataSource.cloneWithRows(data),
       });
-    }
+    });
 
+    const { categoryProduct } = this.props.category;
     if(categoryProduct && this.loadCategory) {
       const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
       this.setState({
@@ -48,6 +48,25 @@ class Search extends React.Component {
       });
       this.loadCategory = false;
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { fetching, error, dataList, language } = nextProps.searchs;
+    const { categoryProduct } = nextProps.category;
+    // if(!fetching && dataList) {
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(dataList),
+    //   });
+    // }
+
+    // if(categoryProduct && this.loadCategory) {
+    //   const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
+    //   this.setState({
+    //     data: categoryProductNew,
+    //   });
+    //   this.loadCategory = false;
+    // }
 
     //error - not internet
     if(!fetching && error){
