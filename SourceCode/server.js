@@ -32,7 +32,7 @@ server.listen(config.PORT, () => {
 });
 
 app.get('/', (req,res) => res.sendFile(__dirname + '/public/views/index.html'));
-// app.get('/api', (req,res) => res.sendFile(__dirname + '/public/views/api.html'));
+app.get('/api-doc', (req,res) => res.sendFile(__dirname + '/public/api-doc.json'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
 app.post('/Auctions', require('./controllers/postAuction'));
