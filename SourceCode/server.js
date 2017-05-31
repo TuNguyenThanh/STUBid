@@ -7,10 +7,20 @@ var express = require('express');
 var app = express();
 app.use(express.static('public'));
 app.use(function (req, res, next) {
+  if (req.path != '/'
+    && req.header('App-Name') != 'sbid'
+    && new RegExp(req.header('origin')).test(config.ALLOW_ORIGIN) != true
+  )
+    return res.send({
+        ok: false,
+        error: {
+          code: 97,
+          description: 'you do not have permission to access this route'
+        }
+    });
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  next();
 });
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -22,6 +32,7 @@ server.listen(config.PORT, () => {
   })
 });
 
+app.get('/', (req,res) => res.sendFile(__dirname + '/public/views/index.html'));
 // app.get('/Auctions', require('./controllers/getAuctions'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
@@ -38,10 +49,19 @@ let interval = setInterval(() => {
     socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page - 1, socket.categoryId));
   })
 }, 1000);
+
 io.on('connection', function (socket) {
-  socket.page = 1;
-  socket.categoryId = -1;
-  sockets.push(socket);
+  if (
+    socket.handshake.query.key === 'sbid'
+    || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true
+  ) {
+    socket.page = 1;
+    socket.categoryId = -1;
+    sockets.push(socket);
+  }
+  else socket.disconnect();
+
+  socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
 
   socket.on('CLIENT-SEND-PAGE', page => {
     socket.page = page;
@@ -50,7 +70,6 @@ io.on('connection', function (socket) {
   socket.on('CLIENT-SEND-CATEGORY', categoryId => {
     socket.page = 1;
     socket.categoryId = categoryId;
-    console.log(socket.categoryId);
   });
 
   socket.on('disconnect', () => sockets.splice(sockets.indexOf(socket),1));
