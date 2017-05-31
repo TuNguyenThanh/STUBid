@@ -38,7 +38,9 @@ module.exports = (req,res) => {
                         lastName: account.lastName,
                         phoneNumber: account.phoneNumber,
                         email: account.email,
-                        avatar: account.avatar
+                        avatar: account.avatar,
+                        bankRefNumber: account.bankRefNumber,
+                        bankRefName: account.bankRefName
                     }
                 });
         }

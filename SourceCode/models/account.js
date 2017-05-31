@@ -1,5 +1,6 @@
 var { query } = require('../helpers/db'),
-    { DOMAIN_NAME } = require('../config');
+    { DOMAIN_NAME } = require('../config'),
+    registerQueue = [];
 
 exports.createAccount = (username, password, isAdmin, profileId) => {
     return new Promise((resolve,reject) => {
@@ -70,13 +71,18 @@ exports.login = (username, password) => {
             "Account"."isAdmin",
             "Account"."bannedLevel",
             "Account"."bannedDate",
-            "Account".point,
+            "Account"."sBidPoint",
             "Profile"."firstName",
             "Profile"."lastName",
             "Profile"."phoneNumber",
             "Profile".email,
-            CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile".avatar) AS avatar
-            FROM "Account" INNER JOIN "Profile" ON "Account"."profileId" = "Profile"."profileId"
+            CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile".avatar) AS avatar,
+            "BankBrand"."bankBrandName" AS "bankRefName",
+            substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 3, length("BankRef"."bankAccountNumber")) AS "bankRefNumber"
+            FROM "Account"
+            INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+            INNER JOIN "BankRef" ON "BankRef"."accountId" = "Account"."accountId"
+            INNER JOIN "BankBrand" ON "BankBrand"."bankBrandId" = "BankRef"."bankBrandId"
             WHERE username=$1 AND password=$2
         `,
             params = [username, password];
@@ -86,19 +92,36 @@ exports.login = (username, password) => {
     })
 }
 
-exports.getBankRefs = (accountId) => {
+exports.exist = (username, email, phoneNumber) => {
     return new Promise((resolve,reject) => {
-        let sql = `
-            SELECT
-            "Bank".name,
-            "BankRef"."bankNumber"
-            FROM "BankRef"
-            INNER JOIN "Bank" ON "BankRef"."bankId" = "Bank"."bankId"
-            INNER JOIN "Account" ON "BankRef"."accountId" = "Account"."accountId"
-            WHERE "Account"."accountId" = $1
-        `
-        query(sql,[accountId])
-        .then(result => resolve(result))
+        if (registerQueue.find(e => e.username == username)) reject(new Error('username existed'));
+        else if (registerQueue.find(e => e.phoneNumber == phoneNumber)) reject(new Error('phone number existed'));
+        else if (registerQueue.find(e => e.email == email)) reject(new Error('email existed'));
+
+        let sql     = `SELECT "Account".username, "Profile".email, "Profile"."phoneNumber"
+                    FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                    WHERE username=$1 OR email=$2 OR "phoneNumber"=$3`,
+            params  = [username, email, phoneNumber];
+        query(sql, params)
+        .then(result => {
+            let rows = result.rows;
+            if (rows.length === 0) {
+                registerQueue.push({ username, email, phoneNumber });
+                setTimeout(function() {
+                    registerQueue.splice(registerQueue.findIndex(e => e.username === username),1)
+                }, 10*60*1000);
+                resolve();
+            }
+            else {
+                if (rows.find(e => e.username == username)) reject(new Error('username existed'));
+                else if (rows.find(e => e.phoneNumber == phoneNumber)) reject(new Error('phone number existed'));
+                else if (rows.find(e => e.email == email)) reject(new Error('email existed'));
+            }
+        })
         .catch(error => reject(error));
     })
+}
+
+exports.register = () => {
+
 }

@@ -27,18 +27,15 @@ app.use(bodyParser.json());
 var server = require('http').createServer(app);
 server.listen(config.PORT, () => {
   console.log('Server is running');
-  Object.keys(config).forEach(key => {
-    console.log(key + ' : ' + config[key]);
-  })
 });
 
 app.get('/', (req,res) => res.sendFile(__dirname + '/public/views/index.html'));
-// app.get('/Auctions', require('./controllers/getAuctions'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
-app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
 app.post('/Auctions', require('./controllers/postAuction'));
+app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
 app.get('/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
+app.post('/Accounts/register', require('./controllers/register'));
 app.post('/Accounts/login', require('./controllers/login'));
 
 // socket.io configuration

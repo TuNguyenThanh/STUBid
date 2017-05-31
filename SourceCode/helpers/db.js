@@ -1,14 +1,5 @@
 var pg = require('pg');
-var config = {
-  user: 'user',
-  database: 'database',
-  password: 'password',
-  host: 'host',
-  port: 5432,
-  max: 10,
-  idleTimeoutMillis: 30000,
-  ssl: true
-};
+var config = require('../config').PG;
 
 const pool = new pg.Pool(config);
 
