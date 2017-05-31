@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { View, Text, TextInput, TouchableOpacity, Image, Animated, Easing, Dimensions, ActivityIndicator, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, Animated, Easing, Dimensions, ActivityIndicator, Alert, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -21,13 +21,47 @@ class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: '',
-      password: '',
+      username: 'testadmin',
+      password: '123456',
       isLoading: false,
     };
     this.buttonAnimated = new Animated.Value(0);
 		this.growAnimated = new Animated.Value(0);
 		this._onPress = this._onPress.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { fetching, user, error } = nextProps.login;
+
+    if(!fetching && user) {
+      console.log(user);
+      //save token
+      try {
+        AsyncStorage.setItem('loginToken', user.token);
+      } catch (error) {
+        // Error saving data
+        console.log('Error saving data');
+      }
+
+      Animated.timing(
+      	this.buttonAnimated,
+      	{
+      		toValue: 1,
+      		duration: 200,
+      		easing: Easing.linear
+      	}
+      ).start();
+
+      setTimeout(() => { this._onGrow() }, 2000);
+
+      setTimeout(() => {
+       	this.setState({ isLoading: false });
+       	this.buttonAnimated.setValue(0);
+       	this.growAnimated.setValue(0);
+
+        NavigationActions.pop(); //chuyen man hinh
+      }, 2300);
+    }
   }
 
   check(text) {
@@ -38,7 +72,7 @@ class LoginScreen extends React.Component {
   _onPress() {
 		if (this.state.isLoading) return;
     const { username, password } = this.state;
-    console.log(md5(password));
+
     if (!username) {
       this.message('Bạn chưa điền tên đăng nhập');
     } else {
@@ -61,27 +95,8 @@ class LoginScreen extends React.Component {
                   this.message('Mật khẩu tối đa 18 ký tự');
                 } else {
                   //check oke
-
+                  this.props.attemptLogin(username, md5(password));
                   this.setState({ isLoading: true });
-              		Animated.timing(
-              			this.buttonAnimated,
-              			{
-              				toValue: 1,
-              				duration: 200,
-              				easing: Easing.linear
-              			}
-              		).start();
-
-              		setTimeout(() => {
-              			this._onGrow();
-              		}, 2000);
-
-              		setTimeout(() => {
-              		  NavigationActions.pop(); //chuyen man hinh
-              		 	this.setState({ isLoading: false });
-              		 	this.buttonAnimated.setValue(0);
-              		 	this.growAnimated.setValue(0);
-              		}, 2300);
                 }
               }
             }
@@ -204,7 +219,7 @@ class LoginScreen extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    fetching: state.login.fetching,
+    login: state.login,
     language: state.settings.language,
   }
 }

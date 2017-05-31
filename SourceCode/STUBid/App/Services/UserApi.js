@@ -21,13 +21,13 @@ const create = (baseURL = ApiConfig.baseURL) => {
   // get state working of pro
   // const getAuction = (page) => api.get('Auctions/page/' + page);
 
-  const getCategory = () => {
-    return api.get('Categorys');
+  const login = (username, password) => {
+    return api.post('Accounts/login', { username, password });
   }
 
   return {
     // a list of the API functions from step 2
-    getCategory
+    login
   }
 }
 

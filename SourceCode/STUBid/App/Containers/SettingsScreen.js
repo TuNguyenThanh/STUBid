@@ -20,8 +20,17 @@ class Settings extends React.Component {
     this.state = {
       switchIsOn: true,
       openLanguage: false,
-      user: null
+      user: this.props.login.user
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { fetching, user, error } = nextProps.login;
+    if(user) {
+      this.setState({
+        user: user,
+      });
+    }
   }
 
   render() {
@@ -103,6 +112,7 @@ class Settings extends React.Component {
   }
 
   renderAvatarUser() {
+    const { profile } = this.state.user;
     return(
       <View style={styles.viewAvatar}>
         <View style={{ flexDirection: 'row'}}>
@@ -112,7 +122,7 @@ class Settings extends React.Component {
             resizeMode="contain"
           />
           <Image
-            source={{uri: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg'}}
+            source={{uri: profile.avatar }}
             style={styles.imgAvatar}
           />
           <Image
@@ -121,7 +131,7 @@ class Settings extends React.Component {
             resizeMode="contain"
           />
         </View>
-        <Text style={styles.titleUser}>Nguyễn Thanh Tú</Text>
+        <Text style={styles.titleUser}>{profile.lastName} {profile.firstName}</Text>
       </View>
     );
   }
@@ -151,7 +161,7 @@ class Settings extends React.Component {
           <Text style={styles.titleSession}>{I18n.t('user', { locale: language }).toUpperCase()}</Text>
         </View>
         <View style={styles.group}>
-          <TouchableOpacity style={styles.row} onPress={() => NavigationActions.editProfileScreen({title: I18n.t('editUser', { locale: language })} )}>
+          <TouchableOpacity style={styles.row} onPress={() => NavigationActions.editProfileScreen({title: I18n.t('editUser', { locale: language }), user: this.state.user.profile } )}>
             <Text style={styles.titleRow}>{I18n.t('editUser', { locale: language })}</Text>
             <Icon name="angle-right" size={25} color={'lightgray'} />
           </TouchableOpacity>
@@ -209,6 +219,7 @@ class Settings extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    login: state.login,
   }
 }
 

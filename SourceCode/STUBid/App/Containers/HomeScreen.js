@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import AuctionsActions from '../Redux/AuctionsRedux'
 import CategoryActions from '../Redux/CategoryRedux'
@@ -33,10 +33,19 @@ class Home extends React.Component {
   }
 
   componentWillMount() {
+    try {
+      AsyncStorage.getItem('loginToken').then((token) => {
+        console.log(token);
+      });
+    } catch (error) {
+      // Error retrieving data
+      console.log(error);
+    }
+
     this.animated = new Animated.Value(0);
 
     //get data auctions
-  //  this.props.getAuctions(1);
+    this.props.getAuctions(1);
 
     //get data category
     this.props.getProductCategory();
@@ -44,12 +53,12 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    const socket = IO('https://sbid.herokuapp.com/');
-    socket.on('SERVER-SEND-AUCTIONS', (data) => {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
-      });
-    });
+    // const socket = IO('https://sbid.herokuapp.com/');
+    // socket.on('SERVER-SEND-AUCTIONS', (data) => {
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(data),
+    //   });
+    // });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,11 +66,11 @@ class Home extends React.Component {
     const { fetching, error, data } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
     const fetchingCategory = nextProps.category.fetching;
-    // if(!fetching && data) {
-    //   this.setState({
-    //     dataSource: this.state.dataSource.cloneWithRows(data),
-    //   });
-    // }
+    if(!fetching && data) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(data),
+      });
+    }
 
     if(!fetchingCategory && categoryProduct && this.loadCategory) {
       const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);

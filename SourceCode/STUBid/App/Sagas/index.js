@@ -1,6 +1,7 @@
 import { takeLatest, fork } from 'redux-saga/effects'
 import AuctionsAPI from '../Services/AuctionsApi'
 import CategoryAPI from '../Services/CategoryApi'
+import UserAPI from '../Services/UserApi'
 
 /* ------------- Types ------------- */
 
@@ -9,6 +10,7 @@ import { SettingsTypes } from '../Redux/SettingsRedux'
 import { AuctionsTypes } from '../Redux/AuctionsRedux'
 import { SearchTypes } from '../Redux/SearchRedux'
 import { CategoryTypes } from '../Redux/CategoryRedux'
+import { LoginTypes } from '../Redux/LoginRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -17,6 +19,7 @@ import { updateLanguage } from './SettingsSagas'
 import { getAuctions, bidProduct } from './AuctionsSagas'
 import { getProducts, searchs } from './SearchSagas'
 import { getCategory } from './CategorySagas'
+import { login } from './LoginSagas'
 
 /* ------------- API ------------- */
 
@@ -25,6 +28,7 @@ import { getCategory } from './CategorySagas'
 //const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
 const AuctionsApi = AuctionsAPI.create()
 const CategoryApi = CategoryAPI.create()
+const UserApi = UserAPI.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -32,7 +36,7 @@ export default function * root () {
   yield [
     // some sagas only receive an action
     takeLatest(StartupTypes.STARTUP, startup),
-    //takeLatest(LoginTypes.LOGIN_REQUEST, login),
+    takeLatest(LoginTypes.LOGIN_REQUEST, login, UserApi),
     //takeLatest(OpenScreenTypes.OPEN_SCREEN, openScreen),
 
     //some sagas receive extra parameters in addition to an action

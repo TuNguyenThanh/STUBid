@@ -8,7 +8,11 @@ export function * getAuctions(api, action) {
   try {
     while (true) {
       const response = yield call(api.getAuction, page);
-      yield put(AuctionsActions.auctionsSuccess(response));
+      if(response) {
+        yield put(AuctionsActions.auctionsSuccess(response));
+      } else {
+        yield put(AuctionsActions.auctionsFailure('WRONG'));
+      }
     }
   } catch (e) {
     console.log(e);

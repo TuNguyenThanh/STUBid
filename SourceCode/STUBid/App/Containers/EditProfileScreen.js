@@ -19,14 +19,13 @@ class EditProfile extends React.Component {
     super(props);
     _this = this;
     this.state = {
-      firstName: 'Tú',
-      lastName: 'Nguyễn Thanh',
-      phone: '0903016975',
-      email: 'thanhtu.dev@gmail.com',
-      atm: '2338 3232 6565 3425',
+      firstName: this.props.user.firstName,
+      lastName: this.props.user.lastName,
+      phone: this.props.user.phoneNumber,
+      email: this.props.user.email,
+      atm: this.props.user.atm,
       openModalChooseImage: false,
-      urlImage: 'http://znews-photo.d.za.zdn.vn/w1024/Uploaded/neg_rtlzofn/2017_01_23/14494601_177404746951l3484_2482115257403382069_n.jpg',
-
+      urlImage: this.props.user.avatar,
     };
   }
 
