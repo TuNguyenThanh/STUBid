@@ -8,7 +8,7 @@ module.exports = (req,res) => {
             let account = result.rows[0];
             if (account.bannedLevel >= 2)
                 res.send({
-                    success: false,
+                    ok: false,
                     error: {
                         code: 103,
                         description: 'account has been banned at level 2'
@@ -19,7 +19,7 @@ module.exports = (req,res) => {
                 && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
             )
                 res.send({
-                    success: false,
+                    ok: false,
                     error: {
                         code: 102,
                         description: 'account has been banned at level 1'
@@ -27,7 +27,7 @@ module.exports = (req,res) => {
                 });
             else
                 res.send({
-                    success: true,
+                    ok: true,
                     token: sign({
                         accountId: account.accountId,
                         username: account.username,
@@ -44,7 +44,7 @@ module.exports = (req,res) => {
         }
         else {
             res.send({
-                success: false,
+                ok: false,
                 error: {
                     code: 101,
                     description: 'wrong username or password'
@@ -55,7 +55,7 @@ module.exports = (req,res) => {
     .catch(error => {
         console.log(error + '');
         res.send({
-            success: false,
+            ok: false,
             error: {
                 code: 99,
                 description: 'system error'

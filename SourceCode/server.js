@@ -29,7 +29,6 @@ app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, s
 app.post('/Auctions', require('./controllers/postAuction'));
 app.get('/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
 app.post('/Accounts/login', require('./controllers/login'));
-app.get('/Accounts/bankRefs', require('./controllers/getBankRefs'));
 
 // socket.io configuration
 var io = require('socket.io')(server),

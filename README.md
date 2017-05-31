@@ -50,6 +50,31 @@ npm start
 }
 ```
 
+|Method|Route|
+|-|-|
+|POST|/Accounts/login|
+- Parameters:
+```javascript
+{
+	username: string,
+	password: string
+}
+```
+- Response:
+```javascript
+{
+  ok: boolean,
+  token: string,
+  profile: {
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+    email: string,
+    avatar: string
+  }
+}
+```
+
 ### Socket event
 |Type|Key|
 |-|-|
