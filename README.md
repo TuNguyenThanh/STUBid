@@ -75,13 +75,12 @@ npm start
 }
 ```
 
-### Socket event
-|Type|Key|
+### Socket events
+|Event type|Event name|
 |-|-|
-|Litsen|'SERVER-UPDATE-AUCTION'|
-- Parameters:
+|ON|'SERVER-UPDATE-AUCTION'|
 
-- Response:
+- Data:
 ```javascript
 {
     auctionId: number,
@@ -123,6 +122,37 @@ npm start
         price: number,
         timestamp: string
     },
+    bids: number,
     timeLeft: string
 }
+```
+
+|Event type|Event name|
+|-|-|
+|ON|'SERVER-SEND-INFO'|
+
+- Data:
+```javascript
+{
+    page: number,
+    categoryId: number
+}
+```
+
+|Event type|Event name|
+|-|-|
+|EMIT|'CLIENT-SEND-PAGE'|
+
+- Data:
+```javascript
+page: number
+```
+
+|Event type|Event name|
+|-|-|
+|EMIT|'CLIENT-SEND-CATEGORY'|
+
+- Data:
+```javascript
+categoryId: number
 ```

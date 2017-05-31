@@ -1,0 +1,14 @@
+[
+    {
+        "method": "patch",
+        "route": "/Auctions/bid",
+        "parameters": "{ auctionId: number, accountId: number, price: number }",
+        "response": "{ ok: boolean }"
+    },
+    {
+        "method": "post",
+        "route": "/Accounts/login",
+        "parameters": "{ username: string, password: string }",
+        "response": "{ ok: boolean, token: string, profile: { firstName: string, lastName: string, phoneNumber: string, email: string, avatar: string } }"
+    }
+]

@@ -7,9 +7,11 @@ var express = require('express');
 var app = express();
 app.use(express.static('public'));
 app.use(function (req, res, next) {
+  console.log(req.header('origin'));
   if (req.path != '/'
     && req.header('App-Name') != 'sbid'
-    && new RegExp(req.header('origin')).test(config.ALLOW_ORIGIN) != true
+    && (!req.header('origin')
+      || new RegExp(req.header('origin')).test(config.ALLOW_ORIGIN) != true)
   )
     return res.send({
         ok: false,
@@ -30,6 +32,7 @@ server.listen(config.PORT, () => {
 });
 
 app.get('/', (req,res) => res.sendFile(__dirname + '/public/views/index.html'));
+// app.get('/api', (req,res) => res.sendFile(__dirname + '/public/views/api.html'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
 app.post('/Auctions', require('./controllers/postAuction'));
