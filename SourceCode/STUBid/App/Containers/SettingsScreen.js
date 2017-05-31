@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Picker, Image, TouchableOpacity, ScrollView, Switch } from 'react-native'
+import { View, Text, Picker, Image, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import SettingsActions from '../Redux/SettingsRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -31,6 +31,21 @@ class Settings extends React.Component {
         user: user,
       });
     }
+  }
+
+  handleLogout() {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('logOut', { locale: language }),
+      I18n.t('areYouSureLogout', { locale: language }),
+      [
+        {text: I18n.t('cancel', { locale: language }), onPress: () => {}, style: 'cancel'},
+        {text: I18n.t('ok', { locale: language }), onPress: () => {
+
+        }},
+      ],
+      { cancelable: false }
+    );
   }
 
   render() {
@@ -95,7 +110,7 @@ class Settings extends React.Component {
                 <Icon name="angle-right" size={25} color={'lightgray'} />
               </TouchableOpacity>
               <View style={styles.line} />
-              <TouchableOpacity style={styles.row}>
+              <TouchableOpacity style={styles.row} onPress={() => NavigationActions.versionAppScreen({ title: I18n.t('version', { locale: language }) })}>
                 <Text style={styles.titleRow}>{I18n.t('version', { locale: language })}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={{marginRight: 10, color: 'gray'}}>1.0.1</Text>
@@ -166,12 +181,12 @@ class Settings extends React.Component {
             <Icon name="angle-right" size={25} color={'lightgray'} />
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.row}>
+          <TouchableOpacity style={styles.row} onPress={() => NavigationActions.changePasswordScreen()}>
             <Text style={styles.titleRow}>{I18n.t('changePass', { locale: language })}</Text>
             <Icon name="angle-right" size={25} color={'lightgray'} />
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.row}>
+          <TouchableOpacity style={styles.row} onPress={() => this.handleLogout()}>
             <Text style={styles.titleRow}>{I18n.t('logOut', { locale: language })}</Text>
             <Icon name="angle-right" size={25} color={'lightgray'} />
           </TouchableOpacity>

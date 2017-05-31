@@ -77,4 +77,9 @@
   "verificationCode": "Verification code",
   "getCode": "Get a new code",
   "confirm": "Confirm",
+  "areYouSureLogout": "Are you sure you want logout?",
+  "oldPassword": "Old password",
+  "newPassword": "New password",
+  "repeatNewPassword": "Repeat new password",
+  "versionApp": "Version App",
 }

@@ -76,5 +76,10 @@
   "repeatPassword": "Nhập lại mật khẩu",
   "verificationCode": "Mã xác nhận",
   "getCode": "Nhận mã mới",
-  "confirm": "Xác nhận"
+  "confirm": "Xác nhận",
+  "areYouSureLogout": "Bạn có chắc muốn đăng xuất?",
+  "oldPassword": "Mật khẩu cũ",
+  "newPassword": "Mật khẩu mới",
+  "repeatNewPassword": "Nhập lại mật khẩu mới",
+  "versionApp": "Phiên bản ứng dụng",
 }

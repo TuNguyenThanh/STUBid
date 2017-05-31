@@ -19,6 +19,8 @@ import UploadProductScreen from '../Containers/UploadProductScreen'
 import ForgotPasswordScreen from '../Containers/ForgotPasswordScreen'
 import CreactAccountScreen from '../Containers/CreactAccountScreen'
 import CheckCodeScreen from '../Containers/CheckCodeScreen'
+import ChangePasswordScreen from '../Containers/ChangePasswordScreen'
+import VersionAppScreen from '../Containers/VersionAppScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -45,12 +47,14 @@ class NavigationRouter extends Component {
             <Scene key="tab4" title="profile" icon={TabIcon}>
               <Scene key='settingsScreen' component={SettingsScreen} hideNavBar/>
               <Scene key='infoAppScreen' component={InfoAppScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+              <Scene key='versionAppScreen' component={VersionAppScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
             </Scene>
           </Scene>
 
           <Scene key='loginScreen' component={LoginScreen} hideNavBar />
           <Scene key='forgotPasswordScreen' component={ForgotPasswordScreen} hideNavBar />
           <Scene key='checkCodeScreen' component={CheckCodeScreen} hideNavBar />
+          <Scene key='changePasswordScreen' component={ChangePasswordScreen} hideNavBar />
           <Scene key='creactAccountScreen' component={CreactAccountScreen} direction="vertical" hideNavBar />
           <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
           <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false} titleStyle={Styles.title} />
