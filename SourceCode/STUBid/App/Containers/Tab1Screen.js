@@ -19,14 +19,14 @@ class Tab1 extends React.Component {
     super(props);
     this.state = {
       arrImage: [],
-      data: this.props.auctions.data[this.props.rowID]
+      data: this.props.auctions.listData[this.props.rowID]
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    const { data } = nextProps.auctions;
+    const { listData } = nextProps.auctions;
     this.setState({
-      data: data[this.props.rowID],
+      data: listData[this.props.rowID],
     });
   }
 

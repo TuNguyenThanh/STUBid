@@ -28,18 +28,9 @@ class Search extends React.Component {
 
   componentWillMount() {
     this.animated = new Animated.Value(0);
-
-    // this.props.getProducts(1);
   }
 
   componentDidMount() {
-    const socket = IO('https://sbid.herokuapp.com/');
-    socket.on('SERVER-SEND-AUCTIONS', (data) => {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(data),
-      });
-    });
-
     const { categoryProduct } = this.props.category;
     if(categoryProduct && this.loadCategory) {
       const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
@@ -52,13 +43,12 @@ class Search extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, dataList, language } = nextProps.searchs;
-    const { categoryProduct } = nextProps.category;
-    // if(!fetching && dataList) {
-    //   this.setState({
-    //     dataSource: this.state.dataSource.cloneWithRows(dataList),
-    //   });
-    // }
+    const { fetching, error, listData } = nextProps.auctions;
+    if(!fetching && listData) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(listData),
+      });
+    }
 
     // if(categoryProduct && this.loadCategory) {
     //   const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
@@ -152,7 +142,7 @@ class Search extends React.Component {
       fontSize: fontInterpolate
     };
 
-    const { fetching } = this.props.searchs;
+    const { fetching } = this.props.auctions;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -227,14 +217,13 @@ class Search extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
-    searchs: state.searchs,
     category: state.category,
+    auctions: state.auctions,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getProducts: (page) => dispatch(SearchActions.getProductsRequest(page)),
   }
 }
 

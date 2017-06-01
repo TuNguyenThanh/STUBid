@@ -4,10 +4,6 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  getProductsRequest: ['page'],
-  getProductsSuccess: ['dataList'],
-  getProductsFailure: ['error'],
-
   searchRequest: ['keysearch'],
   searchSuccess: ['dataSearch'],
   searchFailure: ['error'],
@@ -20,7 +16,6 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   dataSearch: [],
-  dataList: [],
   error: null,
   fetching: false
 })
@@ -31,8 +26,6 @@ export const INITIAL_STATE = Immutable({
 export const request = (state) => state.merge({ fetching: true })
 
 // we've successfully logged in
-export const loadSuccess = (state, { dataList }) => state.merge({ fetching: false, error: null, dataList })
-
 export const searchSuccess = (state, { dataSearch }) => state.merge({ fetching: false, error: null, dataSearch })
 
 // we've had a problem logging in
@@ -42,10 +35,6 @@ export const failure = (state, { error }) => state.merge({ fetching: false, erro
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.GET_PRODUCTS_REQUEST]: request,
-  [Types.GET_PRODUCTS_SUCCESS]: loadSuccess,
-  [Types.GET_PRODUCTS_FAILURE]: failure,
-  
   [Types.SEARCH_REQUEST]: request,
   [Types.SEARCH_SUCCESS]: searchSuccess,
   [Types.SEARCH_FAILURE]: failure,

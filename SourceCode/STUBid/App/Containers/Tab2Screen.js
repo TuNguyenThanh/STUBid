@@ -11,14 +11,14 @@ class Tab2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.auctions.data[this.props.rowID]
+      data: this.props.auctions.listData[this.props.rowID]
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    const { data } = nextProps.auctions;
+    const { listData } = nextProps.auctions;
     this.setState({
-      data: data[this.props.rowID],
+      data: listData[this.props.rowID],
     });
   }
 

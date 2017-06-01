@@ -4,13 +4,15 @@ import Immutable from 'seamless-immutable'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  auctionsRequest: ['page'],
+  auctionsRequest: ['category', 'page'],
   auctionsSuccess: ['data'],
   auctionsFailure: ['error'],
 
   bidProductRequest: ['auctionId', 'accountId', 'priceBid'],
   bidProductSuccess: ['bidSuccess'],
   bidProductFailure: ['error'],
+
+  setData: ['listData'],
 })
 
 export const AuctionsTypes = Types
@@ -20,6 +22,7 @@ export default Creators
 
 export const INITIAL_STATE = Immutable({
   data: [],
+  listData: [],
   error: null,
   fetching: false,
   bidSuccess: null,
@@ -40,6 +43,8 @@ export const failure = (state, { error }) => state.merge({ fetching: false, erro
 
 export const bidProductRequest = (state) => state.merge({ })
 
+export const setData = (state, { listData }) => state.merge({ listData })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -50,6 +55,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.BID_PRODUCT_REQUEST]: bidProductRequest,
   // [Types.BID_PRODUCT_SUCCESS]: bidProductSuccess,
   // [Types.BID_PRODUCT_FAILURE]: failure,
+
+  [Types.SET_DATA]: setData,
 })
 
 /* ------------- Selectors ------------- */

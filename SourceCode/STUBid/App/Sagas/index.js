@@ -17,7 +17,7 @@ import { LoginTypes } from '../Redux/LoginRedux'
 import { startup } from './StartupSagas'
 import { updateLanguage } from './SettingsSagas'
 import { getAuctions, bidProduct } from './AuctionsSagas'
-import { getProducts, searchs } from './SearchSagas'
+import { searchs } from './SearchSagas'
 import { getCategory } from './CategorySagas'
 import { login } from './LoginSagas'
 
@@ -49,9 +49,6 @@ export default function * root () {
     takeLatest(AuctionsTypes.AUCTIONS_REQUEST, getAuctions, AuctionsApi),
 
     takeLatest(AuctionsTypes.BID_PRODUCT_REQUEST, bidProduct, AuctionsApi),
-
-    //Search - AuctionsApi
-    takeLatest(SearchTypes.GET_PRODUCTS_REQUEST, getProducts, AuctionsApi),
 
     //Category
     takeLatest(CategoryTypes.CATEGORY_PRODUCT_REQUEST, getCategory, CategoryApi),

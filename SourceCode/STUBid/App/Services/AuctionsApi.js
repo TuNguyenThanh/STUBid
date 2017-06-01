@@ -12,18 +12,10 @@ const create = (baseURL = ApiConfig.baseURL) => {
     timeout: ApiConfig.timeOut,
   });
 
-  // Force OpenWeather API Key on all requests
-  api.addRequestTransform(request => {});
-
-  if (__DEV__ && console.tron) {
-    console.tron.log('Hello, I\'m an example of how to log via Reactotron.')
-    api.addMonitor(console.tron.apisauce)
-  };
-
   // get state working of pro
   // const getAuction = (page) => api.get('Auctions/page/' + page);
 
-  const getAuction = (page) => {
+  const getAuction = (category, page) => {
     return new Promise(resolve => {
       socket.on('SERVER-SEND-AUCTIONS', (data) => {
         resolve(data);

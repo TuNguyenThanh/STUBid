@@ -4,6 +4,12 @@ import { Scene, Router } from 'react-native-router-flux'
 import NavigationDrawer from './NavigationDrawer'
 import TabIcon from './TabIcon'
 
+//Redux and Fetch API
+import AuctionsActions from '../Redux/AuctionsRedux'
+import { connect } from 'react-redux'
+import ApiConfig from '../Config/ApiConfig'
+import IO from 'socket.io-client/dist/socket.io'
+
 // screens identified by the router
 import LaunchScreen from '../Containers/LaunchScreen'
 import LoginScreen from '../Containers/LoginScreen'
@@ -29,6 +35,13 @@ import Styles from './Styles/NavigationContainerStyles'
 * Documentation: https://github.com/aksonov/react-native-router-flux
 ***************************/
 class NavigationRouter extends Component {
+  componentDidMount() {
+    const socket = IO(ApiConfig.baseURL);
+    socket.on('SERVER-SEND-AUCTIONS', (data) => {
+      this.props.setData(data);
+    });
+  }
+
   render () {
     return (
       <Router>
@@ -67,4 +80,17 @@ class NavigationRouter extends Component {
   }
 }
 
-export default NavigationRouter
+const mapStateToProps = (state) => {
+  return {
+    language: state.settings.language,
+    auctions: state.auctions,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setData: (data) => dispatch(AuctionsActions.setData(data)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationRouter)

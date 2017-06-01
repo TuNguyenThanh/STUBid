@@ -15,7 +15,7 @@ class VersionApp extends React.Component {
       isNewVersion: false,
     };
   }
-  
+
   render () {
     const { language } = this.props;
     return (
@@ -26,7 +26,7 @@ class VersionApp extends React.Component {
           <View style={styles.contentStyle}>
             <Text style={styles.textUpdate}>Đã có 1 bản cập nhật mới, cập nhật ngay để trải nghiệm tốt hơn.</Text>
             <TouchableOpacity style={styles.buttonUpdate}>
-              <Text style={styles.buttonText}>Cap nhat</Text>
+              <Text style={styles.buttonText}>Cập nhật</Text>
             </TouchableOpacity>
           </View>
         }

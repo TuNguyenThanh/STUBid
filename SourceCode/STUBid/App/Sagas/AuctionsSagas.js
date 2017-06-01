@@ -1,13 +1,14 @@
 import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AuctionsActions from '../Redux/AuctionsRedux'
+import IO from 'socket.io-client/dist/socket.io'
 
 export function * getAuctions(api, action) {
   // make the call to the api
-  const { page } = action;
+  const { category, page } = action;
   try {
     while (true) {
-      const response = yield call(api.getAuction, page);
+      const response = yield call(api.getAuction, category, page);
       if(response) {
         yield put(AuctionsActions.auctionsSuccess(response));
       } else {
