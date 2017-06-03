@@ -16,8 +16,15 @@
             "method": "post",
             "route": "/Accounts/login",
             "parameters": {
-                "username": "string",
-                "password": "string"
+                "OR": [
+                    {
+                        "username": "string",
+                        "password": "string"
+                    },
+                    {
+                        "token": "string"
+                    }
+                ]
             },
             "response": {
                 "ok": "boolean",

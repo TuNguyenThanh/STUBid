@@ -62,9 +62,10 @@ exports.deleteAccount = (accountId) => {
     })
 }
 
-exports.login = (username, password) => {
+exports.login = (accountId, username, password) => {
     return new Promise((resolve,reject) => {
-        let sql = `
+        let sql, params;
+        sql = `
             SELECT
             "Account"."accountId",
             "Account"."username",
@@ -83,11 +84,21 @@ exports.login = (username, password) => {
             INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
             INNER JOIN "BankRef" ON "BankRef"."accountId" = "Account"."accountId"
             INNER JOIN "BankBrand" ON "BankBrand"."bankBrandId" = "BankRef"."bankBrandId"
-            WHERE username=$1 AND password=$2
-        `,
-            params = [username, password];
+            ${accountId?' WHERE "Account"."accountId"=$1':' WHERE username=$1 AND password=$2'}
+        `;
+            params = accountId?[accountId]:[username, password];
         query(sql,params)
-        .then(result => resolve({ rowCount: result.rowCount, rows: result.rows }))
+        .then(result => {
+            if (result.rowCount !== 1) return reject(new Error('wrong username or password'));
+            let account = result.rows[0];
+            if (account.bannedLevel >= 2) return reject(new Error('account has been banned at level 2'));
+            if (
+                account.bannedLevel >=1
+                && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
+            )
+                return reject(new Error('account has been banned at level 1'));
+            resolve(account)
+        })
         .catch(error => reject(error));
     })
 }

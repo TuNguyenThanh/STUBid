@@ -1,67 +1,44 @@
 var { login } = require('../models/account'),
-    { sign } = require('../helpers/jwt');
+    { sign, verify } = require('../helpers/jwt');
 
 module.exports = (req,res) => {
-    login(req.body.username, req.body.password)
-    .then(result => {
-        if (result.rowCount == 1) {
-            let account = result.rows[0];
-            if (account.bannedLevel >= 2)
-                res.send({
-                    ok: false,
-                    error: {
-                        code: 103,
-                        description: 'account has been banned at level 2'
-                    }
-                });
-            else if (
-                account.bannedLevel >=1
-                && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
-            )
-                res.send({
-                    ok: false,
-                    error: {
-                        code: 102,
-                        description: 'account has been banned at level 1'
-                    }
-                });
-            else
-                res.send({
-                    ok: true,
-                    token: sign({
-                        accountId: account.accountId,
-                        username: account.username,
-                        isAdmin: account.isAdmin
-                    }),
-                    profile: {
-                        firstName: account.firstName,
-                        lastName: account.lastName,
-                        phoneNumber: account.phoneNumber,
-                        email: account.email,
-                        avatar: account.avatar,
-                        bankRefNumber: account.bankRefNumber,
-                        bankRefName: account.bankRefName
-                    }
-                });
-        }
-        else {
-            res.send({
-                ok: false,
-                error: {
-                    code: 101,
-                    description: 'wrong username or password'
-                }
-            });
-        }
+    new Promise((resolve,reject) => {
+        if (req.body.username && req.body.password)
+            resolve(login(undefined, req.body.username, req.body.password));
+        verify(req.body.token)
+        .then(object => {
+            if (object.accountId) {
+                resolve(login(object.accountId));
+            }
+            else reject(new Error('token error'));
+        })
+        .catch(error => reject(error))
+    })
+    .then(res => res)
+    .then(account => {
+        res.send({
+            ok: true,
+            token: sign({
+                accountId: account.accountId,
+                username: account.username,
+                isAdmin: account.isAdmin
+            }),
+            profile: {
+                firstName: account.firstName,
+                lastName: account.lastName,
+                phoneNumber: account.phoneNumber,
+                email: account.email,
+                avatar: account.avatar,
+                bankRefNumber: account.bankRefNumber,
+                bankRefName: account.bankRefName
+            }
+        });
     })
     .catch(error => {
         console.log(error + '');
         res.send({
             ok: false,
-            error: {
-                code: 99,
-                description: 'system error'
-            }
+            error: error
         });
     })
 }
