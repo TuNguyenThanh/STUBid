@@ -1,5 +1,73 @@
-{
+var apiDoc = {
     "routes": [
+        {
+            "method": "post",
+            "route": "/Accounts/register",
+            "parameters": {
+                "verifyCode": "string, required for verifying registration",
+                "firstName": "string",
+                "lastName": "string",
+                "phoneNumber": "string",
+                "email": "string",
+                "username": "string",
+                "password": "string"
+            },
+            "response": {
+                "ok": "boolean",
+                "step": "number"
+            }
+        },
+        {
+            "method": "post",
+            "route": "/Accounts/resendVerifyCode",
+            "parameters": {
+                "phoneNumber": "string",
+                "email": "string",
+                "username": "string"
+            },
+            "response": { }
+        },
+        {
+            "method": "post",
+            "route": "/Accounts/login",
+            "parameters": {
+                "username": "string, required when token is empty",
+                "password": "string, required when token is empty",
+                "token": "string, required when username and password are empty"
+            },
+            "response": {
+                "ok": "boolean",
+                "token": "string",
+                "profile": {
+                    "firstName": "string",
+                    "lastName": "string",
+                    "phoneNumber": "string",
+                    "email": "string",
+                    "avatar":"string",
+                    "bankRefNumber": "string",
+                    "bankRefName": "string"
+                }
+            }
+        },
+        {
+            "method": "post",
+            "route": "/Accounts/forgotPassword",
+            "parameters": {
+                "email": "string"
+            },
+            "response": { }
+        },
+        {
+            "method": "get",
+            "route": "/Categorys",
+            "parameters": { },
+            "response": [{
+                "categoryId": "number",
+                "name": "string",
+                "description": "string",
+                "createdDate": "timestamp"
+            }]
+        },
         {
             "method": "patch",
             "route": "/Auctions/bid",
@@ -10,32 +78,6 @@
             },
             "response": {
                 "ok": "boolean"
-            }
-        },
-        {
-            "method": "post",
-            "route": "/Accounts/login",
-            "parameters": {
-                "OR": [
-                    {
-                        "username": "string",
-                        "password": "string"
-                    },
-                    {
-                        "token": "string"
-                    }
-                ]
-            },
-            "response": {
-                "ok": "boolean",
-                "token": "string",
-                "profile": {
-                    "firstName": "string",
-                    "lastName": "string",
-                    "phoneNumber": "string",
-                    "email": "string",
-                    "avatar":"string"
-                }
             }
         }
     ],
@@ -96,12 +138,12 @@
         {
             "event-type": "emit",
             "event-name": "'CLIENT-SEND-CATEGORY'",
-            "data": "categoryId: number"
+            "data": { "categoryId": "number" }
         },
         {
             "event-type": "emit",
             "event-name": "'CLIENT-SEND-PAGE'",
-            "data": "page: number"
+            "data": { "page": "number"}
         }
     ]
 }

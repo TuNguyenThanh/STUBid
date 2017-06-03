@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const KEY = 'SECRET_KEY';
 
 exports.sign = (object) => {
-    return jwt.sign(object, KEY, { expiresIn: "10 minutes" });
+    return jwt.sign(object, KEY, { expiresIn: "30 minutes" });
 }
 
 exports.verify = (token) => {

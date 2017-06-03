@@ -1,0 +1,6 @@
+{
+    "wrong-verify-code": {
+        "code": 101,
+        "description": "wrong verify code"
+    }
+}

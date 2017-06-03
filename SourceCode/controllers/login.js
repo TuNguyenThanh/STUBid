@@ -5,16 +5,17 @@ module.exports = (req,res) => {
     new Promise((resolve,reject) => {
         if (req.body.username && req.body.password)
             resolve(login(undefined, req.body.username, req.body.password));
-        verify(req.body.token)
-        .then(object => {
-            if (object.accountId) {
-                resolve(login(object.accountId));
-            }
-            else reject(new Error('token error'));
-        })
-        .catch(error => reject(error))
+        else {
+            verify(req.body.token)
+            .then(object => {
+                if (object.accountId) {
+                    resolve(login(object.accountId));
+                }
+                else reject(new Error('token error'));
+            })
+            .catch(error => reject(error))
+        }
     })
-    .then(res => res)
     .then(account => {
         res.send({
             ok: true,
