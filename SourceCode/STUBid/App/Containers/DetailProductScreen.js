@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
+import AuctionsActions from '../Redux/AuctionsRedux'
 
 import Tab1 from './Tab1Screen'
 import Tab2 from './Tab2Screen'
@@ -21,13 +22,40 @@ class DetailProduct extends React.Component {
     this.state = {
       data: this.props.auctions.data[this.props.rowID]
     };
+
+    this.isHandleBid = false;
   }
 
   componentWillReceiveProps(nextProps) {
-    const { data } = nextProps.auctions;
+    const { fetching, listData, bidSuccess, error } = nextProps.auctions;
+    const { language } = this.props;
     this.setState({
-      data: data[this.props.rowID],
+      data: listData[this.props.rowID],
     });
+
+    if(!fetching && bidSuccess && this.isHandleBid) {
+      Alert.alert(
+        listData[this.props.rowID].product.name,
+        I18n.t('bidSuccess', {locale: language}) + ' ' + bidSuccess.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND',
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isHandleBid = false;
+    }
+
+    //error - not internet
+    if(!fetching && error) {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   render() {
@@ -50,7 +78,7 @@ class DetailProduct extends React.Component {
             <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
           </TouchableOpacity>
           <View style={styles.line} />
-          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data.ceilingPrice)}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data)}>
             <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
@@ -59,22 +87,63 @@ class DetailProduct extends React.Component {
   }
 
   handleBid(data) {
-    let price = data.highestBidder.price ? data.highestBidder.price : data.startPrice ;
+    const { language } = this.props;
+    let price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
     price += data.bidIncreasement;
-    alert('bid ' + price);
+
+    const highestBidder = data.highestBidder;
+    const auctionId = data.auctionId;
+
+    if(highestBidder.accountId == 5) {
+      Alert.alert(
+        data.product.name,
+        I18n.t('youAreHighestBidder', {locale: language}),
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      Alert.alert(
+        data.product.name,
+        I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
+        [
+          {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+          {text: I18n.t('bid', {locale: language}), onPress: () => {
+            //bid product
+            this.props.bibProduct(auctionId, 3, price);
+            this.isHandleBid = true;
+          }},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
-  handleBuyNow(ceilingPrice) {
+  handleBuyNow(data) {
     const { language } = this.props;
-    Alert.alert(
-      I18n.t('buyNow', {locale: language}),
-      I18n.t('buyProductPrice', {locale: language}) + ' ' + ceilingPrice + ' VNĐ ?',
-      [
-        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-        {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
-      ],
-      { cancelable: false }
-    )
+    const price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
+    if(data.ceilingPrice < price) {
+      // Buy now disable
+      Alert.alert(
+        I18n.t('buyNow', {locale: language}),
+        I18n.t('youOnlyBid', {locale: language}),
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    } else {
+      Alert.alert(
+        I18n.t('buyNow', {locale: language}),
+        I18n.t('buyProductPrice', {locale: language}) + ' ' + data.ceilingPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VNĐ ?',
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+          {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
 }
@@ -88,6 +157,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    bibProduct: (auctionId, accountId, priceBid) => dispatch(AuctionsActions.bidProductRequest(auctionId, accountId, priceBid)),
   }
 }
 

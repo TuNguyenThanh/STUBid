@@ -7,7 +7,12 @@ const { Types, Creators } = createActions({
   loginRequest: ['username', 'password'],
   loginSuccess: ['user'],
   loginFailure: ['error'],
-  logout: null
+  logout: [],
+
+  loginTokenRequest: ['token'],
+  loginTokenSuccess: ['user'],
+  loginTokenFailure: ['error'],
+
 })
 
 export const LoginTypes = Types
@@ -18,7 +23,7 @@ export default Creators
 export const INITIAL_STATE = Immutable({
   user: null,
   error: null,
-  fetching: false
+  fetching: false,
 })
 
 /* ------------- Reducers ------------- */
@@ -41,7 +46,11 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.LOGIN_REQUEST]: request,
   [Types.LOGIN_SUCCESS]: success,
   [Types.LOGIN_FAILURE]: failure,
-  [Types.LOGOUT]: logout
+  [Types.LOGOUT]: logout,
+
+  [Types.LOGIN_TOKEN_REQUEST]: request,
+  [Types.LOGIN_TOKEN_SUCCESS]: success,
+  [Types.LOGIN_TOEKN_FAILURE]: failure,
 })
 
 /* ------------- Selectors ------------- */

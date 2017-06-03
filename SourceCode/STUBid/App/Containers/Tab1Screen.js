@@ -66,7 +66,7 @@ class Tab1 extends React.Component {
             <Icon name="clock-o" size={20} color={Colors.primary} style={styles.iconRight}/>
             <Text style={styles.fontStyle}>
             {
-              moment(data.activatedDate).format('LLLL')
+              this.capitalizeEachWord(moment(data.activatedDate).format('LLLL').toString())
             }
             </Text>
           </View>
@@ -125,6 +125,12 @@ class Tab1 extends React.Component {
       });
     }
     return arrImg;
+  }
+
+  capitalizeEachWord(str) {
+    return str.replace(/\w\S*/g, function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
   }
 }
 

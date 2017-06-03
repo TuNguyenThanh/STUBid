@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import AccountActions from '../Redux/AccountRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -18,22 +19,73 @@ class CheckCode extends React.Component {
     this.state = {
       code: '123456',
     };
+    this.isCheckCode = false;
+    this.isGetCode = false;
   }
 
   handleGetCode() {
-    alert('get new code')
+    Alert.alert(
+      '',
+      I18n.t('getCode', {locale: this.props.language}),
+      [
+        {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {
+          const { email, username, phoneNumber } = this.props.dataRegister;
+          this.props.getCode(email, username, phoneNumber);
+          this.isGetCode = true;
+        }},
+        {text: I18n.t('cancel', {locale: this.props.language}), onPress: () => {}},
+      ],
+      { cancelable: false }
+    );
   }
 
-  handleSendCode(code) {
+  handleSendCode() {
+    const { code } = this.state;
     if(code == '') {
       this.message('Vui long nhap code')
     } else {
       if(code.length != 6) {
         this.message('Code khong hop le')
       } else {
-        //alert(code);
-        NavigationActions.pop({refresh:{}});
+        const { email, username, phoneNumber } = this.props.dataRegister;
+        this.props.checkCode(code, email, username, phoneNumber);
+        this.isCheckCode = true;
       }
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    const { codeSuccess, error, fetching, newCode } = nextProps.account;
+
+    if(!fetching && codeSuccess && this.isCheckCode) {
+      Alert.alert(
+        I18n.t('getCode', {locale: this.props.language}),
+        'Success, please check sms !',
+        [
+          {text: 'OK', onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isCheckCode = false;
+    }
+
+    if(!fetching && newCode && this.isGetCode) {
+      Alert.alert(
+        'Thong bao',
+        'Account Actived',
+        [
+          {text: 'OK', onPress: () => {
+            if(this.props.isPop) {
+              NavigationActions.pop();
+              setTimeout(() => {
+                NavigationActions.pop();
+              }, 100);
+            }
+          }},
+        ],
+        { cancelable: false }
+      );
+      this.isCheckCode = false;
     }
   }
 
@@ -74,7 +126,7 @@ class CheckCode extends React.Component {
                 returnKeyType='go'
                 value={this.state.code}
                 onChangeText={(code) => this.setState({ code })}
-                onSubmitEditing={() => this.handleSendCode(this.state.code)}
+                onSubmitEditing={() => this.handleSendCode()}
               />
             </View>
 
@@ -85,7 +137,7 @@ class CheckCode extends React.Component {
             </View>
 
             {/*button-confirm*/}
-            <TouchableOpacity style={styles.button} onPress={() => this.handleSendCode(this.state.code)}>
+            <TouchableOpacity style={styles.button} onPress={() => this.handleSendCode()}>
               <Text style={styles.buttonText}>{I18n.t('confirm', {locale: language})}</Text>
             </TouchableOpacity>
           </View>
@@ -99,11 +151,14 @@ class CheckCode extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    account: state.account,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    checkCode: (code, email, username, phoneNumber) => dispatch(AccountActions.checkCodeRequest(code, email, username, phoneNumber)),
+    getCode: (email, username, phoneNumber) => dispatch(AccountActions.getNewCodeRequest(email, username, phoneNumber)),
   }
 }
 

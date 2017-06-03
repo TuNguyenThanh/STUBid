@@ -82,4 +82,6 @@
   "newPassword": "New password",
   "repeatNewPassword": "Repeat new password",
   "versionApp": "Version App",
+  "bidSuccess": "Bid success with price",
+  "youOnlyBid": "You can only bid for this product",
 }

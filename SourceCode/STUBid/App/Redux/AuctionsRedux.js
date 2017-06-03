@@ -52,9 +52,9 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.AUCTIONS_SUCCESS]: success,
   [Types.AUCTIONS_FAILURE]: failure,
 
-  [Types.BID_PRODUCT_REQUEST]: bidProductRequest,
-  // [Types.BID_PRODUCT_SUCCESS]: bidProductSuccess,
-  // [Types.BID_PRODUCT_FAILURE]: failure,
+  [Types.BID_PRODUCT_REQUEST]: request,
+  [Types.BID_PRODUCT_SUCCESS]: bidProductSuccess,
+  [Types.BID_PRODUCT_FAILURE]: failure,
 
   [Types.SET_DATA]: setData,
 })

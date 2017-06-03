@@ -82,4 +82,6 @@
   "newPassword": "Mật khẩu mới",
   "repeatNewPassword": "Nhập lại mật khẩu mới",
   "versionApp": "Phiên bản ứng dụng",
+  "bidSuccess": "Đấu giá thành công với giá",
+  "youOnlyBid": "Bạn chỉ có thể đấu giá cho sản này",
 }

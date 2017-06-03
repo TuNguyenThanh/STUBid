@@ -34,9 +34,8 @@ export function * bidProduct(api, action) {
   const { auctionId, accountId, priceBid } = action;
   try {
     const response = yield call(api.bidProduct , auctionId, accountId, priceBid );
-    console.log(response);
     if(response.ok) {
-      yield put(AuctionsActions.bidProductSuccess('success'));
+      yield put(AuctionsActions.bidProductSuccess(priceBid));
     } else {
       yield put(AuctionsActions.bidProductFailure(response.problem));
     }

@@ -7,6 +7,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Icon from 'react-native-vector-icons/FontAwesome'
 import md5 from 'blueimp-md5'
 
+//KEY CONFIG - AsyncStorage
+import AppConfig from '../Config/AppConfig'
+
 //styles
 import styles from './Styles/LoginScreenStyles'
 import { Images, Colors } from '../Themes'
@@ -31,13 +34,13 @@ class LoginScreen extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { language } = this.props;
     const { fetching, user, error } = nextProps.login;
 
     if(!fetching && user) {
-      console.log(user);
       //save token
       try {
-        AsyncStorage.setItem('loginToken', user.token);
+        AsyncStorage.setItem(AppConfig.STORAGE_KEY_SAVE_TOKEN, user.token);
       } catch (error) {
         // Error saving data
         console.log('Error saving data');
@@ -61,6 +64,19 @@ class LoginScreen extends React.Component {
 
         NavigationActions.pop(); //chuyen man hinh
       }, 2300);
+    }
+
+    //error
+    if(!fetching && error && !user){
+      this.setState({ isLoading: false });
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
     }
   }
 

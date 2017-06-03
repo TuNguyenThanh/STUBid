@@ -1,6 +1,7 @@
 import React from 'react'
 import { ScrollView, Text, View, Image, TouchableOpacity, TextInput, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import AccountActions from '../Redux/AccountRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -18,6 +19,35 @@ class ForgotPassword extends React.Component {
     this.state = {
       email: '',
     };
+    this.isForgotPassword = false;
+  }
+
+  componentWillReceiveProps(nextProps){
+    const { error, fetching, forgotPasswordSuccess } = nextProps.account;
+
+    if(!fetching && forgotPasswordSuccess && this.isForgotPassword) {
+      Alert.alert(
+        'Success',
+        'Please check email:' + this.state.email,
+        [
+          {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isForgotPassword = false;
+    }
+
+    //error
+    if(!fetching && error) {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   handleSendForgotPassword(email) {
@@ -32,7 +62,8 @@ class ForgotPassword extends React.Component {
         { cancelable: false }
       );
     } else {
-      alert('ok')
+      this.props.forgotPassword(email);
+      this.isForgotPassword = true;
     }
   }
 
@@ -87,11 +118,13 @@ class ForgotPassword extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    account: state.account,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    forgotPassword: (email) => dispatch(AccountActions.forgotPasswordRequest(email)),
   }
 }
 

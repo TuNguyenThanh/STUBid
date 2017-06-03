@@ -3,11 +3,17 @@ import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, Ac
 import { connect } from 'react-redux'
 import AuctionsActions from '../Redux/AuctionsRedux'
 import CategoryActions from '../Redux/CategoryRedux'
+import LoginActions from '../Redux/LoginRedux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
 import ImageLoad from 'react-native-image-placeholder'
+import IO from 'socket.io-client/dist/socket.io'
+
+//Key config - AsyncStorage
+import AppConfig from '../Config/AppConfig'
+import ApiConfig from '../Config/ApiConfig'
 
 // Styles
 import styles from './Styles/HomeScreenStyle'
@@ -19,22 +25,31 @@ import I18n from 'react-native-i18n'
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    this.socket = IO(ApiConfig.baseURL);
     this.state = {
       openModalCategory: false,
       categorySelected: { categoryId: -1, name: 'all' },
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       data: [],
       badge: 0,
-      isOpen: false
+      isOpen: false,
+      productBid: null,
+      user: null,
     };
     this.loadCategory = false;
     this.clickBid = false;
+    this.isHandleBid = false;
+    this.isLoginToken = false;
   }
 
   componentWillMount() {
+    const _this = this;
     try {
-      AsyncStorage.getItem('loginToken').then((token) => {
-        console.log(token);
+      AsyncStorage.getItem(AppConfig.STORAGE_KEY_SAVE_TOKEN).then((token) => {
+        if(token) {
+          _this.props.loginToken(token);
+          _this.isLoginToken = true;
+        }
       });
     } catch (error) {
       // Error retrieving data
@@ -51,11 +66,31 @@ class Home extends React.Component {
     this.loadCategory = true;
   }
 
+  componentDidMount() {
+    this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: -1 });
+
+    this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
+      this.props.setData(data);
+    });
+  }
+
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, listData } = nextProps.auctions;
+    const { language } = this.props;
+    const { fetching, error, listData, bidSuccess } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
     const fetchingCategory = nextProps.category.fetching;
+    const { user } = nextProps.login;
+    const fetchingUser = nextProps.login.fetching;
+
+    if(!fetchingUser && user && this.isLoginToken) {
+      try {
+        AsyncStorage.setItem(AppConfig.STORAGE_KEY_SAVE_TOKEN, user.token);
+      } catch (error) {
+        // Error saving data
+        console.log('Error saving data');
+      }
+    }
 
     if(!fetching && listData) {
       this.setState({
@@ -69,6 +104,18 @@ class Home extends React.Component {
         data: categoryProductNew,
       });
       this.loadCategory = false;
+    }
+
+    if(!fetching && bidSuccess && this.isHandleBid) {
+      Alert.alert(
+        this.state.productBid.product.name,
+        I18n.t('bidSuccess', {locale: language}) + ' ' + bidSuccess.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND',
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isHandleBid = false;
     }
 
     //error - not internet
@@ -96,7 +143,7 @@ class Home extends React.Component {
     if(this.clickBid) {
       //check highestBidder id auctions
       const highestBidder = data.highestBidder;
-      if(highestBidder.accountId == 3) {
+      if(highestBidder.accountId == 5) {
         Alert.alert(
           data.product.name,
           I18n.t('youAreHighestBidder', {locale: language}),
@@ -108,12 +155,14 @@ class Home extends React.Component {
       } else {
         Alert.alert(
           data.product.name,
-          I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.'),
+          I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
           [
             {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
             {text: I18n.t('bid', {locale: language}), onPress: () => {
               //bid product
               this.props.bibProduct(auctionId, 3, price);
+              this.setState({ productBid: data });
+              this.isHandleBid = true;
             }},
           ],
           { cancelable: false }
@@ -215,7 +264,6 @@ class Home extends React.Component {
       paddingTop: menuInterpolate
     }
 
-    const { fetching } = this.props.auctions;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -249,29 +297,20 @@ class Home extends React.Component {
           <Icon name="list-alt" size={20} color={Colors.primary} />
         </TouchableOpacity>
 
-        { fetching ?
-          <View style={styles.viewLoading}>
-            <ActivityIndicator
-              animating={fetching}
-              style={{height: 80}}
-              size="large"
-            />
-          </View>
-          :
-          <ListView
-            style={styles.content}
-            scrollEventThrottle={16}
-            onScroll={
-              Animated.event([
-                { nativeEvent: { contentOffset: { y: this.animated }}}
-              ])
-            }
-            enableEmptySections
-            contentContainerStyle={styles.listView}
-            dataSource={this.state.dataSource}
-            renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
-          />
-        }
+        <ListView
+          style={styles.content}
+          scrollEventThrottle={16}
+          onScroll={
+            Animated.event([
+              { nativeEvent: { contentOffset: { y: this.animated }}}
+            ])
+          }
+          enableEmptySections
+          contentContainerStyle={styles.listView}
+          dataSource={this.state.dataSource}
+          renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
+        />
+
         { this.renderModalCategory()}
       </View>
     )
@@ -284,9 +323,14 @@ class Home extends React.Component {
         open={this.state.openModalCategory}
         modalDidClose={() => this.setState({ openModalCategory: false })}
         data={this.state.data}
-        onPressItem={(item) => this.setState({ openModalCategory: false, categorySelected: item}) }
+        onPressItem={(item) => this.handleChooseItem(item) }
       />
     );
+  }
+
+  handleChooseItem(item) {
+    this.setState({ openModalCategory: false, categorySelected: item});
+    this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: item.categoryId });
   }
 }
 
@@ -295,6 +339,7 @@ const mapStateToProps = (state) => {
     language: state.settings.language,
     auctions: state.auctions,
     category: state.category,
+    login: state.login,
   }
 }
 
@@ -303,6 +348,8 @@ const mapDispatchToProps = (dispatch) => {
     getAuctions: (category, page) => dispatch(AuctionsActions.auctionsRequest(category, page)),
     bibProduct: (auctionId, accountId, priceBid) => dispatch(AuctionsActions.bidProductRequest(auctionId, accountId, priceBid)),
     getProductCategory: () => dispatch(CategoryActions.categoryProductRequest()),
+    setData: (data) => dispatch(AuctionsActions.setData(data)),
+    loginToken: (token) => dispatch(LoginActions.loginTokenRequest(token)),
   }
 }
 

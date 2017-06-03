@@ -25,9 +25,14 @@ const create = (baseURL = ApiConfig.baseURL) => {
     return api.post('Accounts/login', { username, password });
   }
 
+  const loginToken = (token) => {
+    return api.post('Accounts/login', { token });
+  }
+
   return {
     // a list of the API functions from step 2
-    login
+    login,
+    loginToken
   }
 }
 

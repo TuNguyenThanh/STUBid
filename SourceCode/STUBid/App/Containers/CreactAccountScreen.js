@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import AccountActions from '../Redux/AccountRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -20,23 +21,28 @@ class CreactAccount extends React.Component {
       firstName: 'Tu',
       lastName: 'Nguyen',
       email: 'thanhtu.dev@gmail.com',
-      phone: '0903016975',
+      phoneNumber: '0903016975',
       username: 'thanhtu',
       password: '123456',
       rePassword: '123456',
     };
+    this.isRegister = false;
   }
 
   componentWillReceiveProps(nextProps){
-    const { sceneKey } = nextProps;
-    if(sceneKey == 'creactAccountScreen') {
-      NavigationActions.pop();
+    const { success, error } = nextProps.account;
+
+    if(success == true && this.isRegister) {
+      const { firstName, lastName, email, phoneNumber, username, password, rePassword } = this.state;
+      const info = { firstName, lastName, email, phoneNumber, username, password };
+      NavigationActions.checkCodeScreen({ isPop: true, dataRegister: info });
+      this.isRegister = false;
     }
   }
 
   handleRegister() {
-    const { firstName, lastName, email, phone, username, password, rePassword } = this.state;
-    console.log(md5(password));
+    const { firstName, lastName, email, phoneNumber, username, password, rePassword } = this.state;
+
     if (!firstName) {
       this.message('Bạn chưa điền Tên');
     } else {
@@ -49,10 +55,10 @@ class CreactAccount extends React.Component {
           if (!this.validateEmail(email)) {
             this.message('Địa chỉ email không hợp lệ');
           } else {
-            if (!phone) {
+            if (!phoneNumber) {
               this.message('Bạn chưa điền số điện thoại');
             } else {
-              if(phone.length < 10 || phone.length >= 12){
+              if(phoneNumber.length < 10 || phoneNumber.length >= 12){
                 this.message('Số điện thoại không hợp lệ');
               } else {
                 if (!username) {
@@ -83,8 +89,9 @@ class CreactAccount extends React.Component {
                                   this.message('Mật khẩu và nhập lại phải giống nhau');
                                 } else {
                                   //oke - register
-                                  NavigationActions.checkCodeScreen()
-
+                                  const info = { firstName, lastName, email, phoneNumber, username, password };
+                                  this.props.accountRegister(info);
+                                  this.isRegister = true;
                                 }
                               }
                             }
@@ -194,8 +201,8 @@ class CreactAccount extends React.Component {
                 underlineColorAndroid={'transparent'}
                 returnKeyType='next'
                 keyboardType={'phone-pad'}
-                value={this.state.phone}
-                onChangeText={(phone) => this.setState({ phone })}
+                value={this.state.phoneNumber}
+                onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
                 onSubmitEditing={() => this.username.focus()}
               />
               <View style={styles.line} />
@@ -259,11 +266,13 @@ class CreactAccount extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    account: state.account,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    accountRegister: (info) => dispatch(AccountActions.accountRegisterRequest(info)),
   }
 }
 

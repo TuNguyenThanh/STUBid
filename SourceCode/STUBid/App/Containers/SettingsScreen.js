@@ -1,11 +1,15 @@
 import React from 'react'
-import { View, Text, Picker, Image, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native'
+import { View, Text, Picker, Image, TouchableOpacity, ScrollView, Switch, Alert, AsyncStorage } from 'react-native'
 import { connect } from 'react-redux'
 import SettingsActions from '../Redux/SettingsRedux'
+import LoginActions from '../Redux/LoginRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
 import Modal2Choose from '../Components/Modal2Choose'
+
+// KEY CONFIG - AsyncStorage
+import AppConfig from '../Config/AppConfig'
 
 // Styles
 import styles from './Styles/SettingsScreenStyle'
@@ -26,11 +30,7 @@ class Settings extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { fetching, user, error } = nextProps.login;
-    if(user) {
-      this.setState({
-        user: user,
-      });
-    }
+    this.setState({ user: user });
   }
 
   handleLogout() {
@@ -41,11 +41,20 @@ class Settings extends React.Component {
       [
         {text: I18n.t('cancel', { locale: language }), onPress: () => {}, style: 'cancel'},
         {text: I18n.t('ok', { locale: language }), onPress: () => {
-
+          this.props.logout();
+          this.removeToken();
         }},
       ],
       { cancelable: false }
     );
+  }
+
+  async removeToken() {
+    try {
+      await AsyncStorage.removeItem(AppConfig.STORAGE_KEY_SAVE_TOKEN);
+    } catch (error) {
+      cosole.log(error.message);
+    }
   }
 
   render() {
@@ -241,6 +250,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeLanguage: (newLang) => dispatch(SettingsActions.changeLanguage(newLang)),
+    logout: () => dispatch(LoginActions.logout()),
   }
 }
 
