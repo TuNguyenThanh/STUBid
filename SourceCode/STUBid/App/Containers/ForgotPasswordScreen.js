@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Text, View, Image, TouchableOpacity, TextInput, Alert } from 'react-native'
+import { ScrollView, Text, View, Image, TouchableOpacity, TextInput, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -23,14 +23,17 @@ class ForgotPassword extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    const { language } = this.props;
     const { error, fetching, forgotPasswordSuccess } = nextProps.account;
 
     if(!fetching && forgotPasswordSuccess && this.isForgotPassword) {
       Alert.alert(
         'Success',
-        'Please check email:' + this.state.email,
+        'Please check email: ' + this.state.email,
         [
-          {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {}},
+          {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {
+            NavigationActions.pop();
+          }},
         ],
         { cancelable: false }
       );
@@ -102,10 +105,10 @@ class ForgotPassword extends React.Component {
               />
             </View>
 
-            {/*button-send*/}
-    				<TouchableOpacity style={styles.button} onPress={() => this.handleSendForgotPassword(this.state.email)}>
-    					<Text style={styles.buttonText}>{I18n.t('sendPassword', {locale: language})}</Text>
-    				</TouchableOpacity>
+            {
+              /*button-send*/
+              this.renderButtonRegister()
+            }
           </View>
         </Image>
       </KeyboardAwareScrollView>
@@ -113,6 +116,21 @@ class ForgotPassword extends React.Component {
     )
   }
 
+  renderButtonRegister() {
+    const { language } = this.props;
+    if (!this.props.account.fetching) {
+      return (
+        <TouchableOpacity style={styles.button} onPress={() => this.handleSendForgotPassword(this.state.email)}>
+          <Text style={styles.buttonText}>{I18n.t('sendPassword', {locale: language})}</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={styles.button} onPress={() => this.handleSendForgotPassword(this.state.email)}>
+        <ActivityIndicator animating={this.props.account.fetching} color='white' />
+      </TouchableOpacity>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {

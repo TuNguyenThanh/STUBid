@@ -137,6 +137,7 @@ class Settings extends React.Component {
 
   renderAvatarUser() {
     const { profile } = this.state.user;
+    console.log(profile);
     return(
       <View style={styles.viewAvatar}>
         <View style={{ flexDirection: 'row'}}>
@@ -145,10 +146,18 @@ class Settings extends React.Component {
             source={Images.left}
             resizeMode="contain"
           />
-          <Image
-            source={{uri: profile.avatar }}
-            style={styles.imgAvatar}
-          />
+          {
+            profile.avatar ?
+            <Image
+              source={{uri: profile.avatar}}
+              style={styles.imgAvatar}
+            />
+            :
+            <Image
+              source={Images.userIcon}
+              style={[styles.imgAvatar, { tintColor: Colors.primary }]}
+            />
+          }
           <Image
             style={styles.imgStyle}
             source={Images.right}

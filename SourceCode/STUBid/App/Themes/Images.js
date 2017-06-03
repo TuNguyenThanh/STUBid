@@ -28,6 +28,7 @@ const images = {
   iconEN: require('../Images/iconEN.png'),
   left: require('../Images/left.png'),
   right: require('../Images/right.png'),
+  userIcon: require('../Images/user-icon.png'),
 }
 
 export default images

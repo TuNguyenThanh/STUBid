@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, Image, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -27,16 +27,32 @@ class CreactAccount extends React.Component {
       rePassword: '123456',
     };
     this.isRegister = false;
+    this.isDisable = false;
   }
 
   componentWillReceiveProps(nextProps){
-    const { success, error } = nextProps.account;
+    if(!this.isDisable) {
+      const { language } = this.props;
+      const { fetching, success, error } = nextProps.account;
+      console.log(fetching, success, error);
 
-    if(success == true && this.isRegister) {
-      const { firstName, lastName, email, phoneNumber, username, password, rePassword } = this.state;
-      const info = { firstName, lastName, email, phoneNumber, username, password };
-      NavigationActions.checkCodeScreen({ isPop: true, dataRegister: info });
-      this.isRegister = false;
+      if(!fetching && success && !error) {
+        const { firstName, lastName, email, phoneNumber, username, password, rePassword } = this.state;
+        const info = { firstName, lastName, email, phoneNumber, username, password };
+        NavigationActions.checkCodeScreen({ isPop: true, dataRegister: info });
+        this.isDisable = true;
+      }
+
+      if(!fetching && !success && error) {
+        Alert.alert(
+          'Error',
+          error,
+          [
+            {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+          ],
+          { cancelable: false }
+        );
+      }
     }
   }
 
@@ -89,7 +105,7 @@ class CreactAccount extends React.Component {
                                   this.message('Mật khẩu và nhập lại phải giống nhau');
                                 } else {
                                   //oke - register
-                                  const info = { firstName, lastName, email, phoneNumber, username, password };
+                                  const info = { firstName, lastName, email, phoneNumber, username, password: md5(password) };
                                   this.props.accountRegister(info);
                                   this.isRegister = true;
                                 }
@@ -251,14 +267,30 @@ class CreactAccount extends React.Component {
               />
             </View>
 
-            {/*button-register*/}
-    				<TouchableOpacity style={styles.button} onPress={() => this.handleRegister()}>
-    					<Text style={styles.buttonText}>{I18n.t('register', {locale: language})}</Text>
-    				</TouchableOpacity>
+            {
+              /*button-register*/
+              this.renderButtonRegister()
+            }
           </View>
         </Image>
       </KeyboardAwareScrollView>
     )
+  }
+
+  renderButtonRegister() {
+    const { language } = this.props;
+    if (!this.props.account.fetching) {
+      return (
+        <TouchableOpacity style={styles.button} onPress={() => this.handleRegister()}>
+          <Text style={styles.buttonText}>{I18n.t('register', {locale: language})}</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={styles.button}>
+        <ActivityIndicator animating={this.props.account.fetching} color='white' />
+      </TouchableOpacity>
+    );
   }
 
 }

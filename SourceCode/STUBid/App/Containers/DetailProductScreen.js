@@ -94,29 +94,35 @@ class DetailProduct extends React.Component {
     const highestBidder = data.highestBidder;
     const auctionId = data.auctionId;
 
-    if(highestBidder.accountId == 5) {
-      Alert.alert(
-        data.product.name,
-        I18n.t('youAreHighestBidder', {locale: language}),
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
-        ],
-        { cancelable: false }
-      );
+    //Check login
+    if(this.props.login.user) {
+      if(highestBidder.accountId == this.props.login.user.profile.accountId) {
+        Alert.alert(
+          data.product.name,
+          I18n.t('youAreHighestBidder', {locale: language}),
+          [
+            {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+          ],
+          { cancelable: false }
+        );
+      } else {
+        Alert.alert(
+          data.product.name,
+          I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
+          [
+            {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+            {text: I18n.t('bid', {locale: language}), onPress: () => {
+              //bid product
+              this.props.bibProduct(auctionId, this.props.login.user.profile.accountId, price);
+              this.isHandleBid = true;
+            }},
+          ],
+          { cancelable: false }
+        );
+      }
     } else {
-      Alert.alert(
-        data.product.name,
-        I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-        [
-          {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-          {text: I18n.t('bid', {locale: language}), onPress: () => {
-            //bid product
-            this.props.bibProduct(auctionId, 3, price);
-            this.isHandleBid = true;
-          }},
-        ],
-        { cancelable: false }
-      );
+      //not login - not profile
+      NavigationActions.loginScreen();
     }
   }
 
@@ -152,6 +158,7 @@ const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
     auctions: state.auctions,
+    login: state.login,
   }
 }
 

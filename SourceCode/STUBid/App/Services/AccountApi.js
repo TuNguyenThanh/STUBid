@@ -11,7 +11,7 @@ const create = (baseURL = ApiConfig.baseURL) => {
   });
 
   const createAccount = (info) => {
-    return api.post('Accounts/register', { info });
+    return api.post('Accounts/register', info);
   }
 
   const checkCode = (code, email, username, phoneNumber) => {
@@ -19,11 +19,11 @@ const create = (baseURL = ApiConfig.baseURL) => {
   }
 
   const getNewCode = (email, username, phoneNumber) => {
-    //return api.post('Accounts/register', { verifyCode: code, email, username, phoneNumber });
+    return api.post('Accounts/resendVerifyCode', { email, username, phoneNumber });
   }
 
   const forgotPassword = (email) => {
-    //return api.post('Accounts/register', { verifyCode: code, email, username, phoneNumber });
+    return api.post('Accounts/forgotPassword', { email });
   }
 
   return {
@@ -31,6 +31,7 @@ const create = (baseURL = ApiConfig.baseURL) => {
     createAccount,
     checkCode,
     getNewCode,
+    forgotPassword,
   }
 }
 

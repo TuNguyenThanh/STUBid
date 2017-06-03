@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -55,9 +55,12 @@ class CheckCode extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
+    const { language } = this.props;
     const { codeSuccess, error, fetching, newCode } = nextProps.account;
+    console.log(codeSuccess, error, fetching, newCode);
 
-    if(!fetching && codeSuccess && this.isCheckCode) {
+
+    if(!fetching && newCode && this.isGetCode) {
       Alert.alert(
         I18n.t('getCode', {locale: this.props.language}),
         'Success, please check sms !',
@@ -66,15 +69,15 @@ class CheckCode extends React.Component {
         ],
         { cancelable: false }
       );
-      this.isCheckCode = false;
+      this.isGetCode = false;
     }
 
-    if(!fetching && newCode && this.isGetCode) {
+    if(!fetching && codeSuccess && this.isCheckCode) {
       Alert.alert(
         'Thong bao',
         'Account Actived',
         [
-          {text: 'OK', onPress: () => {
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
             if(this.props.isPop) {
               NavigationActions.pop();
               setTimeout(() => {
@@ -86,6 +89,18 @@ class CheckCode extends React.Component {
         { cancelable: false }
       );
       this.isCheckCode = false;
+    }
+
+    //error
+    if(!fetching && error) {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
     }
   }
 
@@ -136,14 +151,30 @@ class CheckCode extends React.Component {
               </TouchableOpacity>
             </View>
 
-            {/*button-confirm*/}
-            <TouchableOpacity style={styles.button} onPress={() => this.handleSendCode()}>
-              <Text style={styles.buttonText}>{I18n.t('confirm', {locale: language})}</Text>
-            </TouchableOpacity>
+            {
+              /*button-confirm*/
+              this.renderButtonRegister()
+            }
           </View>
         </Image>
       </KeyboardAwareScrollView>
     )
+  }
+
+  renderButtonRegister() {
+    const { language } = this.props;
+    if (!this.props.account.fetching) {
+      return (
+        <TouchableOpacity style={styles.button} onPress={() => this.handleSendCode()}>
+          <Text style={styles.buttonText}>{I18n.t('confirm', {locale: language})}</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={styles.button}>
+        <ActivityIndicator animating={this.props.account.fetching} color='white' />
+      </TouchableOpacity>
+    );
   }
 
 }

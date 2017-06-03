@@ -133,43 +133,48 @@ class Home extends React.Component {
 
   handleBid(data) {
     this.clickBid = true;
-    //auctionId, accountId, priceBid
     const { language } = this.props;
     let price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
     price += data.bidIncreasement;
 
     const auctionId = data.auctionId;
 
-    if(this.clickBid) {
-      //check highestBidder id auctions
-      const highestBidder = data.highestBidder;
-      if(highestBidder.accountId == 5) {
-        Alert.alert(
-          data.product.name,
-          I18n.t('youAreHighestBidder', {locale: language}),
-          [
-            {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
-          ],
-          { cancelable: false }
-        );
-      } else {
-        Alert.alert(
-          data.product.name,
-          I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-          [
-            {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-            {text: I18n.t('bid', {locale: language}), onPress: () => {
-              //bid product
-              this.props.bibProduct(auctionId, 3, price);
-              this.setState({ productBid: data });
-              this.isHandleBid = true;
-            }},
-          ],
-          { cancelable: false }
-        );
-      }
+    //Check login
+    if(this.props.login.user) {
+      if(this.clickBid) {
+        //check highestBidder id auctions
+        const highestBidder = data.highestBidder;
+        if(highestBidder.accountId == this.props.login.user.profile.accountId) {
+          Alert.alert(
+            data.product.name,
+            I18n.t('youAreHighestBidder', {locale: language}),
+            [
+              {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+            ],
+            { cancelable: false }
+          );
+        } else {
+          Alert.alert(
+            data.product.name,
+            I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
+            [
+              {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+              {text: I18n.t('bid', {locale: language}), onPress: () => {
+                //bid product
+                this.props.bibProduct(auctionId, this.props.login.user.profile.accountId, price);
+                this.setState({ productBid: data });
+                this.isHandleBid = true;
+              }},
+            ],
+            { cancelable: false }
+          );
+        }
 
-      this.clickBid = false;
+        this.clickBid = false;
+      }
+    } else {
+      //not login - not profile
+      NavigationActions.loginScreen();
     }
   }
 
@@ -345,7 +350,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getAuctions: (category, page) => dispatch(AuctionsActions.auctionsRequest(category, page)),
+  //getAuctions: (category, page) => dispatch(AuctionsActions.auctionsRequest(category, page)),
     bibProduct: (auctionId, accountId, priceBid) => dispatch(AuctionsActions.bidProductRequest(auctionId, accountId, priceBid)),
     getProductCategory: () => dispatch(CategoryActions.categoryProductRequest()),
     setData: (data) => dispatch(AuctionsActions.setData(data)),

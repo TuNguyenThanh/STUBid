@@ -15,6 +15,11 @@ export default StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
+  viewImageCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   imgStyle: {
     width: Metrics.screenHeight / 5,
     height: Metrics.screenHeight / 5,

@@ -7,8 +7,12 @@ export function * createAcccount(api, action) {
   const { info } = action;
   const response = yield call(api.createAccount, info);
   if (response.ok) {
-    const data = response.ok;
-    yield put(AccountActions.accountRegisterSuccess(data));
+    const data = response.data;
+    if(data.error) {
+      yield put(AccountActions.accountRegisterFailure(data.error));
+    } else {
+      yield put(AccountActions.accountRegisterSuccess());
+    }
   } else {
     yield put(AccountActions.accountRegisterFailure(response.problem));
   }
@@ -19,8 +23,12 @@ export function * checkCode(api, action) {
   const { code, email, username, phoneNumber } = action;
   const response = yield call(api.checkCode, code, email, username, phoneNumber);
   if (response.ok) {
-    const data = response.ok;
-    yield put(AccountActions.checkCodeSuccess(data));
+    const data = response.data;
+    if(data.error) {
+      yield put(AccountActions.checkCodeFailure(data.error));
+    } else {
+      yield put(AccountActions.checkCodeSuccess());
+    }
   } else {
     yield put(AccountActions.checkCodeFailure(response.problem));
   }
@@ -29,26 +37,40 @@ export function * checkCode(api, action) {
 export function * getNewCode(api, action) {
   // make the call to the api
   const { email, username, phoneNumber } = action;
-  //const response = yield call(api.getNewCode, email, username, phoneNumber);
-  //console.log(response);
-  // if (response.ok) {
-  //   const data = response.ok;
-  //   yield put(AccountActions.getNewCodeSuccess(data));
-  // } else {
-  //   yield put(AccountActions.getNewCodeFailure(response.problem));
-  // }
+  const response = yield call(api.getNewCode, email, username, phoneNumber);
+  if (response.ok) {
+    const data = response.data;
+    if(data) {
+      if(data.error) {
+        yield put(AccountActions.getNewCodeFailure(data.error));
+      } else {
+        yield put(AccountActions.getNewCodeSuccess());
+      }
+    } else {
+      yield put(AccountActions.getNewCodeSuccess());
+    }
+  } else {
+    yield put(AccountActions.getNewCodeFailure(response.problem));
+  }
 }
 
 export function * forgotPassword(api, action) {
   // make the call to the api
   const { email } = action;
-  console.log(email);
-  //const response = yield call(api.forgotPassword, email);
-  //console.log(response);
-  // if (response.ok) {
-  //   const data = response.ok;
-  //   yield put(AccountActions.forgotPasswordSuccess(data));
-  // } else {
-  //   yield put(AccountActions.forgotPasswordFailure(response.problem));
-  // }
+  const response = yield call(api.forgotPassword, email);
+
+  if (response.ok) {
+    const data = response.data;
+    if(data) {
+      if(data.error) {
+        yield put(AccountActions.forgotPasswordFailure(data.error));
+      } else {
+        yield put(AccountActions.forgotPasswordSuccess());
+      }
+    } else {
+      yield put(AccountActions.forgotPasswordSuccess());
+    }
+  } else {
+    yield put(AccountActions.forgotPasswordFailure(response.problem));
+  }
 }

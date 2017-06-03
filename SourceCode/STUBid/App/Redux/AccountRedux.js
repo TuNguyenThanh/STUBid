@@ -5,19 +5,19 @@ import Immutable from 'seamless-immutable'
 
 const { Types, Creators } = createActions({
   accountRegisterRequest: ['info'],
-  accountRegisterSuccess: ['success'],
+  accountRegisterSuccess: [],
   accountRegisterFailure: ['error'],
 
   checkCodeRequest: ['code', 'email', 'username', 'phoneNumber'],
-  checkCodeSuccess: ['codeSuccess'],
+  checkCodeSuccess: [],
   checkCodeFailure: ['error'],
 
   getNewCodeRequest: ['email', 'username', 'phoneNumber'],
-  getNewCodeSuccess: ['newCode'],
+  getNewCodeSuccess: [],
   getNewCodeFailure: ['error'],
 
   forgotPasswordRequest: ['email'],
-  forgotPasswordSuccess: ['forgotPasswordSuccess'],
+  forgotPasswordSuccess: [],
   forgotPasswordFailure: ['error'],
 })
 
@@ -31,26 +31,29 @@ export const INITIAL_STATE = Immutable({
   fetching: false,
   success: false,
   codeSuccess: false,
-  newCode: null,
-  forgotPasswordSuccess: null,
+  newCode: false,
+  forgotPasswordSuccess: false,
 })
 
 /* ------------- Reducers ------------- */
 
-// we're attempting to login
 export const request = (state) => state.merge({ fetching: true })
 
-// we've successfully logged in
-export const success = (state, { success }) => state.merge({ fetching: false, error: null, success })
+export const success = (state) => state.merge({ fetching: false, error: null, success: true })
 
-export const checkCodeSuccess = (state, { codeSuccess }) => state.merge({ fetching: false, error: null, codeSuccess })
+export const failure = (state, { error }) => state.merge({ fetching: false, error, success: false })
 
-export const getNewCodeSuccess = (state, { newCode }) => state.merge({ fetching: false, error: null, newCode })
+export const checkCodeSuccess = (state, { codeSuccess }) => state.merge({ fetching: false, error: null, codeSuccess: true })
 
-export const forgotPasswordSuccess = (state, { forgotPasswordSuccess }) => state.merge({ fetching: false, error: null, forgotPasswordSuccess })
+export const checkCodeFailure = (state, { error }) => state.merge({ fetching: false, error, codeSuccess: false })
 
-// we've had a problem logging in
-export const failure = (state, { error }) => state.merge({ fetching: false, error })
+export const getNewCodeSuccess = (state, { newCode }) => state.merge({ fetching: false, error: null, newCode: true })
+
+export const getNewCodeFailure = (state, { error }) => state.merge({ fetching: false, error, newCode: false })
+
+export const forgotPasswordSuccess = (state, { forgotPasswordSuccess }) => state.merge({ fetching: false, error: null, forgotPasswordSuccess: true })
+
+export const forgotPasswordFailure = (state, { error }) => state.merge({ fetching: false, error, forgotPasswordSuccess: false })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -61,15 +64,15 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.CHECK_CODE_REQUEST]: request,
   [Types.CHECK_CODE_SUCCESS]: checkCodeSuccess,
-  [Types.CHECK_CODE_FAILURE]: failure,
+  [Types.CHECK_CODE_FAILURE]: checkCodeFailure,
 
-  [Types.GET_NEW_CODE_REQUEST]: success,
+  [Types.GET_NEW_CODE_REQUEST]: request,
   [Types.GET_NEW_CODE_SUCCESS]: getNewCodeSuccess,
-  [Types.GET_NEW_CODE_FAILURE]: failure,
+  [Types.GET_NEW_CODE_FAILURE]: getNewCodeFailure,
 
-  [Types.FORGOT_PASSWORD_REQUEST]: success,
+  [Types.FORGOT_PASSWORD_REQUEST]: request,
   [Types.FORGOT_PASSWORD_SUCCESS]: forgotPasswordSuccess,
-  [Types.FORGOT_PASSWORD_FAILURE]: failure,
+  [Types.FORGOT_PASSWORD_FAILURE]: forgotPasswordFailure,
 })
 
 /* ------------- Selectors ------------- */

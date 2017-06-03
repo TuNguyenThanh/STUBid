@@ -24,20 +24,21 @@ class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: 'testadmin',
+      username: 'thanhtu',
       password: '123456',
       isLoading: false,
     };
     this.buttonAnimated = new Animated.Value(0);
 		this.growAnimated = new Animated.Value(0);
 		this._onPress = this._onPress.bind(this);
+    this.isLogin = false;
   }
 
   componentWillReceiveProps(nextProps) {
     const { language } = this.props;
     const { fetching, user, error } = nextProps.login;
 
-    if(!fetching && user) {
+    if(!fetching && user && this.isLogin) {
       //save token
       try {
         AsyncStorage.setItem(AppConfig.STORAGE_KEY_SAVE_TOKEN, user.token);
@@ -61,7 +62,6 @@ class LoginScreen extends React.Component {
        	this.setState({ isLoading: false });
        	this.buttonAnimated.setValue(0);
        	this.growAnimated.setValue(0);
-
         NavigationActions.pop(); //chuyen man hinh
       }, 2300);
     }
@@ -112,6 +112,7 @@ class LoginScreen extends React.Component {
                 } else {
                   //check oke
                   this.props.attemptLogin(username, md5(password));
+                  this.isLogin = true;
                   this.setState({ isLoading: true });
                 }
               }

@@ -18,9 +18,6 @@ const create = (baseURL = ApiConfig.baseURL) => {
     api.addMonitor(console.tron.apisauce)
   };
 
-  // get state working of pro
-  // const getAuction = (page) => api.get('Auctions/page/' + page);
-
   const getCategory = () => {
     return api.get('Categorys');
   }

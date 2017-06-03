@@ -44,13 +44,35 @@ class EditProfile extends React.Component {
         <View style={styles.container}>
           {/*Avatar*/}
           <View style={styles.viewImage}>
-            <Image
-              style={styles.imgStyle}
-              source={{uri: this.state.urlImage}}
-            />
-            <TouchableOpacity style={styles.iconChooseImageStyle} onPress={() => this.handleChangeAvatar()}>
-              <Icon name="camera-retro" size={30} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row'}}>
+              <Image
+                style={styles.imgStyle}
+                source={Images.left}
+                resizeMode="contain"
+              />
+              <View style={styles.viewImageCenter}>
+                {
+                  this.state.urlImage ?
+                  <Image
+                    style={styles.imgStyle}
+                    source={{uri: this.state.urlImage}}
+                  />
+                  :
+                  <Image
+                    style={[styles.imgStyle, { tintColor: Colors.primary }]}
+                    source={Images.userIcon}
+                  />
+                }
+                <TouchableOpacity style={styles.iconChooseImageStyle} onPress={() => this.handleChangeAvatar()}>
+                  <Icon name="camera-retro" size={30} />
+                </TouchableOpacity>
+              </View>
+              <Image
+                style={styles.imgStyle}
+                source={Images.right}
+                resizeMode="contain"
+              />
+            </View>
           </View>
 
           {/*First name*/}
