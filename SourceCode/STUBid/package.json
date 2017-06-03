@@ -44,6 +44,7 @@
     "react-native-onesignal": "^3.0.3",
     "react-native-router-flux": "3.38.0",
     "react-native-scrollable-tab-view": "^0.7.4",
+    "react-native-spinkit": "^1.0.2",
     "react-native-swiper": "^1.5.4",
     "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.7",

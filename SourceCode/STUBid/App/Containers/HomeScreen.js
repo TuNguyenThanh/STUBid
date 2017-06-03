@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
+import ModalLoading from '../Components/ModalLoading'
 import ImageLoad from 'react-native-image-placeholder'
 import IO from 'socket.io-client/dist/socket.io'
 
@@ -40,23 +41,11 @@ class Home extends React.Component {
     this.clickBid = false;
     this.isHandleBid = false;
     this.isLoginToken = false;
+    this.isLoaingFirst = true;
+
   }
 
   componentWillMount() {
-    const _this = this;
-    try {
-      AsyncStorage.getItem(AppConfig.STORAGE_KEY_SAVE_TOKEN).then((token) => {
-        //if(token) {
-        //console.log('token = ' +token);
-          _this.props.loginToken(token);
-          _this.isLoginToken = true;
-        //}
-      });
-    } catch (error) {
-      // Error retrieving data
-      console.log(error);
-    }
-
     this.animated = new Animated.Value(0);
 
     //get data auctions
@@ -81,17 +70,6 @@ class Home extends React.Component {
     const { fetching, error, listData, bidSuccess } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
     const fetchingCategory = nextProps.category.fetching;
-    const { user } = nextProps.login;
-    const fetchingUser = nextProps.login.fetching;
-
-    if(!fetchingUser && user && this.isLoginToken) {
-      try {
-        AsyncStorage.setItem(AppConfig.STORAGE_KEY_SAVE_TOKEN, user.token);
-      } catch (error) {
-        // Error saving data
-        console.log('Error saving data');
-      }
-    }
 
     if(!fetching && listData) {
       this.setState({
@@ -270,7 +248,7 @@ class Home extends React.Component {
       paddingTop: menuInterpolate
     }
 
-    const { fetching } = this.props.login;
+    const fetching = this.props.login.fetchingLoginToken;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -318,9 +296,18 @@ class Home extends React.Component {
           renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
         />
 
-        { this.renderModalCategory()}
+        { this.renderModalCategory() }
+        { this.renderModalLoading(fetching) }
       </View>
     )
+  }
+
+  renderModalLoading(fetching) {
+    return(
+      <ModalLoading
+        isVisible={fetching}
+      />
+    );
   }
 
   renderModalCategory() {

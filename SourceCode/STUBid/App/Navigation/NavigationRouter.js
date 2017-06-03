@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, AsyncStorage } from 'react-native'
+import { connect } from 'react-redux'
+import LoginActions from '../Redux/LoginRedux'
 import { Scene, Router } from 'react-native-router-flux'
 import NavigationDrawer from './NavigationDrawer'
 import TabIcon from './TabIcon'
+import ModalLoading from '../Components/ModalLoading'
+
+//Key config - AsyncStorage
+import AppConfig from '../Config/AppConfig'
 
 // screens identified by the router
 import LaunchScreen from '../Containers/LaunchScreen'
@@ -29,6 +35,31 @@ import Styles from './Styles/NavigationContainerStyles'
 * Documentation: https://github.com/aksonov/react-native-router-flux
 ***************************/
 class NavigationRouter extends Component {
+  componentDidMount() {
+    this.isLoginToken = false;
+    try {
+      AsyncStorage.getItem(AppConfig.STORAGE_KEY_SAVE_TOKEN).then((token) => {
+        this.props.loginToken(token);
+        this.isLoginToken = true;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { user, fetchingLoginToken } = nextProps.login;
+    if(!fetchingLoginToken && user && this.isLoginToken) {
+      try {
+        AsyncStorage.setItem(AppConfig.STORAGE_KEY_SAVE_TOKEN, user.token);
+      } catch (error) {
+        // Error saving data
+        console.log('Error saving data');
+      }
+    }
+  }
+
   render () {
     return (
       <Router>
@@ -67,4 +98,16 @@ class NavigationRouter extends Component {
   }
 }
 
-export default NavigationRouter
+const mapStateToProps = (state) => {
+  return {
+    login: state.login,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginToken: (token) => dispatch(LoginActions.loginTokenRequest(token)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationRouter)
