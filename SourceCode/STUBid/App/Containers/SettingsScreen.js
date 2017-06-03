@@ -137,7 +137,6 @@ class Settings extends React.Component {
 
   renderAvatarUser() {
     const { profile } = this.state.user;
-    console.log(profile);
     return(
       <View style={styles.viewAvatar}>
         <View style={{ flexDirection: 'row'}}>

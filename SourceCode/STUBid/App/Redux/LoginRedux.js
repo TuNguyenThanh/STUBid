@@ -50,7 +50,7 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.LOGIN_TOKEN_REQUEST]: request,
   [Types.LOGIN_TOKEN_SUCCESS]: success,
-  [Types.LOGIN_TOEKN_FAILURE]: failure,
+  [Types.LOGIN_TOKEN_FAILURE]: failure,
 })
 
 /* ------------- Selectors ------------- */

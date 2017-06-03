@@ -46,10 +46,11 @@ class Home extends React.Component {
     const _this = this;
     try {
       AsyncStorage.getItem(AppConfig.STORAGE_KEY_SAVE_TOKEN).then((token) => {
-        if(token) {
+        //if(token) {
+        //console.log('token = ' +token);
           _this.props.loginToken(token);
           _this.isLoginToken = true;
-        }
+        //}
       });
     } catch (error) {
       // Error retrieving data
@@ -269,6 +270,7 @@ class Home extends React.Component {
       paddingTop: menuInterpolate
     }
 
+    const { fetching } = this.props.login;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
