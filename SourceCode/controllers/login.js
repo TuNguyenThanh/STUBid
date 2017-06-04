@@ -5,8 +5,8 @@ module.exports = (req,res) => {
     new Promise((resolve,reject) => {
         if (req.body.username && req.body.password)
             resolve(login(undefined, req.body.username, req.body.password));
-        else {
-            verify(req.body.token)
+        else if (req.body.token) {
+            verify(req.body.token, true)
             .then(object => {
                 if (object.accountId) {
                     resolve(login(object.accountId));
@@ -14,6 +14,12 @@ module.exports = (req,res) => {
                 else reject(new Error('token error'));
             })
             .catch(error => reject(error))
+        }
+        else {
+            res.send({
+                success: false,
+                error: 'missing parameters'
+            });
         }
     })
     .then(account => {
@@ -40,7 +46,7 @@ module.exports = (req,res) => {
         console.log(error + '');
         res.send({
             ok: false,
-            error: error
+            error: error + ''
         });
     })
 }

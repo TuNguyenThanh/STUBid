@@ -25,7 +25,9 @@ var apiDoc = {
                 "email": "string",
                 "username": "string"
             },
-            "response": { }
+            "response": {
+                "success": "boolean"
+            }
         },
         {
             "method": "post",
@@ -57,7 +59,25 @@ var apiDoc = {
                 "currentPassword": "string",
                 "newPassword": "string"
             },
-            "response": { }
+            "response": {
+                "success": "boolean",
+                "token": "string"
+            }
+        },
+        {
+            "method": "patch",
+            "route": "/Accounts/updateProfile",
+            "parameters": {
+                "token": "string",
+                "firstName": "string",
+                "lastName": "string",
+                "phoneNumber": "string",
+                "email": "string"
+            },
+            "response": {
+                "success": "boolean",
+                "token": "string"
+            }
         },
         {
             "method": "post",
@@ -65,7 +85,9 @@ var apiDoc = {
             "parameters": {
                 "email": "string"
             },
-            "response": { }
+            "response": {
+                "success": "boolean"
+            }
         },
         {
             "method": "get",
@@ -87,7 +109,8 @@ var apiDoc = {
                 "price": "number"
             },
             "response": {
-                "ok": "boolean"
+                "success": "boolean",
+                "token": "string"
             }
         }
     ],

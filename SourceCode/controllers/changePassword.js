@@ -1,9 +1,8 @@
-const { verify } = require('../helpers/jwt'),
+const { verify, refreshToken } = require('../helpers/jwt'),
       { changePassword } = require('../models/account');
 
 module.exports = (req,res) => {
     var { token, currentPassword, newPassword } = req.body;
-    console.log({ token, currentPassword, newPassword });
     if (!token || !currentPassword || !newPassword) {
         return res.send({
             success: false,
@@ -12,11 +11,9 @@ module.exports = (req,res) => {
     }
     verify(token)
     .then(object => {
-        if (object.exp*1000 < Date.now())
-            return Promise.reject(new Error('token is expired'));
         if (!object.accountId)
-            return Promise.reject(new Error('token is invalid'));
-        console.log(object);
+            return Promise.reject(new Error('authentication failed'));
+        token = refreshToken(obj);
         return changePassword(object.accountId, currentPassword, newPassword);
     })
     .then(() => {

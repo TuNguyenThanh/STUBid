@@ -5,17 +5,17 @@ const { sendResetPasswordEmail } = require('../helpers/mailer'),
 module.exports = (req,res) => {
     var { email } = req.body;
     if (!email) {
-        return res.send({ error: 'email is required' })
+        return res.send({ success: false, error: 'email is required' })
     }
     forgotPassword(email)
     .then(result => {
         return sendResetPasswordEmail(email, result.firstName, sign({ accountId: result.accountId }))
     })
     .then(() => {
-        res.send()
+        res.send({ success: true })
     })
     .catch(error => {
         console.log(error);
-        res.send({ error: error + '' })
+        res.send({ success: false, error: error + '' })
     })
 }

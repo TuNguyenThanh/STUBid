@@ -1,9 +1,9 @@
 const { verify, refreshToken } = require('../helpers/jwt'),
-      { bid } = require('../models/auction');
+      { updateProfile } = require('../models/account');
 
-module.exports = (req, res, sockets) => {
-    var { token, auctionId, accountId, price } = req.body;
-    if (!token || !auctionId || !accountId || !price)
+module.exports = (req,res) => {
+    var { token, firstName, lastName, phoneNumber, email } = req.body;
+    if (!token || !firstName || !lastName || !phoneNumber || !email)
         return res.send({
             success: false,
             error: 'missing parameters'
@@ -13,19 +13,16 @@ module.exports = (req, res, sockets) => {
         if (!obj.accountId)
             return Promise.reject(new Error('authentication failed'));
         token = refreshToken(obj);
-        return bid(auctionId, accountId, price)
+        return updateProfile(obj.accountId, firstName, lastName, phoneNumber, email)
     })
-    .then(result => {
-        sockets.forEach(socket => {
-            socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page - 1, socket.categoryId));
-        })
-        res.send({ success: true, token })
+    .then(() => {
+        res.send({ success: true, token });
     })
     .catch(error => {
         console.log(error);
         res.send({
             success: false,
             error: error + ''
-        })
+        });
     })
 }

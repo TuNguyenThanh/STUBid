@@ -47,6 +47,7 @@ app.post('/Accounts/login', require('./controllers/login'));
 app.post('/Accounts/forgotPassword', require('./controllers/forgotPassword'));
 app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
 app.patch('/Accounts/changePassword', require('./controllers/changePassword'));
+app.patch('/Accounts/updateProfile', require('./controllers/updateProfile'));
 
 // socket.io configuration
 var io = require('socket.io')(server),

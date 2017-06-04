@@ -50,7 +50,7 @@ exports.login = (accountId, username, password) => {
                 && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
             )
                 return reject(new Error('account has been banned at level 1'));
-            account.avatar = account.avatar?`${DOMAIN_NAME}/image/avatar/${account.avatar}`:null;
+            account.avatar = account.avatar?`${DOMAIN_NAME}/images/avatar/${account.avatar}`:null;
             resolve(account)
         })
         .catch(error => reject(error));
@@ -221,8 +221,31 @@ exports.changePassword = (accountId, currentPassword, newPassword) => {
         })
         .then(result => {
             if (result.rowCount !== 1)
-                return Promise.reject(new Error('system error'));
-            resolve();
+                reject(new Error('system error'));
+            else resolve();
+        })
+        .catch(error => {
+            reject(error);
+        })
+    });
+}
+
+exports.updateProfile = (accountId, firstName, lastName, phoneNumber, email) => {
+    return new Promise((resolve,reject) => {
+        let sql = `
+            WITH result AS (
+                SELECT "profileId" FROM "Account" WHERE "accountId" = $1
+            )
+            UPDATE "Profile"
+            SET "firstName" = $2, "lastName" = $3, "phoneNumber" = $4, email = $5
+            WHERE "profileId" = (SELECT "profileId" FROM result)
+        `;
+        let params = [accountId, firstName, lastName, phoneNumber, email];
+        query(sql,params)
+        .then(result => {
+            if (result.rowCount !== 1)
+                reject(new Error('update profile failed'));
+            else resolve();
         })
         .catch(error => {
             reject(error);
