@@ -80,6 +80,18 @@ var apiDoc = {
             }
         },
         {
+            "method": "patch",
+            "route": "/Accounts/updateAvatar",
+            "parameters": {
+                "token": "string",
+                "firstName": "file"
+            },
+            "response": {
+                "success": "boolean",
+                "avatar": "string"
+            }
+        },
+        {
             "method": "post",
             "route": "/Accounts/forgotPassword",
             "parameters": {
@@ -104,9 +116,11 @@ var apiDoc = {
             "method": "patch",
             "route": "/Auctions/bid",
             "parameters": {
+                "token": "string",
                 "auctionId": "number",
                 "accountId": "number",
-                "price": "number"
+                "price": "number",
+                "buyNow": "boolean"
             },
             "response": {
                 "success": "boolean",

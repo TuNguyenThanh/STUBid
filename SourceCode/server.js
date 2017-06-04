@@ -30,6 +30,7 @@ app.use(function (req, res, next) {
 });
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 var server = require('http').createServer(app);
 server.listen(config.PORT, () => {
   console.log('Server is running');
@@ -38,7 +39,7 @@ server.listen(config.PORT, () => {
 app.get('/', (req,res) => res.sendFile(__dirname + '/public/index.html'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
-app.post('/Auctions', require('./controllers/postAuction'));
+// app.post('/Auctions', require('./controllers/postAuction'));
 app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
 app.get('/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
 app.post('/Accounts/register', require('./controllers/register'));
@@ -48,6 +49,7 @@ app.post('/Accounts/forgotPassword', require('./controllers/forgotPassword'));
 app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
 app.patch('/Accounts/changePassword', require('./controllers/changePassword'));
 app.patch('/Accounts/updateProfile', require('./controllers/updateProfile'));
+app.patch('/Accounts/updateAvatar', require('./controllers/updateAvatar'));
 
 // socket.io configuration
 var io = require('socket.io')(server),

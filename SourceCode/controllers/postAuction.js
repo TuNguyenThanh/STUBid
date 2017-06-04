@@ -1,6 +1,6 @@
 var formidable = require('formidable'),
     { DIRNAME } = require('../config'),
-    { getNewToken } = require('../helpers/jwt');
+    { refreshToken } = require('../helpers/jwt');
 
 module.exports = (req,res) => {
     var form = new formidable.IncomingForm();

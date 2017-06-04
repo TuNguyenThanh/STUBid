@@ -31,12 +31,21 @@ exports.login = (accountId, username, password) => {
             "Profile"."phoneNumber",
             "Profile".email,
             "Profile".avatar,
-            "BankBrand"."bankBrandName" AS "bankRefName",
-            substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 3, length("BankRef"."bankAccountNumber")) AS "bankRefNumber"
+            (
+                SELECT array_to_json(array_agg(row_to_json(bankRefs)))
+                FROM (
+                    SELECT
+                    "BankRef"."bankRefId",
+                    substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 2, length("BankRef"."bankAccountNumber")) AS "bankRefNumber",
+                    "BankBrand"."bankBrandName",
+                    CONCAT('${DOMAIN_NAME}/assets/bank_logos/',"BankBrand".logo) AS "bankLogo"
+                    FROM "BankRef"
+                    INNER JOIN "BankBrand" ON "BankBrand"."bankBrandId" = "BankRef"."bankBrandId"
+                    WHERE "accountId" = "Account"."accountId"
+                ) AS bankRefs
+			) AS "bankRefs"
             FROM "Account"
             INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
-            LEFT JOIN "BankRef" ON "BankRef"."accountId" = "Account"."accountId"
-            LEFT JOIN "BankBrand" ON "BankBrand"."bankBrandId" = "BankRef"."bankBrandId"
             ${accountId?'WHERE "Account"."accountId"=$1':'WHERE username=$1 AND password=$2'}
         `;
         let params = accountId?[accountId]:[username, password];
@@ -246,6 +255,36 @@ exports.updateProfile = (accountId, firstName, lastName, phoneNumber, email) => 
             if (result.rowCount !== 1)
                 reject(new Error('update profile failed'));
             else resolve();
+        })
+        .catch(error => {
+            reject(error);
+        })
+    });
+}
+
+exports.updateAvatar = (accountId, avatar) => {
+    return new Promise((resolve,reject) => {
+        let sql = `
+            WITH result1 AS (
+                SELECT "Profile"."profileId", avatar
+                FROM "Account"
+                INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                WHERE "accountId" = $1
+            ),
+            result2 AS (
+                UPDATE "Profile"
+                SET avatar = $2
+                WHERE "profileId" = (SELECT "profileId" FROM result1)
+                RETURNING avatar
+            )
+            SELECT * FROM result1
+        `;
+        let params = [accountId, avatar];
+        query(sql,params)
+        .then(result => {
+            if (result.rowCount !== 1)
+                reject(new Error('update avatar failed'));
+            else resolve(result.rows[0].avatar);
         })
         .catch(error => {
             reject(error);
