@@ -25,6 +25,7 @@ module.exports = (req,res) => {
                 isAdmin: account.isAdmin
             }),
             profile: {
+                accountId: account.accountId,
                 firstName: account.firstName,
                 lastName: account.lastName,
                 phoneNumber: account.phoneNumber,

@@ -50,6 +50,16 @@ var apiDoc = {
             }
         },
         {
+            "method": "patch",
+            "route": "/Accounts/changePassword",
+            "parameters": {
+                "token": "string",
+                "currentPassword": "string",
+                "newPassword": "string"
+            },
+            "response": { }
+        },
+        {
             "method": "post",
             "route": "/Accounts/forgotPassword",
             "parameters": {

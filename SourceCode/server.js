@@ -46,7 +46,7 @@ app.post('/Accounts/resendVerifyCode', require('./controllers/resendVerifyCode')
 app.post('/Accounts/login', require('./controllers/login'));
 app.post('/Accounts/forgotPassword', require('./controllers/forgotPassword'));
 app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
-app.post('/Accounts/changePassword', require('./controllers/changePassword'));
+app.patch('/Accounts/changePassword', require('./controllers/changePassword'));
 
 // socket.io configuration
 var io = require('socket.io')(server),
