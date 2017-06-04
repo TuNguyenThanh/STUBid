@@ -26,12 +26,17 @@ const create = (baseURL = ApiConfig.baseURL) => {
     return api.post('Accounts/forgotPassword', { email });
   }
 
+  const changePassword = (token, oldPassword, newPassword) => {
+    return api.patch('Accounts/changePassword', { token, currentPassword: oldPassword, newPassword });
+  }
+
   return {
     // a list of the API functions from step 2
     createAccount,
     checkCode,
     getNewCode,
     forgotPassword,
+    changePassword,
   }
 }
 

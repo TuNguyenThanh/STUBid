@@ -74,3 +74,20 @@ export function * forgotPassword(api, action) {
     yield put(AccountActions.forgotPasswordFailure(response.problem));
   }
 }
+
+export function * changePassword(api, action) {
+  // make the call to the api
+  const { token, oldPassword, newPassword } = action;
+  const response = yield call(api.changePassword, token, oldPassword, newPassword);
+  console.log(response);
+  if (response.ok) {
+    const data = response.data;
+    if(data.success) {
+      yield put(AccountActions.changePasswordSuccess());
+    } else {
+      yield put(AccountActions.changePasswordFailure(data.error));
+    }
+  } else {
+    yield put(AccountActions.changePasswordFailure(response.problem));
+  }
+}

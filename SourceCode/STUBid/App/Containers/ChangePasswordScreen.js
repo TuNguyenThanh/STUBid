@@ -1,9 +1,15 @@
 import React from 'react'
-import { View, Text, Image, TouchableOpacity, TextInput, Alert} from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, Alert, AsyncStorage, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
+import AccountActions from '../Redux/AccountRedux'
+import LoginActions from '../Redux/LoginRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
+import md5 from 'blueimp-md5'
+
+// KEY CONFIG - AsyncStorage
+import AppConfig from '../Config/AppConfig'
 
 // Styles
 import styles from './Styles/ChangePasswordScreenStyle'
@@ -20,6 +26,45 @@ class ChangePassword extends React.Component {
       newPassword: '',
       reNewPassword: '',
     };
+    this.isChangePassword = false;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { language } = this.props;
+    const { fetching, error, changePasswordSuccess } = nextProps.account;
+    const { user } = nextProps.login;
+    const fetchingLogin = nextProps.login.fetching;
+
+    if(!fetching && changePasswordSuccess && this.isChangePassword) {
+      Alert.alert(
+        'Change Password',
+        'Success, please login again',
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
+            this.handleLoginAgain();
+          }},
+        ],
+        { cancelable: false }
+      );
+      this.isChangePassword = false;
+    }
+
+    if(!fetchingLogin && !user) {
+      NavigationActions.loginScreen({ screen: 'CHANGE_PASSWORD' })
+    }
+
+    //handle error
+    if(!fetching && error) {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
+
   }
 
   handleSend() {
@@ -55,6 +100,9 @@ class ChangePassword extends React.Component {
                         this.message('Mat khau moi va nhap lai mat khau moi phai giong nhau');
                       } else {
                           //oke send
+                        const token = this.props.login.user.token;
+                        this.props.changePassword(token, md5(oldPassword), md5(newPassword));
+                        this.isChangePassword = true;
                       }
                     }
                   }
@@ -64,6 +112,19 @@ class ChangePassword extends React.Component {
           }
         }
       }
+    }
+  }
+
+  handleLoginAgain() {
+    this.props.logout();
+    this.removeToken();
+  }
+
+  async removeToken() {
+    try {
+      await AsyncStorage.removeItem(AppConfig.STORAGE_KEY_SAVE_TOKEN);
+    } catch (error) {
+      cosole.log(error.message);
     }
   }
 
@@ -139,14 +200,30 @@ class ChangePassword extends React.Component {
               />
             </View>
 
-            {/*button-send*/}
-    				<TouchableOpacity style={styles.button} onPress={() => this.handleSend()}>
-    					<Text style={styles.buttonText}>{I18n.t('changePass', {locale: language})}</Text>
-    				</TouchableOpacity>
+            {
+              /*button-send*/
+              this.renderButtonChangePassword()
+            }
           </View>
         </Image>
       </KeyboardAwareScrollView>
     )
+  }
+
+  renderButtonChangePassword() {
+    const { language } = this.props;
+    if (!this.props.account.fetching) {
+      return (
+        <TouchableOpacity style={styles.button} onPress={() => this.handleSend()}>
+          <Text style={styles.buttonText}>{I18n.t('changePass', {locale: language})}</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={styles.button}>
+        <ActivityIndicator animating={this.props.account.fetching} color='white' />
+      </TouchableOpacity>
+    );
   }
 
 }
@@ -154,11 +231,15 @@ class ChangePassword extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    account: state.account,
+    login: state.login,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    logout: () => dispatch(LoginActions.logout()),
+    changePassword: (token, oldPassword, newPassword) => dispatch(AccountActions.changePasswordRequest(token, oldPassword, newPassword)),
   }
 }
 

@@ -62,7 +62,15 @@ class LoginScreen extends React.Component {
        	this.setState({ isLoading: false });
        	this.buttonAnimated.setValue(0);
        	this.growAnimated.setValue(0);
-        NavigationActions.pop(); //chuyen man hinh
+
+        //chuyen man hinh
+        if(this.props.screen) {
+          if(this.props.screen == 'CHANGE_PASSWORD') {
+            NavigationActions.tabbar({ type: 'reset' })
+          }
+        } else {
+          NavigationActions.pop()
+        }
       }, 2300);
     }
 
@@ -145,6 +153,14 @@ class LoginScreen extends React.Component {
 		).start();
 	}
 
+  handlePop() {
+    if(this.props.screen == 'CHANGE_PASSWORD') {
+      NavigationActions.tabbar()
+    } else {
+      NavigationActions.pop()
+    }
+  }
+
   render () {
     const changeWidth = this.buttonAnimated.interpolate({
 	    inputRange: [0, 1],
@@ -158,7 +174,7 @@ class LoginScreen extends React.Component {
     return(
       <KeyboardAwareScrollView scrollEnabled={false} resetScrollToCoords={{ x: 0, y: 0 }} >
         <Image style={styles.container} source={Images.background} >
-          <TouchableOpacity style={styles.backButton} onPress={() => NavigationActions.pop()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => this.handlePop()}>
             <Icon name="chevron-circle-left" size={35} color={Colors.primary}  />
           </TouchableOpacity>
           {/*Form login*/}
