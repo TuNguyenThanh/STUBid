@@ -46,8 +46,14 @@ var apiDoc = {
                     "phoneNumber": "string",
                     "email": "string",
                     "avatar":"string",
-                    "bankRefNumber": "string",
-                    "bankRefName": "string"
+                    "bankRefs": [
+                        {
+                            "bankRefId": "number",
+                            "bankRefNumber": "string",
+                            "bankBrandName": "string",
+                            "bankLogo": "string"
+                        }
+                    ]
                 }
             }
         },
@@ -88,7 +94,8 @@ var apiDoc = {
             },
             "response": {
                 "success": "boolean",
-                "avatar": "string"
+                "avatar": "string",
+                "token": "string"
             }
         },
         {

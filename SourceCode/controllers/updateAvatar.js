@@ -34,12 +34,14 @@ module.exports = (req,res) => {
     .then(obj => {
         if (!obj.accountId)
             return Promise.reject(new Error('authentication failed'));
+        token = refreshToken(obj);
         return updateAvatar(obj.accountId, imageName)
     })
     .then(avatar => {
         res.send({
             success: true,
-            avatar: `${DOMAIN_NAME}/images/avatar/${imageName}`
+            avatar: `${DOMAIN_NAME}/images/avatar/${imageName}`,
+            token
         })
         fs.unlink(form.uploadDir + avatar, error => {
             console.log(error + '');

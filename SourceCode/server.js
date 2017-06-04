@@ -50,6 +50,7 @@ app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
 app.patch('/Accounts/changePassword', require('./controllers/changePassword'));
 app.patch('/Accounts/updateProfile', require('./controllers/updateProfile'));
 app.patch('/Accounts/updateAvatar', require('./controllers/updateAvatar'));
+app.get('/BankBrands', require('./controllers/getBankBrands'));
 
 // socket.io configuration
 var io = require('socket.io')(server),

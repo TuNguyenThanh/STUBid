@@ -10,11 +10,11 @@ module.exports = (req,res) => {
         })
     }
     verify(token)
-    .then(object => {
-        if (!object.accountId)
+    .then(obj => {
+        if (!obj.accountId)
             return Promise.reject(new Error('authentication failed'));
         token = refreshToken(obj);
-        return changePassword(object.accountId, currentPassword, newPassword);
+        return changePassword(obj.accountId, currentPassword, newPassword);
     })
     .then(() => {
         res.send({ success: true });
