@@ -8,7 +8,7 @@ const { Types, Creators } = createActions({
   auctionsSuccess: ['data'],
   auctionsFailure: ['error'],
 
-  bidProductRequest: ['auctionId', 'accountId', 'priceBid'],
+  bidProductRequest: ['token', 'auctionId', 'accountId', 'priceBid', 'buyNow'],
   bidProductSuccess: ['bidSuccess'],
   bidProductFailure: ['error'],
 

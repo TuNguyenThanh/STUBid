@@ -113,7 +113,7 @@ class DetailProduct extends React.Component {
             {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
             {text: I18n.t('bid', {locale: language}), onPress: () => {
               //bid product
-              this.props.bibProduct(auctionId, this.props.login.user.profile.accountId, price);
+              this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
               this.isHandleBid = true;
             }},
           ],
@@ -164,7 +164,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    bibProduct: (auctionId, accountId, priceBid) => dispatch(AuctionsActions.bidProductRequest(auctionId, accountId, priceBid)),
+    bibProduct: (token, auctionId, accountId, priceBid, buyNow) => dispatch(AuctionsActions.bidProductRequest(token, auctionId, accountId, priceBid, buyNow)),
   }
 }
 

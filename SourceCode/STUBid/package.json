@@ -37,6 +37,7 @@
     "react-native-customized-image-picker": "0.0.28",
     "react-native-device-info": "0.10.2",
     "react-native-drawer": "2.3.0",
+    "react-native-fetch-blob": "^0.10.5",
     "react-native-i18n": "^1.0.0",
     "react-native-image-placeholder": "^1.0.7",
     "react-native-keyboard-aware-scroll-view": "^0.2.8",

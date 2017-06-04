@@ -107,7 +107,7 @@ class ForgotPassword extends React.Component {
 
             {
               /*button-send*/
-              this.renderButtonRegister()
+              this.renderButtonForgotPassword()
             }
           </View>
         </Image>
@@ -116,7 +116,7 @@ class ForgotPassword extends React.Component {
     )
   }
 
-  renderButtonRegister() {
+  renderButtonForgotPassword() {
     const { language } = this.props;
     if (!this.props.account.fetching) {
       return (

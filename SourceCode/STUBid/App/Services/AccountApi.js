@@ -30,6 +30,14 @@ const create = (baseURL = ApiConfig.baseURL) => {
     return api.patch('Accounts/changePassword', { token, currentPassword: oldPassword, newPassword });
   }
 
+  const editProfile = (info) => {
+  //  const { token, firstName, lastName, phoneNumber, email } = info;
+    return api.patch('Accounts/updateProfile', {
+      token: info.token, firstName: info.firstName,
+      lastName: info.lastName, phoneNumber: info.phoneNumber, email: info.email 
+    });
+  }
+
   return {
     // a list of the API functions from step 2
     createAccount,
@@ -37,6 +45,7 @@ const create = (baseURL = ApiConfig.baseURL) => {
     getNewCode,
     forgotPassword,
     changePassword,
+    editProfile,
   }
 }
 

@@ -1,6 +1,7 @@
 import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import AccountActions from '../Redux/AccountRedux'
+import LoginActions from '../Redux/LoginRedux'
 
 export function * createAcccount(api, action) {
   // make the call to the api
@@ -75,19 +76,64 @@ export function * forgotPassword(api, action) {
   }
 }
 
-export function * changePassword(api, action) {
+export function * changePassword(AccountApi, UserApi, action) {
   // make the call to the api
   const { token, oldPassword, newPassword } = action;
-  const response = yield call(api.changePassword, token, oldPassword, newPassword);
-  console.log(response);
+  const response = yield call(AccountApi.changePassword, token, oldPassword, newPassword);
+
   if (response.ok) {
     const data = response.data;
     if(data.success) {
       yield put(AccountActions.changePasswordSuccess());
+
+      //login from new token
+      const responseLogin = yield call(UserApi.loginToken, data.token);
+      if(response.ok) {
+        const dataLogin = responseLogin.data;
+        if(dataLogin.error) {
+          yield put(LoginActions.loginTokenFailure(dataLogin.error.message));
+        } else {
+          yield put(LoginActions.loginTokenSuccess(dataLogin));
+        }
+      } else {
+        yield put(LoginActions.loginTokenFailure(responseLogin.problem));
+      }
+
     } else {
       yield put(AccountActions.changePasswordFailure(data.error));
     }
   } else {
     yield put(AccountActions.changePasswordFailure(response.problem));
+  }
+}
+
+export function * editProfile(AccountApi, UserApi, action) {
+  // make the call to the api
+  const { info } = action;
+  const response = yield call(AccountApi.editProfile, info);
+
+  if (response.ok) {
+    const data = response.data;
+    if(data.success) {
+      yield put(AccountActions.editProfileSuccess());
+
+      //login from new token
+      const responseLogin = yield call(UserApi.loginToken, data.token);
+      if(response.ok) {
+        const dataLogin = responseLogin.data;
+        if(dataLogin.error) {
+          yield put(LoginActions.loginTokenFailure(dataLogin.error.message));
+        } else {
+          yield put(LoginActions.loginTokenSuccess(dataLogin));
+        }
+      } else {
+        yield put(LoginActions.loginTokenFailure(responseLogin.problem));
+      }
+
+    } else {
+      yield put(AccountActions.editProfileFailure(data.error));
+    }
+  } else {
+    yield put(AccountActions.editProfileFailure(response.problem));
   }
 }

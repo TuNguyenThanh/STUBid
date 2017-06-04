@@ -23,6 +23,10 @@ const { Types, Creators } = createActions({
   changePasswordRequest: ['token', 'oldPassword', 'newPassword'],
   changePasswordSuccess: [],
   changePasswordFailure: ['error'],
+
+  editProfileRequest: ['info'],
+  editProfileSuccess: [],
+  editProfileFailure: ['error'],
 })
 
 export const AccountTypes = Types
@@ -38,6 +42,7 @@ export const INITIAL_STATE = Immutable({
   newCode: false,
   forgotPasswordSuccess: false,
   changePasswordSuccess: false,
+  editProfileSuccess: false,
 })
 
 /* ------------- Reducers ------------- */
@@ -64,6 +69,10 @@ export const changePasswordSuccess = (state) => state.merge({ fetching: false, e
 
 export const changePasswordFailure = (state, { error }) => state.merge({ fetching: false, error, changePasswordSuccess: false })
 
+export const editProfileSuccess = (state) => state.merge({ fetching: false, error: null, editProfileSuccess: true })
+
+export const editProfileFailure = (state, { error }) => state.merge({ fetching: false, error, editProfileSuccess: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -86,6 +95,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CHANGE_PASSWORD_REQUEST]: request,
   [Types.CHANGE_PASSWORD_SUCCESS]: changePasswordSuccess,
   [Types.CHANGE_PASSWORD_FAILURE]: changePasswordFailure,
+
+  [Types.EDIT_PROFILE_REQUEST]: request,
+  [Types.EDIT_PROFILE_SUCCESS]: editProfileSuccess,
+  [Types.EDIT_PROFILE_FAILURE]: editProfileFailure,
 })
 
 /* ------------- Selectors ------------- */

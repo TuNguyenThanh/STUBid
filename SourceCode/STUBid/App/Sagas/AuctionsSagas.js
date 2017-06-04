@@ -30,12 +30,27 @@ export function * getAuctions(api, action) {
   // }
 }
 
-export function * bidProduct(api, action) {
-  const { auctionId, accountId, priceBid } = action;
+export function * bidProduct(AuctionsApi, UserApi, action) {
+  const { token, auctionId, accountId, priceBid, buyNow } = action;
   try {
-    const response = yield call(api.bidProduct , auctionId, accountId, priceBid );
+    const response = yield call(AuctionsApi.bidProduct, token, auctionId, accountId, priceBid, buyNow );
+    console.log(response);
     if(response.ok) {
       yield put(AuctionsActions.bidProductSuccess(priceBid));
+
+      //login from new token
+      const responseLogin = yield call(UserApi.loginToken, response.data.token);
+      if(response.ok) {
+        const dataLogin = responseLogin.data;
+        if(dataLogin.error) {
+          yield put(LoginActions.loginTokenFailure(dataLogin.error.message));
+        } else {
+          yield put(LoginActions.loginTokenSuccess(dataLogin));
+        }
+      } else {
+        yield put(LoginActions.loginTokenFailure(responseLogin.problem));
+      }
+
     } else {
       yield put(AuctionsActions.bidProductFailure(response.problem));
     }

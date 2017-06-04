@@ -22,7 +22,7 @@ import { getAuctions, bidProduct } from './AuctionsSagas'
 import { searchs } from './SearchSagas'
 import { getCategory } from './CategorySagas'
 import { login, loginToken } from './LoginSagas'
-import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword } from './AccountSagas'
+import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword, editProfile } from './AccountSagas'
 
 /* ------------- API ------------- */
 
@@ -50,7 +50,7 @@ export default function * root () {
 
     //Auctions
     takeLatest(AuctionsTypes.AUCTIONS_REQUEST, getAuctions, AuctionsApi),
-    takeLatest(AuctionsTypes.BID_PRODUCT_REQUEST, bidProduct, AuctionsApi),
+    takeLatest(AuctionsTypes.BID_PRODUCT_REQUEST, bidProduct, AuctionsApi, UserApi),
 
     //Category
     takeLatest(CategoryTypes.CATEGORY_PRODUCT_REQUEST, getCategory, CategoryApi),
@@ -60,6 +60,7 @@ export default function * root () {
     takeLatest(AccountTypes.CHECK_CODE_REQUEST, checkCode, AccountApi),
     takeLatest(AccountTypes.GET_NEW_CODE_REQUEST, getNewCode, AccountApi),
     takeLatest(AccountTypes.FORGOT_PASSWORD_REQUEST, forgotPassword, AccountApi),
-    takeLatest(AccountTypes.CHANGE_PASSWORD_REQUEST, changePassword, AccountApi),
+    takeLatest(AccountTypes.CHANGE_PASSWORD_REQUEST, changePassword, AccountApi, UserApi),
+    takeLatest(AccountTypes.EDIT_PROFILE_REQUEST, editProfile, AccountApi, UserApi),
   ]
 }

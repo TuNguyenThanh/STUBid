@@ -139,6 +139,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
     compile project(':react-native-spinkit')
     compile project(':react-native-customized-image-picker')
     compile project(':react-native-maps')

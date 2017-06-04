@@ -1,6 +1,7 @@
 import React from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
+import AccountActions from '../Redux/AccountRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-customized-image-picker'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -21,12 +22,43 @@ class EditProfile extends React.Component {
     this.state = {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,
-      phone: this.props.user.phoneNumber,
+      phoneNumber: this.props.user.phoneNumber,
       email: this.props.user.email,
-      atm: this.props.user.atm,
+      accountBanking: this.props.user.accountBanking || null,
       openModalChooseImage: false,
       urlImage: this.props.user.avatar,
     };
+    this.isChange = false;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { language } = this.props;
+    const { fetching, error, editProfileSuccess } = nextProps.account;
+    console.log( fetching, error, editProfileSuccess );
+
+    if(!fetching && editProfileSuccess && this.isChange) {
+      Alert.alert(
+        'Success',
+        '',
+        [
+          {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isChange = false;
+    }
+
+    //error
+    if(!fetching && error) {
+      Alert.alert(
+        'Error',
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   handleChangeAvatar() {
@@ -34,7 +66,12 @@ class EditProfile extends React.Component {
   }
 
   handleSaveProfile() {
-    alert('save');
+    const { firstName, lastName, phoneNumber, email, accountBanking } = this.state;
+    const { token } = this.props.login.user;
+    const info = { token, firstName, lastName, phoneNumber, email, accountBanking };
+
+    this.props.editProfile(info);
+    this.isChange = true;
   }
 
   render () {
@@ -130,8 +167,8 @@ class EditProfile extends React.Component {
                 underlineColorAndroid={'transparent'}
                 returnKeyType='next'
                 onSubmitEditing={() => this.email.focus()}
-                value={this.state.phone}
-                onChangeText={(phone) => this.setState({ phone })}
+                value={this.state.phoneNumber}
+                onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
               />
               <View style={styles.lineStyle} />
             </View>
@@ -172,8 +209,8 @@ class EditProfile extends React.Component {
                 underlineColorAndroid={'transparent'}
                 returnKeyType='done'
                 onSubmitEditing={() => this.handleSaveProfile()}
-                value={this.state.atm}
-                onChangeText={(atm) => this.setState({ atm })}
+                value={this.state.accountBanking}
+                onChangeText={(accountBanking) => this.setState({ accountBanking })}
               />
               <View style={styles.lineStyle} />
             </View>
@@ -181,13 +218,30 @@ class EditProfile extends React.Component {
 
           <View style={{flex: 1}}/>
 
-          <TouchableOpacity style={styles.button} onPress={this.handleSaveProfile.bind(this)}>
-            <Text style={styles.textButton}>{I18n.t('change', {locale: language})}</Text>
-          </TouchableOpacity>
+          {
+            /*Button change*/
+            this.renderButtonChange()
+          }
         </View>
         { this.renderModalChooseImage()}
       </KeyboardAwareScrollView>
     )
+  }
+
+  renderButtonChange() {
+    const { language } = this.props;
+    if (!this.props.account.fetching) {
+      return (
+        <TouchableOpacity style={styles.button} onPress={this.handleSaveProfile.bind(this)}>
+          <Text style={styles.textButton}>{I18n.t('change', {locale: language})}</Text>
+        </TouchableOpacity>
+      );
+    }
+    return (
+      <TouchableOpacity style={styles.button}>
+        <ActivityIndicator animating={this.props.account.fetching} color='white' />
+      </TouchableOpacity>
+    );
   }
 
   handlePhoto() {
@@ -252,11 +306,14 @@ class EditProfile extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    login: state.login,
+    account: state.account,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    editProfile: (info) => dispatch(AccountActions.editProfileRequest(info)),
   }
 }
 

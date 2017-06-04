@@ -23,9 +23,9 @@ const create = (baseURL = ApiConfig.baseURL) => {
     // });
   }
 
-  const bidProduct = (auctionId, accountId, price) => {
+  const bidProduct = (token, auctionId, accountId, price, buyNow) => {
     return api.patch('Auctions/bid', {
-      auctionId, accountId, price
+      token, auctionId, accountId, price, buyNow
     });
   }
 
