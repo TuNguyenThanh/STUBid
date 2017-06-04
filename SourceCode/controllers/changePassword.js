@@ -12,8 +12,6 @@ module.exports = (req,res) => {
     }
     verify(token)
     .then(object => {
-        console.log(new Date(object.exp*1000));
-        console.log(new Date(Date.now()));
         if (object.exp*1000 < Date.now())
             return Promise.reject(new Error('token is expired'));
         if (!object.accountId)

@@ -30,7 +30,7 @@ exports.login = (accountId, username, password) => {
             "Profile"."lastName",
             "Profile"."phoneNumber",
             "Profile".email,
-            CONCAT ('${DOMAIN_NAME}/images/avatar/',"Profile".avatar) AS avatar,
+            "Profile".avatar,
             "BankBrand"."bankBrandName" AS "bankRefName",
             substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 3, length("BankRef"."bankAccountNumber")) AS "bankRefNumber"
             FROM "Account"
@@ -50,6 +50,7 @@ exports.login = (accountId, username, password) => {
                 && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
             )
                 return reject(new Error('account has been banned at level 1'));
+            account.avatar = account.avatar?`${DOMAIN_NAME}/image/avatar/${account.avatar}`:null;
             resolve(account)
         })
         .catch(error => reject(error));
