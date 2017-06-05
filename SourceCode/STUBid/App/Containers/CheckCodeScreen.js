@@ -40,12 +40,13 @@ class CheckCode extends React.Component {
   }
 
   handleSendCode() {
+    const { language } = this.props;
     const { code } = this.state;
     if(code == '') {
-      this.message('Vui long nhap code')
+      this.message(I18n.t('pleaseEnterCode', {locale: this.props.language}))
     } else {
       if(code.length != 6) {
-        this.message('Code khong hop le')
+        this.message(I18n.t('invalidCode', {locale: this.props.language}))
       } else {
         const { email, username, phoneNumber } = this.props.dataRegister;
         this.props.checkCode(code, email, username, phoneNumber);
@@ -57,13 +58,11 @@ class CheckCode extends React.Component {
   componentWillReceiveProps(nextProps){
     const { language } = this.props;
     const { codeSuccess, error, fetching, newCode } = nextProps.account;
-    console.log(codeSuccess, error, fetching, newCode);
-
 
     if(!fetching && newCode && this.isGetCode) {
       Alert.alert(
         I18n.t('getCode', {locale: this.props.language}),
-        'Success, please check sms !',
+        I18n.t('success', {locale: this.props.language}) + ', ' + I18n.t('pleaseCheckSMS', {locale: language}),
         [
           {text: 'OK', onPress: () => {}},
         ],
@@ -105,11 +104,12 @@ class CheckCode extends React.Component {
   }
 
   message(mess) {
+    const { language } = this.props;
     Alert.alert(
-      'Thong bao',
+      I18n.t('error', {locale: language}),
       mess,
       [
-        {text: 'OK', onPress: () => {}},
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
       ],
       { cancelable: false }
     );

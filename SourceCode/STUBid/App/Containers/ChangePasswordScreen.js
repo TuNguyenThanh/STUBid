@@ -37,8 +37,8 @@ class ChangePassword extends React.Component {
 
     if(!fetching && changePasswordSuccess && this.isChangePassword) {
       Alert.alert(
-        'Change Password',
-        'Success, please login again',
+        I18n.t('changePass', {locale: language}),
+        I18n.t('success', {locale: language}) + ', ' + I18n.t('pleaseLoginAgain', {locale: language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {
             this.handleLoginAgain();
@@ -56,7 +56,7 @@ class ChangePassword extends React.Component {
     //handle error
     if(!fetching && error) {
       Alert.alert(
-        'Error',
+        I18n.t('error', {locale: language}),
         error,
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
@@ -68,36 +68,37 @@ class ChangePassword extends React.Component {
   }
 
   handleSend() {
+    const { language } = this.props;
     const { oldPassword, newPassword, reNewPassword } = this.state;
     if(oldPassword == '') {
-      this.message('Vui long nhap mat khau cu');
+      this.message(I18n.t('pleaseEnterOldPasswords', {locale: language}));
     } else {
       if(newPassword == '') {
-        this.message('Vui long nhap mat khau moi');
+        this.message(I18n.t('pleaseEnterNewPasswords', {locale: language}));
       } else {
         if(reNewPassword == '') {
-          this.message('Vui long nhap lai mat khau moi');
+          this.message(I18n.t('pleaseEnterRepeatNewPasswords', {locale: language}));
         } else {
           if(oldPassword.length < 6 ) {
-            this.message('Mat khau cu it nhat 6 ky tu');
+            this.message(I18n.t('oldPasswordIsAtLeast6Characters', {locale: language}));
           } else {
             if(newPassword.length < 6 ) {
-              this.message('Mat khau moi it nhat 6 ky tu');
+              this.message(I18n.t('newPasswordIsAtLeast6Characters', {locale: language}));
             } else {
               if(reNewPassword.length < 6 ) {
-                this.message('Mat khau moi nhap lai it nhat 6 ky tu');
+                this.message(I18n.t('repeatNewPasswordIsAtLeast6Characters', {locale: language}));
               } else {
                 if(oldPassword.length > 18 ) {
-                  this.message('Mat khau cu toi da 18 ky tu');
+                  this.message(I18n.t('oldPasswordIs18charactersMax', {locale: language}));
                 } else {
                   if(newPassword.length > 18 ) {
-                    this.message('Mat khau moi toi da 18 ky tu');
+                    this.message(I18n.t('newPasswordIs18charactersMax', {locale: language}));
                   } else {
                     if(reNewPassword.length > 18 ) {
-                      this.message('Mat khau moi nhap lai toi da 18 ky tu');
+                      this.message(I18n.t('repeatNewPasswordIs18charactersMax', {locale: language}));
                     } else {
                       if(newPassword != reNewPassword) {
-                        this.message('Mat khau moi va nhap lai mat khau moi phai giong nhau');
+                        this.message(I18n.t('newPassAndRepeatNewPassMustBeTheSame', {locale: language}));
                       } else {
                           //oke send
                         const token = this.props.login.user.token;
@@ -129,11 +130,12 @@ class ChangePassword extends React.Component {
   }
 
   message(mess) {
+    const { language } = this.props;
     Alert.alert(
-      'Thong bao',
+      I18n.t('error', {locale: language}),
       mess,
       [
-        {text: 'OK', onPress: () => {}},
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
       ],
       { cancelable: false }
     );

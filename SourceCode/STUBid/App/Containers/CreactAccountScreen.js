@@ -45,7 +45,7 @@ class CreactAccount extends React.Component {
 
       if(!fetching && !success && error) {
         Alert.alert(
-          'Error',
+          I18n.t('error', {locale: language}),
           error,
           [
             {text: I18n.t('ok', {locale: language}), onPress: () => {}},
@@ -57,52 +57,53 @@ class CreactAccount extends React.Component {
   }
 
   handleRegister() {
+    const { language } = this.props;
     const { firstName, lastName, email, phoneNumber, username, password, rePassword } = this.state;
 
     if (!firstName) {
-      this.message('Bạn chưa điền Tên');
+      this.message(I18n.t('notEnterFirstName', {locale: language}));
     } else {
       if (!lastName) {
-        this.message('Bạn chưa điền Họ');
+        this.message(I18n.t('notEnterLastName', {locale: language}));
       } else {
         if (!email) {
-          this.message('Bạn chưa điền Email');
+          this.message(I18n.t('notEnterEmail', {locale: language}));
         } else {
           if (!this.validateEmail(email)) {
-            this.message('Địa chỉ email không hợp lệ');
+            this.message(I18n.t('emailAddressNotValid', {locale: language}));
           } else {
             if (!phoneNumber) {
-              this.message('Bạn chưa điền số điện thoại');
+              this.message(I18n.t('notEnterPhoneNumber', {locale: language}));
             } else {
               if(phoneNumber.length < 10 || phoneNumber.length >= 12){
-                this.message('Số điện thoại không hợp lệ');
+                this.message(I18n.t('invalidPhoneNumber', {locale: language}));
               } else {
                 if (!username) {
-                  this.message('Bạn chưa điền tên đăng nhập');
+                  this.message(I18n.t('notEnterUsername', {locale: language}));
                 } else {
                   if(!this.check(username)) {
-                    this.message('Tên đăng nhập chỉ được sử dụng a-z 0-9');
+                    this.message(I18n.t('usernameIsOnlyUsed', {locale: language}) + ' a-z 0-9');
                   } else {
                     if(username.length < 6) {
-                      this.message('Tên đăng nhập ít nhất 6 ký tự');
+                      this.message(I18n.t('usernameIsAtLeast6characters', {locale: language}));
                     } else {
                       if(username.length >= 18) {
-                        this.message('Tên đăng nhập tối đa 18 ký tự');
+                        this.message(I18n.t('usernameOfUpTo18Characters', {locale: language}));
                       } else {
                         if (!password) {
-                          this.message('Bạn chưa điền mật khẩu');
+                          this.message(I18n.t('notEnterPassword', {locale: language}));
                         } else {
                           if (password.length < 6) {
-                            this.message('Mật khẩu ít nhất 6 ký tự');
+                            this.message(I18n.t('passwordIsAtLeast6characters', {locale: language}));
                           } else {
                             if(password.length >= 18) {
-                              this.message('Mật khẩu tối đa 18 ký tự');
+                              this.message(I18n.t('passwordOfUpTo18Characters', {locale: language}));
                             } else {
                               if (!rePassword) {
-                                this.message('Bạn chưa điền nhập lại mật khẩu');
+                                this.message(I18n.t('youHaveNotReEnteredYourPassword', {locale: language}));
                               } else {
                                 if (password !== rePassword) {
-                                  this.message('Mật khẩu và nhập lại phải giống nhau');
+                                  this.message(I18n.t('passwordAndRepeatPasswordMustBeTheSame', {locale: language}));
                                 } else {
                                   //oke - register
                                   const info = { firstName, lastName, email, phoneNumber, username, password: md5(password) };
@@ -127,11 +128,12 @@ class CreactAccount extends React.Component {
   }
 
   message(mess) {
+    const { language } = this.props;
     Alert.alert(
-      'Thong bao',
+      I18n.t('error', {locale: language}),
       mess,
       [
-        {text: 'OK', onPress: () => {}},
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
       ],
       { cancelable: false }
     );

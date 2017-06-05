@@ -10,7 +10,7 @@ export function * login (api, action) {
     if(response.ok) {
       const data = response.data;
       if(data.error) {
-        yield put(LoginActions.loginFailure('error'));
+        yield put(LoginActions.loginFailure(data.error));
       } else {
         yield put(LoginActions.loginSuccess(data));
       }

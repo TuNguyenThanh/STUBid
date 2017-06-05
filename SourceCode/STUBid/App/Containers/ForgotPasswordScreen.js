@@ -28,8 +28,8 @@ class ForgotPassword extends React.Component {
 
     if(!fetching && forgotPasswordSuccess && this.isForgotPassword) {
       Alert.alert(
-        'Success',
-        'Please check email: ' + this.state.email,
+        I18n.t('success', {locale: this.props.language}),
+        I18n.t('pleaseCheckEmail', {locale: this.props.language}) + ' ' + this.state.email,
         [
           {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {
             NavigationActions.pop();
@@ -43,7 +43,7 @@ class ForgotPassword extends React.Component {
     //error
     if(!fetching && error) {
       Alert.alert(
-        'Error',
+        I18n.t('error', {locale: language}),
         error,
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
@@ -54,13 +54,14 @@ class ForgotPassword extends React.Component {
   }
 
   handleSendForgotPassword(email) {
+    const { language } = this.props;
     if (!this.validateEmail(email)) {
       //email not invalid
       Alert.alert(
-        'Email khong hop le',
-        'Vui long nhap lai email',
+        I18n.t('emailAddressNotValid', {locale: language}),
+        I18n.t('pleaseEnterEmailAgain', {locale: language}),
         [
-          {text: 'OK', onPress: () => {}},
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],
         { cancelable: false }
       );

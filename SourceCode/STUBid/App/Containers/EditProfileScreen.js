@@ -34,11 +34,10 @@ class EditProfile extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { language } = this.props;
     const { fetching, error, editProfileSuccess } = nextProps.account;
-    console.log( fetching, error, editProfileSuccess );
 
     if(!fetching && editProfileSuccess && this.isChange) {
       Alert.alert(
-        'Success',
+        I18n.t('success', {locale: this.props.language}),
         '',
         [
           {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {}},
@@ -51,7 +50,7 @@ class EditProfile extends React.Component {
     //error
     if(!fetching && error) {
       Alert.alert(
-        'Error',
+        I18n.t('error', {locale: this.props.language}),
         error,
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
