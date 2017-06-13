@@ -1,8 +1,9 @@
 const   eSMS = require('../config').eSMS,
-        http = require('http');
+        http = require('http'),
+        ERROR = require('../error.json');
 
 exports.sendSMS = (phoneNumber, verifyCode) => {
-    let message = encodeURIComponent(`Ma xac thuc tai khoan sBid cua ban la ${verifyCode}.`);
+    let message = encodeURIComponent(`Ma xac thuc tai khoan sBid cua ban la ${verifyCode}. Ma xac thuc co hieu luc trong 10 phut`);
     options = {
         host : 'rest.esms.vn',
         path : `/MainService.svc/json/SendMultipleMessage_V4_get?Phone=${phoneNumber}&Content=${message}&ApiKey=${eSMS.API_KEY}&SecretKey=${eSMS.SECRET_KEY}&SmsType=7`,
@@ -18,7 +19,11 @@ exports.sendSMS = (phoneNumber, verifyCode) => {
                 var json = JSON.parse(body);
                 if (json.CodeResult === '100')
                     resolve();
-                else reject(new Error(json.ErrorMessage?json.ErrorMessage:'can not send sms'));
+                else reject({
+                    status: 500,
+                    error: ERROR[500][10],
+                    internalError: json.ErrorMessage
+                });
             })
         }).end();
     })

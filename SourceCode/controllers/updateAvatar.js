@@ -1,8 +1,9 @@
-var formidable = require('formidable'),
-    fs = require('fs'),
-    { DIRNAME, DOMAIN_NAME } = require('../config'),
-    { verify, refreshToken } = require('../helpers/jwt'),
-    { updateAvatar } = require('../models/account');
+const formidable = require('formidable'),
+      fs = require('fs'),
+      { DIRNAME, DOMAIN_NAME } = require('../config'),
+      { verify, refreshToken } = require('../helpers/jwt'),
+      { updateAvatar } = require('../models/account'),
+      ERROR = require('../error.json');
 
 module.exports = (req,res) => {
     var imageName = '', token = '';
@@ -10,6 +11,8 @@ module.exports = (req,res) => {
     form.on('fileBegin', function(name, file) {
         let arrayFileName = file.name.split('.'),
             fileExtension = arrayFileName[arrayFileName.length - 1];
+        if (fileExtension.toLowerCase() !== 'png' && fileExtension.toLowerCase() !== 'jpg' && fileExtension.toLowerCase() !== 'jpeg')
+            fileExtension = 'jpg';
         arrayFileName[arrayFileName.length - 1] = Date.now();
         file.name = imageName = arrayFileName.join('-') + '.' + fileExtension;
         file.path = form.uploadDir + file.name;
@@ -22,18 +25,28 @@ module.exports = (req,res) => {
     });
     new Promise(function(resolve, reject) {
         form.parse(req, function(err, fields, files) {
-            if (err) return reject(err);
+            if (err) return reject({
+                status: 500,
+                error: ERROR[500][20],
+                internalError: err
+            });
             return resolve(fields);
         });
     })
     .then(fields => {
         if (!fields.token)
-            return Promise.reject(new Error('missing parameters'))
+            return Promise.reject({
+                status: 400,
+                error: ERROR[400][0]
+            })
         return verify(fields.token);
     })
     .then(obj => {
         if (!obj.accountId)
-            return Promise.reject(new Error('authentication failed'));
+            return Promise.reject({
+                status: 400,
+                error: ERROR[400][1]
+            });
         token = refreshToken(obj);
         return updateAvatar(obj.accountId, imageName)
     })
@@ -47,11 +60,11 @@ module.exports = (req,res) => {
             console.log(error + '');
         });
     })
-    .catch(function(error){
-        console.log(error);
-        res.send({
+    .catch(function(reason){
+        console.log(reason);
+        res.status(reason.status).send({
             success: false,
-            error: error + ''
+            error: reason.error
         })
         fs.unlink(form.uploadDir + imageName, error => {
             console.log(error + '');

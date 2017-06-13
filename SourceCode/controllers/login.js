@@ -1,5 +1,6 @@
 var { login } = require('../models/account'),
-    { sign, verify } = require('../helpers/jwt');
+    { sign, verify } = require('../helpers/jwt'),
+    ERROR = require('../error.json');
 
 module.exports = (req,res) => {
     new Promise((resolve,reject) => {
@@ -11,14 +12,17 @@ module.exports = (req,res) => {
                 if (object.accountId) {
                     resolve(login(object.accountId));
                 }
-                else reject(new Error('token error'));
+                else reject({
+                    status: 400,
+                    error: ERROR[400][1]
+                });
             })
-            .catch(error => reject(error))
+            .catch(reason => reject(reason))
         }
         else {
-            res.send({
-                success: false,
-                error: 'missing parameters'
+            reject({
+                status: 400,
+                error: ERROR[400][0]
             });
         }
     })
@@ -41,11 +45,11 @@ module.exports = (req,res) => {
             }
         });
     })
-    .catch(error => {
-        console.log(error + '');
-        res.send({
+    .catch(reason => {
+        console.log(reason);
+        res.status(reason.status).send({
             ok: false,
-            error: error + ''
+            error: reason.error
         });
     })
 }

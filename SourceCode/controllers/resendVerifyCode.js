@@ -4,14 +4,20 @@ var { resetVerifyCode } = require('../models/account'),
 module.exports = (req,res) => {
     var { phoneNumber, email, username } = req.body;
     if (!phoneNumber || !email || !username) {
-        res.send({ success: false, error: 'missing parameters' })
+        res.status(400).send({
+            success: false,
+            error: ERROR[400][0]
+        })
     }
     else {
-        let result = resetVerifyCode(phoneNumber, email, username);
-        if (result.error)
-            return res.send({ success: false, error: error + '' });
-        sendSMS(phoneNumber, result.verifyCode)
+        resetVerifyCode(phoneNumber, email, username)
+        .then(verifyCode => {
+            return sendSMS(phoneNumber, verifyCode)
+        })
         .then(() => res.send({ success: true }))
-        .catch(error => res.send({ success: false, error: error + '' }))
+        .catch(reason => {
+            console.log(reason);
+            res.status(reason.status).send({ success: false, error: reason.error })
+        })
     }
 }

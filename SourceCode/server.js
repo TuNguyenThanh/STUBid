@@ -17,13 +17,7 @@ app.use(function (req, res, next) {
     && (!req.header('origin')
       || new RegExp(req.header('origin')).test(config.ALLOW_ORIGIN) != true)
   )
-    return res.send({
-        ok: false,
-        error: {
-          code: 97,
-          description: 'you do not have permission to access this route'
-        }
-    });
+    return res.status(404).send();
 
   res.setHeader('Access-Control-Allow-Origin', '*');
   next();

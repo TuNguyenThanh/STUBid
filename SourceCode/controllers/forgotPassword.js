@@ -1,11 +1,15 @@
 const { sendResetPasswordEmail } = require('../helpers/mailer'),
       { sign } = require('../helpers/jwt'),
-      { forgotPassword } = require('../models/account');
+      { forgotPassword } = require('../models/account'),
+      ERROR = require('../error.json');
 
 module.exports = (req,res) => {
     var { email } = req.body;
     if (!email) {
-        return res.send({ success: false, error: 'email is required' })
+        return res.status(400).send({
+            success: false,
+            error: ERROR[400][0]
+        })
     }
     forgotPassword(email)
     .then(result => {
@@ -14,8 +18,11 @@ module.exports = (req,res) => {
     .then(() => {
         res.send({ success: true })
     })
-    .catch(error => {
-        console.log(error);
-        res.send({ success: false, error: error + '' })
+    .catch(reason => {
+        console.log(reason);
+        res.status(reason.status).send({
+            success: false,
+            error: reason.error
+        })
     })
 }

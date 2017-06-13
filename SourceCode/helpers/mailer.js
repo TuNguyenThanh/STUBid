@@ -1,5 +1,6 @@
-var { DOMAIN_NAME, MAILER_OPTIONS } = require('../config.js');
-var nodemailer = require('nodemailer');
+const { DOMAIN_NAME, MAILER_OPTIONS } = require('../config.js');
+const nodemailer = require('nodemailer');
+const ERROR = require('../error.json');
 
 transporter = nodemailer.createTransport(MAILER_OPTIONS);
 var mailOptions = {
@@ -32,7 +33,10 @@ exports.sendResetPasswordEmail = (receiver, firstName, verifyToken) => {
     </div>`;
     return new Promise(function(resolve, reject) {
         transporter.sendMail(mailOptions, (err, info) => {
-            if (err) return reject(err)
+            if (err) return reject({
+                status: 500,
+                error: ERROR[500][11]
+            })
             else {
                 console.log('Message %s sent: %s', info.messageId, info.response);
                 return resolve();

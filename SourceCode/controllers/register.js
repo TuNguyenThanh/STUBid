@@ -1,35 +1,41 @@
 var { register, exist, pushRegisterQueue } = require('../models/account'),
-    { sendSMS } = require('../helpers/sms');
+    { sendSMS } = require('../helpers/sms'),
+    ERROR = require('../error.json');
 
 module.exports = (req,res) => {
     var { firstName, lastName, phoneNumber, email, username, password, verifyCode } = req.body;
     if (!verifyCode) {
         if (!firstName || !lastName || !phoneNumber || !email || !username || !password) {
-            res.send({ error: 'missing parameters' })
+            return res.status(400).send({
+                success: false,
+                error: ERROR[400][0]
+            })
         }
-        else
-            exist(username, email, phoneNumber)
-            .then(() => {
-                let code = pushRegisterQueue(firstName, lastName, phoneNumber, email, username, password)
-                return sendSMS(phoneNumber, code);
+        exist(username, email, phoneNumber)
+        .then(() => {
+            let code = pushRegisterQueue(firstName, lastName, phoneNumber, email, username, password)
+            return sendSMS(phoneNumber, code);
+        })
+        .then(() => {
+            res.send({
+                ok: true,
+                step: 1
             })
-            .then(() => {
-                res.send({
-                    ok: true,
-                    step: 1
-                })
+        })
+        .catch(reason => {
+            console.log(reason);
+            res.status(reason.status).send({
+                ok: false,
+                error: reason.error
             })
-            .catch(error => {
-                console.log(error);
-                res.send({
-                    ok: false,
-                    error: error + ''
-                })
-            })
+        })
     }
     else {
         if (!phoneNumber || !email || !username) {
-            return res.send({ error: 'missing parameters' })
+            return res.status(400).send({
+                success: false,
+                error: ERROR[400][0]
+            })
         }
         register(verifyCode, phoneNumber, email, username)
         .then(() => {
@@ -38,11 +44,11 @@ module.exports = (req,res) => {
                 step: 2
             })
         })
-        .catch(error => {
-            console.log(error);
-            res.send({
+        .catch(reason => {
+            console.log(reason);
+            res.status(reason.status).send({
                 ok: false,
-                error: error + ''
+                error: reason.error
             })
         })
     }

@@ -1,6 +1,85 @@
 {
-    "wrong-verify-code": {
-        "code": 101,
-        "description": "wrong verify code"
+    "500": {
+        "0": {
+            "code": 2000,
+            "message": "Database connection error"
+        },
+        "1": {
+            "code": 2001,
+            "message": "Database query error"
+        },
+        "10": {
+            "code": 2010,
+            "message": "Can not send verification code via SMS"
+        },
+        "11": {
+            "code": 2011,
+            "message": "Can not send verification code via email"
+        },
+        "20": {
+            "code": 2020,
+            "message": "Form parsing failed"
+        }
+    },
+    "400": {
+        "0": {
+            "code": 1000,
+            "message": "Missing parameters"
+        },
+        "1": {
+            "code": 1001,
+            "message": "Authentication token is not valid"
+        },
+        "2": {
+            "code": 1002,
+            "message": "Authentication token has been expired"
+        },
+        "10": {
+            "code": 1010,
+            "field": "email",
+            "message": "Email has been taken"
+        },
+        "11": {
+            "code": 1011,
+            "field": "phoneNumber",
+            "message": "Phone number has been taken"
+        },
+        "12": {
+            "code": 1012,
+            "field": "username",
+            "message": "Username has been taken"
+        },
+        "13": {
+            "code": 1013,
+            "message": "Verification code is not valid"
+        },
+        "14": {
+            "code": 1014,
+            "message": "Registration has been expired"
+        },
+        "20": {
+            "code": 1020,
+            "message": "Wong username or password"
+        },
+        "21": {
+            "code": 1021,
+            "message": "Account has been banned at level 1"
+        },
+        "22": {
+            "code": 1022,
+            "message": "Account has been banned at level 2"
+        },
+        "30": {
+            "code": 1030,
+            "message": "Current password is not correct"
+        },
+        "31": {
+            "code": 1031,
+            "message": ""
+        },
+        "40": {
+            "code": 1040,
+            "message": "Email not found"
+        }
     }
 }

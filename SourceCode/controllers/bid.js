@@ -4,14 +4,17 @@ const { verify, refreshToken } = require('../helpers/jwt'),
 module.exports = (req, res, sockets) => {
     var { token, auctionId, accountId, price } = req.body;
     if (!token || !auctionId || !accountId || !price)
-        return res.send({
+        return res.status(400).send({
             success: false,
-            error: 'missing parameters'
-        });
+            error: ERROR[400][0]
+        })
     verify(token)
     .then(obj => {
         if (!obj.accountId)
-            return Promise.reject(new Error('authentication failed'));
+            return Promise.reject({
+            success: false,
+            error: ERROR[400][1]
+        });
         token = refreshToken(obj);
         return bid(auctionId, accountId, price)
     })
@@ -21,11 +24,11 @@ module.exports = (req, res, sockets) => {
         })
         res.send({ success: true, token })
     })
-    .catch(error => {
-        console.log(error);
-        res.send({
+    .catch(reason => {
+        console.log(reason);
+        res.status(reason.status).send({
             success: false,
-            error: error + ''
+            error: reason.error
         })
     })
 }
