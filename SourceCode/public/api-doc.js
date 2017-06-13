@@ -200,7 +200,7 @@ var apiDoc = {
             "data": { "page": "number"}
         }
     ],
-    "error": {
+    "errors": {
         "500": [
             {
                 "code": 2000,
@@ -274,10 +274,6 @@ var apiDoc = {
             {
                 "code": 1030,
                 "message": "Current password is not correct"
-            },
-            {
-                "code": 1031,
-                "message": ""
             },
             {
                 "code": 1040,
