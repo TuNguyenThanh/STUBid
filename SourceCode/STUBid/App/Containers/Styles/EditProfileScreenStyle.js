@@ -96,4 +96,37 @@ export default StyleSheet.create({
     marginLeft: 50,
     zIndex: 1
   },
+  containerStyle: {
+    justifyContent: 'center'
+  },
+  modalStyle: {
+    borderRadius: 2,
+    margin: 20,
+    padding: 10,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center'
+  },
+  titleModal: {
+    fontFamily: Fonts.type.quicksand,
+    fontSize: 18
+  },
+  listViewBanking: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  rowCategory: {
+    width: ( Metrics.screenWidth / 2.6 ),
+    borderRadius: 2,
+    borderColor: '#D8D8D8',
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 5,
+    backgroundColor: '#FFFFFF',
+    marginTop: 8,
+    marginLeft: 2,
+    marginRight: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

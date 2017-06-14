@@ -12,7 +12,7 @@ export default Creators
 
 /* ------------- Initial State ------------- */
 export const INITIAL_STATE = Immutable({
-  language: I18n.locale.substr(0, 2)
+  language: 'vi'//I18n.locale.substr(0, 2)
   // take over the recognized, or default if not recognized,
   // language locale as initial state
 })

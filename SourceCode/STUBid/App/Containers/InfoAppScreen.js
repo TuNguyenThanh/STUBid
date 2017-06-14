@@ -19,6 +19,7 @@ class InfoApp extends React.Component {
       latitudeDelta: 0.005,
       longitudeDelta: 0.005,
     };
+    const { language } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.viewLogo}>
@@ -26,7 +27,7 @@ class InfoApp extends React.Component {
         </View>
         <View style={styles.viewBody}>
           <View style={{ padding: 8 }}>
-            <Text>If you really liked Ignite 1 as it was, then not much has changed! You just run ignite new MyApp --max and everything feels pretty normal from there.</Text>
+            <Text style={styles.textStyle}>{I18n.t('infoApp', {locale: language})}</Text>
           </View>
           <MapView style={{flex: 1}} region={region} mapType="standard">
             <MapView.Marker
@@ -44,6 +45,7 @@ class InfoApp extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
   }
 }
 

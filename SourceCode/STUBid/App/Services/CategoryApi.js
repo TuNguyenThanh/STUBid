@@ -22,9 +22,14 @@ const create = (baseURL = ApiConfig.baseURL) => {
     return api.get('Categorys');
   }
 
+  const getBankBrands = () => {
+    return api.get('BankBrands');
+  }
+
   return {
     // a list of the API functions from step 2
-    getCategory
+    getCategory,
+    getBankBrands
   }
 }
 

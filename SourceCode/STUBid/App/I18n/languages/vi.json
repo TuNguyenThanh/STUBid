@@ -113,10 +113,12 @@
   "newPasswordIs18charactersMax": "Mật khẩu mới tối đa là 18 ký tự",
   "repeatNewPasswordIs18charactersMax": "Nhập lại mật khẩu mới tối đa là 18 ký tự",
   "newPassAndRepeatNewPassMustBeTheSame": "Mật khẩu mới và mật khẩu mới phải giống nhau",
-
   "pleaseEnterCode": "Vui lòng nhập mã",
   "invalidCode": "Mã không hợp lệ",
   "pleaseCheckSMS": "vui lòng kiểm tra tin nhắn",
   "pleaseEnterEmailAgain": "Vui lòng nhập lại Email",
   "pleaseCheckEmail": "vui lòng kiểm tra email",
+  "infoApp": "Ứng dụng đấu giá bán đồ cũ cho sinh viên",
+  "emptyAuctions": "Bạn không có cuộc đấu giá nào cả",
+  "chooseBankBrand": "Chọn ngân hàng",
 }

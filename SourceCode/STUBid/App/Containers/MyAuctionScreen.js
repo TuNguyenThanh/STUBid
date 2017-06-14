@@ -29,7 +29,7 @@ class MyAuction extends React.Component {
           bgColor={'#FFF'}
           titleStyle={styles.titleStyle}
         />
-        <View style={{ flex: 1, marginTop: 15}}>
+        <View style={{ flex: 1 }}>
           {
             this.state.data.length == 0 ?
             this.renderEmptyAuction() :
@@ -49,11 +49,11 @@ class MyAuction extends React.Component {
   }
 
   renderEmptyAuction() {
+    const { language } = this.props;
     return(
       <View style={styles.contentEmpty}>
         <Icon name="legal" size={70} color={Colors.primary} />
-        <Text>You do not have any auctions</Text>
-        <Text>Bạn không có cuộc đấu giá nào cả</Text>
+        <Text>{I18n.t('emptyAuctions', {locale: language})}</Text>
       </View>
     );
   }

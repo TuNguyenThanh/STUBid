@@ -27,6 +27,10 @@ const { Types, Creators } = createActions({
   editProfileRequest: ['info'],
   editProfileSuccess: [],
   editProfileFailure: ['error'],
+
+  uploadAvatarRequest: ['image', 'token'],
+  uploadAvatarSuccess: [],
+  uploadAvatarFailure: ['error'],
 })
 
 export const AccountTypes = Types
@@ -43,6 +47,7 @@ export const INITIAL_STATE = Immutable({
   forgotPasswordSuccess: false,
   changePasswordSuccess: false,
   editProfileSuccess: false,
+  uploadAvatarSuccess: false,
 })
 
 /* ------------- Reducers ------------- */
@@ -73,6 +78,10 @@ export const editProfileSuccess = (state) => state.merge({ fetching: false, erro
 
 export const editProfileFailure = (state, { error }) => state.merge({ fetching: false, error, editProfileSuccess: false })
 
+export const uploadAvatarSuccess = (state) => state.merge({ fetching: false, error: null, uploadAvatarSuccess: true })
+
+export const uploadAvatarFailure = (state, { error }) => state.merge({ fetching: false, error, uploadAvatarSuccess: false })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -99,6 +108,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.EDIT_PROFILE_REQUEST]: request,
   [Types.EDIT_PROFILE_SUCCESS]: editProfileSuccess,
   [Types.EDIT_PROFILE_FAILURE]: editProfileFailure,
+
+  [Types.UPLOAD_AVATAR_REQUEST]: request,
+  [Types.UPLOAD_AVATAR_SUCCESS]: uploadAvatarSuccess,
+  [Types.UPLOAD_AVATAR_FAILURE]: uploadAvatarFailure,
 })
 
 /* ------------- Selectors ------------- */

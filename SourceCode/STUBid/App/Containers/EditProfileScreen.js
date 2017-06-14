@@ -1,11 +1,14 @@
 import React from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator, ListView } from 'react-native'
 import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
+import CategoryActions from '../Redux/CategoryRedux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-customized-image-picker'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Modal2Choose from '../Components/Modal2Choose'
+import ModalBanking from '../Components/Modal'
+import ImageLoad from 'react-native-image-placeholder'
 
 // Styles
 import styles from './Styles/EditProfileScreenStyle'
@@ -24,16 +27,48 @@ class EditProfile extends React.Component {
       lastName: this.props.user.lastName,
       phoneNumber: this.props.user.phoneNumber,
       email: this.props.user.email,
-      accountBanking: this.props.user.accountBanking || null,
+      accountBanking: this.props.user.bankRef.bankAccountNumber,
+      bankBrandName: this.props.user.bankRef.bankBrandName,
+      idBankBrandSelected: this.props.user.bankRef.bankBrandId,
       openModalChooseImage: false,
+      openModalBanking: false,
       urlImage: this.props.user.avatar,
+      dataSourceBanking: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
+    console.log(this.props.user);
     this.isChange = false;
+    this.isUploadAvatar = false;
+    this.isLoadBankBrands = false;
+  }
+
+  componentWillMount() {
+    this.props.getBankBrands();
+    this.isLoadBankBrands = true;
   }
 
   componentWillReceiveProps(nextProps) {
     const { language } = this.props;
-    const { fetching, error, editProfileSuccess } = nextProps.account;
+    const { fetching, error, editProfileSuccess, uploadAvatarSuccess } = nextProps.account;
+    const fetchingBankBrands = nextProps.category.fetching;
+    const listBankBrands = nextProps.category.listBankBrands;
+
+    if(!fetchingBankBrands && listBankBrands && this.isLoadBankBrands) {
+      let arrNewBankBrands = [];
+      listBankBrands.map((item) => {
+        let newObject;
+        if(item.bankBrandName == 'ACB') {
+          newObject = Object.assign({}, item, { logo: Images.acb });
+        }
+        if(item.bankBrandName == 'Sacombank') {
+          newObject = Object.assign({}, item, { logo: Images.sacombank });
+        }
+        arrNewBankBrands.push(newObject);
+      });
+      this.setState({
+        dataSourceBanking: this.state.dataSourceBanking.cloneWithRows(arrNewBankBrands),
+      });
+      this.isLoadBankBrands = false;
+    }
 
     if(!fetching && editProfileSuccess && this.isChange) {
       Alert.alert(
@@ -45,6 +80,18 @@ class EditProfile extends React.Component {
         { cancelable: false }
       );
       this.isChange = false;
+    }
+
+    if(!fetching && uploadAvatarSuccess && this.isUploadAvatar) {
+      Alert.alert(
+        I18n.t('success', {locale: this.props.language}),
+        '',
+        [
+          {text: I18n.t('ok', {locale: this.props.language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isUploadAvatar = false;
     }
 
     //error
@@ -65,12 +112,18 @@ class EditProfile extends React.Component {
   }
 
   handleSaveProfile() {
-    const { firstName, lastName, phoneNumber, email, accountBanking } = this.state;
+    const { firstName, lastName, phoneNumber, email, idBankBrandSelected, accountBanking } = this.state;
     const { token } = this.props.login.user;
-    const info = { token, firstName, lastName, phoneNumber, email, accountBanking };
+    if(idBankBrandSelected) {
+      const bankRef = {
+        bankAccountNumber: accountBanking,
+        bankBrandId: idBankBrandSelected
+      };
+      const info = { token, firstName, lastName, phoneNumber, email, bankRef };
 
-    this.props.editProfile(info);
-    this.isChange = true;
+      this.props.editProfile(info);
+      this.isChange = true;
+    }
   }
 
   render () {
@@ -89,8 +142,10 @@ class EditProfile extends React.Component {
               <View style={styles.viewImageCenter}>
                 {
                   this.state.urlImage ?
-                  <Image
+                  <ImageLoad
                     style={styles.imgStyle}
+                    placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+                    loadingStyle={{ size: 'small', color: 'blue' }}
                     source={{uri: this.state.urlImage}}
                   />
                   :
@@ -197,7 +252,10 @@ class EditProfile extends React.Component {
           {/*ATM Number*/}
           <View style={styles.rowInput}>
             <View style={styles.viewNameInput}>
-              <Icon name="credit-card-alt" size={25} />
+            {
+              this.renderImageBankBrands(this.state.idBankBrandSelected)
+            }
+
             </View>
             <View style={styles.viewInput}>
               <TextInput
@@ -222,16 +280,93 @@ class EditProfile extends React.Component {
             this.renderButtonChange()
           }
         </View>
-        { this.renderModalChooseImage()}
+        { this.renderModalChooseImage() }
+        { this.renderModalBanking() }
       </KeyboardAwareScrollView>
     )
+  }
+
+  renderImageBankBrands(idBankBrand) {
+    switch (idBankBrand) {
+      case 1:
+        return (
+          <TouchableOpacity onPress={() => this.setState({ openModalBanking: true })}>
+            <Image
+              style={{ width: 40, height: 15 }}
+              resizeMode="contain"
+              source={Images.acb}
+            />
+          </TouchableOpacity>
+        );
+      case 2:
+        return (
+          <TouchableOpacity onPress={() => this.setState({ openModalBanking: true })}>
+            <Image
+              style={{ width: 55, height: 18 }}
+              resizeMode="contain"
+              source={Images.sacombank}
+            />
+          </TouchableOpacity>
+        );
+      default:
+        return(
+          <Icon name="credit-card-alt" size={25} />
+        );
+    }
+  }
+
+  renderModalBanking() {
+    const { language } = this.props;
+    return (
+      <ModalBanking
+        open={this.state.openModalBanking}
+        offset={0}
+        overlayBackground={'rgba(0, 0, 0, 0.75)'}
+        animationDuration={200}
+        animationTension={40}
+        modalDidOpen={() => {}}
+        modalDidClose={() => this.setState({ openModalBanking: false })}
+        closeOnTouchOutside={true}
+        containerStyle={styles.containerStyle}
+        modalStyle={styles.modalStyle}
+      >
+        <Text style={styles.titleModal}>{I18n.t('chooseBankBrand', {locale: language})}</Text>
+        <ListView
+          enableEmptySections
+          dataSource={this.state.dataSourceBanking}
+          renderRow={(rowData) => this.renderRowBanking(rowData)}
+          contentContainerStyle={styles.listViewBanking}
+        />
+      </ModalBanking>
+    );
+  }
+
+  handleChooseBanking(banking) {
+    this.setState({
+      openModalBanking: false,
+      bankBrandName: banking.name,
+      idBankBrandSelected: banking.bankBrandId,
+    });
+  }
+
+  renderRowBanking(item) {
+    const { language } = this.props;
+    return(
+      <TouchableOpacity style={styles.rowCategory} onPress={() => this.handleChooseBanking(item)}>
+        <Image
+          style={{ width: 120, height: 40 }}
+          resizeMode="contain"
+          source={item.logo}
+        />
+      </TouchableOpacity>
+    );
   }
 
   renderButtonChange() {
     const { language } = this.props;
     if (!this.props.account.fetching) {
       return (
-        <TouchableOpacity style={styles.button} onPress={this.handleSaveProfile.bind(this)}>
+        <TouchableOpacity style={styles.button} onPress={() => this.handleSaveProfile()}>
           <Text style={styles.textButton}>{I18n.t('change', {locale: language})}</Text>
         </TouchableOpacity>
       );
@@ -292,6 +427,9 @@ class EditProfile extends React.Component {
       [
         {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
         {text: I18n.t('ok', {locale: language}), onPress: () => {
+          const { token } = this.props.login.user;
+          this.props.uploadAvatar(image.path, token);
+          this.isUploadAvatar = true;
           this.setState({
             urlImage: image.path
           });
@@ -307,12 +445,15 @@ const mapStateToProps = (state) => {
     language: state.settings.language,
     login: state.login,
     account: state.account,
+    category: state.category,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     editProfile: (info) => dispatch(AccountActions.editProfileRequest(info)),
+    uploadAvatar: (image, token) => dispatch(AccountActions.uploadAvatarRequest(image, token)),
+    getBankBrands: () => dispatch(CategoryActions.bankBrandsRequest()),
   }
 }
 

@@ -113,11 +113,12 @@
   "newPasswordIs18charactersMax": "New password is 18 characters max",
   "repeatNewPasswordIs18charactersMax": "Repeat new password is 18 characters max",
   "newPassAndRepeatNewPassMustBeTheSame": "The new password and the new password must be the same",
-
   "pleaseEnterCode": "Please enter code",
   "invalidCode": "Invalid code",
   "pleaseCheckSMS": "please check sms",
   "pleaseEnterEmailAgain": "Please enter email again",
   "pleaseCheckEmail": "Please check email",
-
+  "infoApp": "Auction application for the sale of old furniture for students",
+  "emptyAuctions": "You do not have any auctions",
+  "chooseBankBrand": "Choose bank brand",
 }

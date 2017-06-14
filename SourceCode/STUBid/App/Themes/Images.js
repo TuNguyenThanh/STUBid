@@ -29,6 +29,8 @@ const images = {
   left: require('../Images/left.png'),
   right: require('../Images/right.png'),
   userIcon: require('../Images/user-icon.png'),
+  acb: require('../Images/acb.png'),
+  sacombank: require('../Images/sacombank.png'),
 }
 
 export default images

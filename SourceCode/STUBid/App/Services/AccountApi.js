@@ -1,6 +1,7 @@
 // a library to wrap and simplify api calls
 import apisauce from 'apisauce'
 import ApiConfig from '../Config/ApiConfig'
+import RNFetchBlob from 'react-native-fetch-blob'
 
 const create = (baseURL = ApiConfig.baseURL) => {
   const headers = ApiConfig.headers;
@@ -31,11 +32,35 @@ const create = (baseURL = ApiConfig.baseURL) => {
   }
 
   const editProfile = (info) => {
-  //  const { token, firstName, lastName, phoneNumber, email } = info;
+    console.log(info);
     return api.patch('Accounts/updateProfile', {
       token: info.token, firstName: info.firstName,
-      lastName: info.lastName, phoneNumber: info.phoneNumber, email: info.email 
+      lastName: info.lastName, phoneNumber: info.phoneNumber,
+      email: info.email, bankRef: info.bankRef
     });
+  }
+
+  const uploadAvatar = (image, token) => {
+
+    return new Promise(resolve => {
+      const nameImage = `image${Math.floor(Date.now() / 1000)}`;
+      let dataResp, dataError,isDone = false;
+      RNFetchBlob.fetch('PATCH', `${ApiConfig.baseURL}Accounts/updateAvatar`, {
+        'Authorization': 'SBID',
+        'otherHeader': 'foo',
+        'App-Name': 'sbid',
+        'Content-Type': 'multipart/form-data',
+      }, [
+        // part file from storage
+        { name: nameImage, filename: nameImage + '.png', type: 'image/png', data: RNFetchBlob.wrap(image) },
+        { name: 'token', data: token }
+      ]).then((resp) => {
+        resolve(resp)
+      }).catch((error) => {
+        resolve(error)
+      });
+    });
+
   }
 
   return {
@@ -46,6 +71,7 @@ const create = (baseURL = ApiConfig.baseURL) => {
     forgotPassword,
     changePassword,
     editProfile,
+    uploadAvatar,
   }
 }
 

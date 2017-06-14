@@ -7,6 +7,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
 import Modal2Choose from '../Components/Modal2Choose'
+import ImageLoad from 'react-native-image-placeholder'
 
 // KEY CONFIG - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -147,9 +148,11 @@ class Settings extends React.Component {
           />
           {
             profile.avatar ?
-            <Image
-              source={{uri: profile.avatar}}
+            <ImageLoad
               style={styles.imgAvatar}
+              placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+              loadingStyle={{ size: 'small', color: 'blue' }}
+              source={{uri: profile.avatar}}
             />
             :
             <Image

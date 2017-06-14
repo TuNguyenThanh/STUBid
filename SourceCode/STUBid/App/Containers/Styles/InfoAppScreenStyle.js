@@ -19,5 +19,9 @@ export default StyleSheet.create({
   },
   viewBody: {
     flex: 1
+  },
+  textStyle: {
+    textAlign: 'center',
+    fontFamily: Fonts.type.quicksand
   }
 })

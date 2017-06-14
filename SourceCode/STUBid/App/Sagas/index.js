@@ -20,9 +20,9 @@ import { startup } from './StartupSagas'
 import { updateLanguage } from './SettingsSagas'
 import { getAuctions, bidProduct } from './AuctionsSagas'
 import { searchs } from './SearchSagas'
-import { getCategory } from './CategorySagas'
+import { getCategory, getBankBrands } from './CategorySagas'
 import { login, loginToken } from './LoginSagas'
-import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword, editProfile } from './AccountSagas'
+import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword, editProfile, uploadAvatar } from './AccountSagas'
 
 /* ------------- API ------------- */
 
@@ -54,6 +54,7 @@ export default function * root () {
 
     //Category
     takeLatest(CategoryTypes.CATEGORY_PRODUCT_REQUEST, getCategory, CategoryApi),
+    takeLatest(CategoryTypes.BANK_BRANDS_REQUEST, getBankBrands, CategoryApi),
 
     //Account
     takeLatest(AccountTypes.ACCOUNT_REGISTER_REQUEST, createAcccount, AccountApi),
@@ -62,5 +63,6 @@ export default function * root () {
     takeLatest(AccountTypes.FORGOT_PASSWORD_REQUEST, forgotPassword, AccountApi),
     takeLatest(AccountTypes.CHANGE_PASSWORD_REQUEST, changePassword, AccountApi, UserApi),
     takeLatest(AccountTypes.EDIT_PROFILE_REQUEST, editProfile, AccountApi, UserApi),
+    takeLatest(AccountTypes.UPLOAD_AVATAR_REQUEST, uploadAvatar, AccountApi, UserApi),
   ]
 }
