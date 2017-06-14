@@ -20,18 +20,20 @@ exports.login = (accountId, username, password) => {
             "Profile".email,
             "Profile".avatar,
             (
-                SELECT array_to_json(array_agg(row_to_json(bankRefs)))
+                SELECT row_to_json(bankRef)
                 FROM (
                     SELECT
                     "BankRef"."bankRefId",
-                    substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 2, length("BankRef"."bankAccountNumber")) AS "bankRefNumber",
-                    "BankBrand"."bankBrandName",
-                    CONCAT('${DOMAIN_NAME}/assets/bank_logos/',"BankBrand".logo) AS "bankLogo"
+                    substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 2, length("BankRef"."bankAccountNumber")) AS "bankAccountNumber",
+                    "BankBrand"."bankBrandId",
+                    "BankBrand"."bankBrandName"
                     FROM "BankRef"
                     INNER JOIN "BankBrand" ON "BankBrand"."bankBrandId" = "BankRef"."bankBrandId"
                     WHERE "accountId" = "Account"."accountId"
-                ) AS bankRefs
-			) AS "bankRefs"
+                    ORDER BY "BankRef"."bankRefId" DESC
+                    LIMIT 1
+                ) AS bankRef
+			) AS "bankRef"
             FROM "Account"
             INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
             ${accountId?'WHERE "Account"."accountId"=$1':'WHERE username=$1 AND password=$2'}
@@ -48,6 +50,7 @@ exports.login = (accountId, username, password) => {
             )
                 return reject({ status: 400, error: ERROR[400][21] });
             account.avatar = account.avatar?`${DOMAIN_NAME}/images/avatar/${account.avatar}`:null;
+            if (!account.bankRef === true) account.bankRef = null;
             resolve(account)
         })
         .catch(error => reject(error));
@@ -244,17 +247,33 @@ exports.changePassword = (accountId, currentPassword, newPassword) => {
     });
 }
 
-exports.updateProfile = (accountId, firstName, lastName, phoneNumber, email) => {
+exports.updateProfile = (accountId, firstName, lastName, phoneNumber, email, bankRef) => {
     return new Promise((resolve,reject) => {
         let sql = `
             WITH result AS (
                 SELECT "profileId" FROM "Account" WHERE "accountId" = $1
+            ),
+            result2 AS (
+                UPDATE "Profile"
+                SET "firstName" = $2, "lastName" = $3, "phoneNumber" = $4, email = $5
+                WHERE "profileId" = (SELECT "profileId" FROM result)
+                RETURNING "profileId"
             )
-            UPDATE "Profile"
-            SET "firstName" = $2, "lastName" = $3, "phoneNumber" = $4, email = $5
-            WHERE "profileId" = (SELECT "profileId" FROM result)
         `;
         let params = [accountId, firstName, lastName, phoneNumber, email];
+        if (!!bankRef) {
+            sql += `,result3 AS (${bankRef.bankRefId?`
+                UPDATE "BankRef"
+                SET "bankAccountNumber" = $6, "bankBrandId" = $7
+                WHERE "bankRefId" = $8
+            `:`
+                INSERT INTO "BankRef"("bankAccountNumber","bankBrandId","accountId")
+                VALUES($6,$7,$1)
+            `} RETURNING "bankRefId") SELECT * FROM result2,result3`;
+            params = params.concat([bankRef.bankAccountNumber,bankRef.bankBrandId]);
+            if (bankRef.bankRefId) params.push(bankRef.bankRefId);
+        }
+        else sql += `SELECT * FROM result2`
         query(sql,params)
         .then(result => {
             if (result.rowCount !== 1)

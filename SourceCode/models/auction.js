@@ -17,10 +17,18 @@ function countDown() {
             element.timeLeft = timeLeftFormat(timeLeft);
         }
         else {
-            delete auctionsTimeLeft[element.auctionId];
+            let auctionId = element.auctionId;
+            delete auctionsTimeLeft[auctionId];
             delete auctions[i];
-            // update state in database
-            // reload auctions
+            let sql = `UPDATE "Auction" SET state=0 WHERE "auctionId"=$1`;
+            let params = [auctionId];
+            query(sql,params)
+            .then(value => {
+                console.log(`close auction : ${auctionId}`);
+            })
+            .catch(reason => {
+                console.log(`failed to close auction : ${auctionId}`);
+            })
         }
     }
 }

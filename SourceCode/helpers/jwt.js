@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const KEY = 'SECRET_KEY';
-const expirationTime = 30*1;
+const expirationTime = 30*60;
 const ERROR = require('../error.json');
 
 exports.sign = (object) => {

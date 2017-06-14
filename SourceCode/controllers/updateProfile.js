@@ -1,28 +1,33 @@
 const { verify, refreshToken } = require('../helpers/jwt'),
-      { updateProfile } = require('../models/account');
+      { updateProfile } = require('../models/account'),
+      ERROR = require('../error.json');
 
 module.exports = (req,res) => {
-    var { token, firstName, lastName, phoneNumber, email } = req.body;
-    if (!token || !firstName || !lastName || !phoneNumber || !email)
-        return res.send({
+    var { token, firstName, lastName, phoneNumber, email, bankRef } = req.body;
+    if (!token || !firstName || !lastName || !phoneNumber || !email ||
+    (bankRef === undefined) || (bankRef && (!bankRef.bankAccountNumber || !bankRef.bankBrandId)))
+        return res.status(400).send({
             success: false,
-            error: 'missing parameters'
-        });
+            error: ERROR[400][0]
+        })
     verify(token)
     .then(obj => {
         if (!obj.accountId)
-            return Promise.reject(new Error('authentication failed'));
+            return Promise.reject({
+                status: 400,
+                error: ERROR[400][0]
+            });
         token = refreshToken(obj);
-        return updateProfile(obj.accountId, firstName, lastName, phoneNumber, email)
+        return updateProfile(obj.accountId, firstName, lastName, phoneNumber, email, bankRef)
     })
     .then(() => {
         res.send({ success: true, token });
     })
-    .catch(error => {
-        console.log(error);
-        res.send({
+    .catch(reason => {
+        console.log(reason);
+        res.status(reason.status).send({
             success: false,
-            error: error + ''
+            error: reason.error
         });
     })
 }

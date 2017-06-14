@@ -9,12 +9,7 @@ module.exports = (req,res) => {
     var imageName = '', token = '';
     var form = new formidable.IncomingForm({ uploadDir: DIRNAME + '/public/images/avatar/' });
     form.on('fileBegin', function(name, file) {
-        let arrayFileName = file.name.split('.'),
-            fileExtension = arrayFileName[arrayFileName.length - 1];
-        if (fileExtension.toLowerCase() !== 'png' && fileExtension.toLowerCase() !== 'jpg' && fileExtension.toLowerCase() !== 'jpeg')
-            fileExtension = 'jpg';
-        arrayFileName[arrayFileName.length - 1] = Date.now();
-        file.name = imageName = arrayFileName.join('-') + '.' + fileExtension;
+        imageName = file.name;
         file.path = form.uploadDir + file.name;
     });
     form.on('file', function (name, file) {
