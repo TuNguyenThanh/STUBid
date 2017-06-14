@@ -24,7 +24,7 @@ exports.login = (accountId, username, password) => {
                 FROM (
                     SELECT
                     "BankRef"."bankRefId",
-                    substr("BankRef"."bankAccountNumber", length("BankRef"."bankAccountNumber") - 2, length("BankRef"."bankAccountNumber")) AS "bankAccountNumber",
+                    "BankRef"."bankAccountNumber",
                     "BankBrand"."bankBrandId",
                     "BankBrand"."bankBrandName"
                     FROM "BankRef"
