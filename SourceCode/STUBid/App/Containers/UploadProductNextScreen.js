@@ -68,20 +68,27 @@ class UploadProduct extends React.Component {
               placeholder={I18n.t('productName', {locale: language})}
               value={this.state.productName}
               onChangeText={(productName) => this.setState({ productName })}
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              underlineColorAndroid={'transparent'}
             />
 
             <Input
               title={I18n.t('productStartPrice', {locale: language})}
               placeholder={'1.000 vnd'}
-              keyboardType={'number-pad'}
+              keyboardType={'numeric'}
+              autoCapitalize={'none'}
+              autoCorrect={false}
+              underlineColorAndroid={'transparent'}
               value={this.state.productStartPrice}
               onChangeText={(text) => this.onChangedProductStartPrice(text)}
             />
 
             <Input
+              ref={(input) => this.productCeilPrice = input}
               title={I18n.t('productCeilPrice', {locale: language})}
               placeholder={'5.000 vnd'}
-              keyboardType={'number-pad'}
+              keyboardType={'numeric'}
               value={this.state.productCeilPrice}
               onChangeText={(text) => this.onChangedProductCeilPrice(text)}
             />
@@ -100,7 +107,7 @@ class UploadProduct extends React.Component {
             />
 
             <View style={styles.viewImage}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={styles.viewTitleImageStyle}>
                 <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
                 {
                   this.state.arrImageChoose.length != 0 &&

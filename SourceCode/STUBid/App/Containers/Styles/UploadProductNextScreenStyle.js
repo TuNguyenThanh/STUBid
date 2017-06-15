@@ -38,6 +38,10 @@ export default StyleSheet.create({
     position: 'relative',
     borderRadius: 2,
   },
+  viewTitleImageStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   titleStyle: {
     color: Colors.primary,
     fontFamily: Fonts.type.quicksand,

@@ -22,6 +22,7 @@ class EditProfile extends React.Component {
   constructor(props){
     super(props);
     _this = this;
+    console.log(this.props.user);
     this.state = {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,

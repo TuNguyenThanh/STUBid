@@ -38,40 +38,51 @@ class UploadProduct extends React.Component {
     };
   }
 
+  handlePriceBid(text) {
+    text = text.replace(/\./g, '');
+    text = text.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    this.setState({ priceBid: text });
+  }
+
   render () {
     const { language } = this.props;
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.content}>
+        <ScrollView style={styles.content} scrollEnabled={false} >
 
           <Input
             title={I18n.t('amountPerABid', {locale: language})}
             placeholder={'VND'}
+            keyboardType={'numeric'}
             value={this.state.priceBid}
-            onChangeText={(priceBid) => this.setState({ priceBid })}
+            onChangeText={(priceBid) => this.handlePriceBid(priceBid)}
           />
 
           <ButtonChoose
             title={I18n.t('auctionTime', {locale: language})}
             item={this.state.timeSelected + ' hour'}
+            nameIcon={'clock-o'}
             onPress={() => this.setState({openModalTime: true})}
           />
 
           <ButtonChoose
             title={I18n.t('formOfTransaction', {locale: language})}
             item={this.state.paymentMethodSeleted}
+            nameIcon={'handshake-o'}
             onPress={() => this.setState({openModalPayment: true})}
           />
 
           <ButtonChoose
             title={I18n.t('consignment', {locale: language})}
             item={this.state.depositMethodSeleted}
+            nameIcon={'gift'}
             onPress={() => this.setState({openModalDeposit: true})}
           />
 
           <ButtonChoose
             title={I18n.t('participants', {locale: language})}
             item={this.state.membershipSeleted}
+            nameIcon={'users'}
             onPress={() => this.setState({openModalMembership: true})}
           />
 
@@ -93,7 +104,7 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     return(
       <ModalList
-        logo={<Icon name="list-alt" size={30} color={Colors.primary} />}
+        logo={<Icon name="clock-o" size={30} color={Colors.primary} />}
         title={I18n.t('auctionTime', {locale: language})}
         open={this.state.openModalTime}
         modalDidClose={() => this.setState({ openModalTime: false })}
@@ -107,7 +118,7 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     return(
       <ModalList
-        logo={<Icon name="list-alt" size={30} color={Colors.primary} />}
+        logo={<Icon name="handshake-o" size={30} color={Colors.primary} />}
         title={I18n.t('formOfTransaction', {locale: language})}
         open={this.state.openModalPayment}
         modalDidClose={() => this.setState({ openModalPayment: false })}
@@ -121,7 +132,7 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     return(
       <ModalList
-        logo={<Icon name="list-alt" size={30} color={Colors.primary} />}
+        logo={<Icon name="gift" size={30} color={Colors.primary} />}
         title={I18n.t('consignment', {locale: language})}
         open={this.state.openModalDeposit}
         modalDidClose={() => this.setState({ openModalDeposit: false })}
@@ -135,7 +146,7 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     return(
       <ModalList
-        logo={<Icon name="list-alt" size={30} color={Colors.primary} />}
+        logo={<Icon name="users" size={30} color={Colors.primary} />}
         title={I18n.t('participants', {locale: language})}
         open={this.state.openModalMembership}
         modalDidClose={() => this.setState({ openModalMembership: false })}

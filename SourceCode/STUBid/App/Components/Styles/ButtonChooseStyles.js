@@ -29,4 +29,9 @@ export default StyleSheet.create({
   itemStyle: {
     fontFamily: Fonts.type.quicksand,
   },
+  viewIcon: {
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 })
