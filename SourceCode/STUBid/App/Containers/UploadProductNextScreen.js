@@ -30,16 +30,18 @@ class UploadProduct extends React.Component {
       arrImageChoose: [],
       openModalCategory: false,
       openModalChooseImage: false,
-      categorySelected: 'all',
+      categorySelected: { categoryId: -1, name: 'all' },
       data: [],
     };
   }
 
   componentDidMount() {
-    const { language } = this.props;
-    this.setState({
-      data: ['all', 'vehicles', 'mobile', 'houseware', 'dtationery', 'document'],
-    });
+    if(this.props.category.categoryProduct) {
+      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(this.props.category.categoryProduct);
+      this.setState({
+        data: categoryProductNew,
+      });
+    }
   }
 
   onChangedProductStartPrice(text) {
@@ -93,7 +95,7 @@ class UploadProduct extends React.Component {
 
             <ButtonChoose
               title={I18n.t('productCategory', {locale: language})}
-              item={I18n.t(this.state.categorySelected, {locale: language})}
+              item={I18n.t(this.state.categorySelected.name, {locale: language})}
               onPress={() => this.setState({openModalCategory: true})}
             />
 
@@ -131,7 +133,7 @@ class UploadProduct extends React.Component {
 
           </ScrollView>
 
-          <TouchableOpacity style={styles.button} onPress={() => NavigationActions.uploadProductScreen()}>
+          <TouchableOpacity style={styles.button} onPress={() => this.handleUploadProductNext()}>
             <Text style={styles.textButton}>{I18n.t('next', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
@@ -139,6 +141,15 @@ class UploadProduct extends React.Component {
         { this.renderModalChooseImage() }
       </KeyboardAwareScrollView>
     )
+  }
+
+  handleUploadProductNext() {
+    const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected } = this.state;
+    const step1 = {
+      productName, productStartPrice, productCeilPrice, productDescription, categorySelected
+    };
+    console.log(step1);
+    NavigationActions.uploadProductScreen({ step1 })
   }
 
   renderModalCategory() {
@@ -245,6 +256,7 @@ class UploadProduct extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    category: state.category,
   }
 }
 
