@@ -249,32 +249,49 @@ exports.changePassword = (accountId, currentPassword, newPassword) => {
 
 exports.updateProfile = (accountId, firstName, lastName, phoneNumber, email, bankRef) => {
     return new Promise((resolve,reject) => {
-        let sql = `
-            WITH result AS (
-                SELECT "profileId" FROM "Account" WHERE "accountId" = $1
-            ),
-            result2 AS (
-                UPDATE "Profile"
-                SET "firstName" = $2, "lastName" = $3, "phoneNumber" = $4, email = $5
-                WHERE "profileId" = (SELECT "profileId" FROM result)
-                RETURNING "profileId"
-            )
-        `;
-        let params = [accountId, firstName, lastName, phoneNumber, email];
-        if (!!bankRef) {
-            sql += `,result3 AS (${bankRef.bankRefId?`
-                UPDATE "BankRef"
-                SET "bankAccountNumber" = $6, "bankBrandId" = $7
-                WHERE "bankRefId" = $8
-            `:`
-                INSERT INTO "BankRef"("bankAccountNumber","bankBrandId","accountId")
-                VALUES($6,$7,$1)
-            `} RETURNING "bankRefId") SELECT * FROM result2,result3`;
-            params = params.concat([bankRef.bankAccountNumber,bankRef.bankBrandId]);
-            if (bankRef.bankRefId) params.push(bankRef.bankRefId);
-        }
-        else sql += `SELECT * FROM result2`
+        let isDelete = !bankRef || bankRef.bankAccountNumber.length===0;
+        let sql = isDelete?`DELETE FROM "BankRef" WHERE "accountId"=$1`
+                          :`SELECT "bankRefId" FROM "BankRef" WHERE "accountId"=$1`;
+        let params = [accountId];
         query(sql,params)
+        .then(value => {
+            sql = `
+                WITH selectProfileResult AS (
+                    SELECT "profileId" FROM "Account" WHERE "accountId" = $1
+                ),
+                updateProfileResult AS (
+                    UPDATE "Profile"
+                    SET "firstName" = $2, "lastName" = $3, "phoneNumber" = $4, email = $5
+                    WHERE "profileId" = (SELECT "profileId" FROM selectProfileResult)
+                    RETURNING "profileId"
+                )
+            `;
+            params = [accountId, firstName, lastName, phoneNumber, email];
+            if (isDelete) {
+                sql += `SELECT * FROM updateProfileResult`;
+            } else {
+                if (value.rowCount === 1) {
+                    sql += `,updateBankRefResult AS (
+                        UPDATE "BankRef"
+                        SET "bankAccountNumber" = $6, "bankBrandId" = $7
+                        WHERE "bankRefId" = $8
+                        RETURNING "bankRefId"
+                    )
+                    SELECT * FROM updateProfileResult, updateBankRefResult`;
+                    params = params.concat([bankRef.bankAccountNumber, bankRef.bankBrandId, value.rows[0].bankRefId]);
+                }
+                else {
+                    sql += `,insertBankRefResult AS (
+                        INSERT INTO "BankRef"("bankAccountNumber","bankBrandId","accountId")
+                        VALUES($6,$7,$1)
+                        RETURNING "bankRefId"
+                    )
+                    SELECT * FROM updateProfileResult, insertBankRefResult`;
+                    params = params.concat([bankRef.bankAccountNumber,bankRef.bankBrandId]);
+                }
+            }
+            return query(sql,params);
+        })
         .then(result => {
             if (result.rowCount !== 1)
                 reject({
