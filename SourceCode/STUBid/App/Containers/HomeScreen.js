@@ -271,7 +271,7 @@ class Home extends React.Component {
           </View>
 
           <Animated.View style={[styles.iconStyle, menuStyle]}>
-            <TouchableOpacity onPress={() => NavigationActions.uploadProductNextScreen()}>
+            <TouchableOpacity onPress={() => NavigationActions.uploadProductNextScreen({ title: I18n.t('step', {locale: language}) + ' 1' })}>
               <Icon name="pencil" size={20} color={Colors.primary} />
             </TouchableOpacity>
           </Animated.View>

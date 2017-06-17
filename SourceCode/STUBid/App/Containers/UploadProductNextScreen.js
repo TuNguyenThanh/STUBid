@@ -151,12 +151,13 @@ class UploadProduct extends React.Component {
   }
 
   handleUploadProductNext() {
+    const { language } = this.props;
     const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected } = this.state;
     const step1 = {
       productName, productStartPrice, productCeilPrice, productDescription, categorySelected
     };
     console.log(step1);
-    NavigationActions.uploadProductScreen({ step1 })
+    NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
   }
 
   renderModalCategory() {

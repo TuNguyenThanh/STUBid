@@ -22,15 +22,14 @@ class EditProfile extends React.Component {
   constructor(props){
     super(props);
     _this = this;
-    console.log(this.props.user);
     this.state = {
       firstName: this.props.user.firstName,
       lastName: this.props.user.lastName,
       phoneNumber: this.props.user.phoneNumber,
       email: this.props.user.email,
-      accountBanking: this.props.user.bankRef.bankAccountNumber,
-      bankBrandName: this.props.user.bankRef.bankBrandName,
-      idBankBrandSelected: this.props.user.bankRef.bankBrandId,
+      accountBanking: this.props.user.bankRef ? this.props.user.bankRef.bankAccountNumber : '',
+      bankBrandName: this.props.user.bankRef ? this.props.user.bankRef.bankBrandName: '',
+      idBankBrandSelected: this.props.user.bankRef ? this.props.user.bankRef.bankBrandId : 1,
       openModalChooseImage: false,
       openModalBanking: false,
       urlImage: this.props.user.avatar,
@@ -250,7 +249,7 @@ class EditProfile extends React.Component {
             </View>
           </View>
 
-          {/*ATM Number*/}
+          {/*Banking Number*/}
           <View style={styles.rowInput}>
             <View style={styles.viewNameInput}>
             {

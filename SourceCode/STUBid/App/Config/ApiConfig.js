@@ -1,4 +1,4 @@
-const baseURL = 'https://sbid.herokuapp.com/';
+const baseURL = 'https://sbid.herokuapp.com/api/';
 
 const headers = {
   "App-Name": "sbid"
