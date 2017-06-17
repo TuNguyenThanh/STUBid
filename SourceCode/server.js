@@ -33,7 +33,7 @@ server.listen(config.PORT, () => {
 app.get('/', (req,res) => res.sendFile(__dirname + '/public/index.html'));
 app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
 app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
-// app.post('/Auctions', require('./controllers/postAuction'));
+app.post('/Auctions', require('./controllers/postAuction'));
 app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
 app.get('/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
 app.post('/Accounts/register', require('./controllers/register'));

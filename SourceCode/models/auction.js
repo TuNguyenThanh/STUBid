@@ -1,6 +1,7 @@
-var { timeLeftFormat } = require('../helpers/time'),
-    { query } = require('../helpers/db'),
-    { DOMAIN_NAME } = require('../config');
+const { timeLeftFormat } = require('../helpers/time'),
+      { query } = require('../helpers/db'),
+      { DOMAIN_NAME } = require('../config'),
+      ERROR = require('../error.json');
 
 var auctions = [],
     auctionsTimeLeft = {};
@@ -176,9 +177,73 @@ exports.bid = (auctionId, accountId, price) => {
                     pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
                 resolve({ auction, page, categoryId, pageInCategory });
             }
+            else {
+                reject({
+                    status: 500,
+                    error: ERROR[500][1]
+                });
+            }
         })
         .catch(error => {
             reject(error);
+        })
+    })
+}
+
+exports.insertAuction = (
+    productName, description, searchKey, categoryId,
+    productImages,
+    duration, startPrice, ceilingPrice,
+    bidIncreasement, comment,
+    productReturningAddress, accountId,
+    moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
+) => {
+    return new Promise((resolve,reject) => {
+        console.log(productImages);
+        let sql = `WITH
+        "insertProductResult" AS (
+            INSERT INTO "Product"(name,description,"searchKey","categoryId")
+            VALUES ($1,$2,$3,$4)
+            RETURNING "productId"),
+        "insertImageResult" AS (
+            INSERT INTO "Image"(name,"productId")
+            VALUES (unnest($5::text[]),(SELECT "productId" FROM "insertProductResult"))
+            RETURNING name),
+        "insertAuctionResult" AS (
+            INSERT INTO "Auction"(
+                "createdDate", "activatedDate", duration, "startPrice", "ceilingPrice",
+                "bidIncreasement", comment, state,
+                "productReturningAddress", "productId", "sellerAccountId",
+                "moneyReceivingBankRefId", "moneyReceivingAddress", "allowedUserLevel")
+            VALUES(
+                now(),now(),$6,$7,$8,
+                $9,$10,1,
+                $11,(SELECT "productId" FROM "insertProductResult"),$12,
+                $13,$14,$15)
+            RETURNING "auctionId")
+        SELECT * FROM "insertAuctionResult"`
+        let params = [
+            productName, description, searchKey, categoryId,
+            productImages,
+            duration, startPrice, ceilingPrice,
+            bidIncreasement, comment,
+            productReturningAddress, accountId,
+            moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
+        ];
+        query(sql,params)
+        .then(value => {
+            if (value.rowCount > 0) {
+                resolve();
+                loadAuctions();
+            }
+            else
+                reject({
+                    status: 500,
+                    error: ERROR[500][1]
+                });
+        })
+        .catch(reason => {
+            reject(reason);
         })
     })
 }

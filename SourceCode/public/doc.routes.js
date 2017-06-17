@@ -137,6 +137,32 @@ var routes = [
             }]
         },
         {
+            "method": "post",
+            "route": "/Auctions",
+            "parameterType": "FormData",
+            "parameters": {
+                "token": "string",
+                "productName": "string",
+                "description": "string",
+                "searchKey": "JSON array string",
+                "categoryId": "number",
+                "duration": "number",
+                "startPrice": "number",
+                "ceilingPrice": "number, optional",
+                "bidIncreasement": "number",
+                "comment": "string",
+                "productReturningAddress": "string, optional",
+                "moneyReceivingBankRefId": "number, optional",
+                "moneyReceivingAddress": "string, optional",
+                "allowedUserLevel": "number, optional",
+                "image": "file"
+            },
+            "response": {
+                "success": "boolean",
+                "token": "string"
+            }
+        },
+        {
             "method": "patch",
             "route": "/Auctions/bid",
             "parameterType": "application/json",
