@@ -8,6 +8,10 @@
             "code": 2001,
             "message": "Database query error"
         },
+        "2": {
+            "code": 2002,
+            "message": "File system error"
+        },
         "10": {
             "code": 2010,
             "message": "Can not send verification code via SMS"

@@ -1,5 +1,5 @@
 const { verify, refreshToken } = require('../helpers/jwt'),
-      { bid } = require('../models/auction');
+      { bid, getAuctions } = require('../models/auction');
 
 module.exports = (req, res, sockets) => {
     var { token, auctionId, accountId, price } = req.body;

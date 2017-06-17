@@ -11,12 +11,8 @@ app.use(function (req, res, next) {
   console.log(req.header('origin'));
   let url_parts = url.parse(req.url),
       pathname = url_parts.pathname;
-  if (pathname != '/'
-    && pathname != '/Accounts/resetPassword'
-    && req.header('App-Name') != 'sbid'
-    && (!req.header('origin')
-      || new RegExp(req.header('origin')).test(config.ALLOW_ORIGIN) != true)
-  )
+  if ((new RegExp(/^\/api\/\w+/).test(pathname)
+      && req.header('App-Name') !== 'sbid'))
     return res.status(404).send();
 
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,21 +26,23 @@ server.listen(config.PORT, () => {
   console.log('Server is running');
 });
 
-app.get('/', (req,res) => res.sendFile(__dirname + '/public/index.html'));
-app.get('/Auctions/page/:page', require('./controllers/getAuctions'));
-app.get('/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
-app.post('/Auctions', require('./controllers/postAuction'));
-app.patch('/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
-app.get('/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
-app.post('/Accounts/register', require('./controllers/register'));
-app.post('/Accounts/resendVerifyCode', require('./controllers/resendVerifyCode'));
-app.post('/Accounts/login', require('./controllers/login'));
-app.post('/Accounts/forgotPassword', require('./controllers/forgotPassword'));
+app.get('/api/Auctions/page/:page', require('./controllers/getAuctions'));
+app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
+app.post('/api/Auctions/uploadProduct', require('./controllers/postAuction'));
+app.patch('/api/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
+app.get('/api/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
+app.post('/api/Accounts/register', require('./controllers/register'));
+app.post('/api/Accounts/resendVerifyCode', require('./controllers/resendVerifyCode'));
+app.post('/api/Accounts/login', require('./controllers/login'));
+app.post('/api/Accounts/forgotPassword', require('./controllers/forgotPassword'));
 app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
-app.patch('/Accounts/changePassword', require('./controllers/changePassword'));
-app.patch('/Accounts/updateProfile', require('./controllers/updateProfile'));
-app.patch('/Accounts/updateAvatar', require('./controllers/updateAvatar'));
-app.get('/BankBrands', require('./controllers/getBankBrands'));
+app.patch('/api/Accounts/changePassword', require('./controllers/changePassword'));
+app.patch('/api/Accounts/updateProfile', require('./controllers/updateProfile'));
+app.patch('/api/Accounts/updateAvatar', require('./controllers/updateAvatar'));
+app.get('/api/BankBrands', require('./controllers/getBankBrands'));
+
+app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
+app.get('/guide', require('./controllers/getGuide'));
 
 // socket.io configuration
 var io = require('socket.io')(server),
@@ -57,14 +55,17 @@ let interval = setInterval(() => {
 
 io.on('connection', function (socket) {
   if (
-    socket.handshake.query.key === 'sbid'
+    socket.handshake.query.appName === 'sbid'
     || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true
   ) {
     socket.page = 1;
     socket.categoryId = -1;
     sockets.push(socket);
   }
-  else socket.disconnect();
+  else {
+    socket.disconnect();
+    console.log('disconnect due to handshake failed');
+  }
 
   socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
 
@@ -79,5 +80,8 @@ io.on('connection', function (socket) {
     socket.categoryId = data.categoryId;
   });
 
-  socket.on('disconnect', () => sockets.splice(sockets.indexOf(socket),1));
+  socket.on('disconnect', () => {
+    sockets.splice(sockets.indexOf(socket),1);
+    console.log('disconnect');
+  });
 });

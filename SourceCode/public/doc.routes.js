@@ -138,19 +138,19 @@ var routes = [
         },
         {
             "method": "post",
-            "route": "/Auctions",
+            "route": "/Auctions/uploadProduct",
             "parameterType": "FormData",
             "parameters": {
                 "token": "string",
                 "productName": "string",
                 "description": "string",
-                "searchKey": "JSON array string",
+                "searchKey": "JSON array string, optional",
                 "categoryId": "number",
                 "duration": "number",
                 "startPrice": "number",
                 "ceilingPrice": "number, optional",
                 "bidIncreasement": "number",
-                "comment": "string",
+                "comment": "string, optional",
                 "productReturningAddress": "string, optional",
                 "moneyReceivingBankRefId": "number, optional",
                 "moneyReceivingAddress": "string, optional",
@@ -176,6 +176,14 @@ var routes = [
             "response": {
                 "success": "boolean",
                 "token": "string"
+            }
+        },
+        {
+            "method": "get",
+            "route": "/guide",
+            "response": {
+                "success": "boolean",
+                "html": "string"
             }
         }
     ]

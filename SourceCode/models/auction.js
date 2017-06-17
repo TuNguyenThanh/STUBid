@@ -107,6 +107,7 @@ function loadAuctions () {
                     WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
                 ) AS "bids"
                 FROM "Auction"
+                WHERE "Auction".state = 1
             ) AS auction
         `,
         params = [];
