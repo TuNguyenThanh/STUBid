@@ -5,6 +5,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import AuctionsActions from '../Redux/AuctionsRedux'
+import ModalBid from '../Components/ModalBid'
 
 import Tab1 from './Tab1Screen'
 import Tab2 from './Tab2Screen'
@@ -20,7 +21,9 @@ class DetailProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.auctions.data[this.props.rowID]
+      data: this.props.auctions.data[this.props.rowID],
+      openModalBid: false,
+      productSelected: null,
     };
 
     this.isHandleBid = false;
@@ -82,8 +85,33 @@ class DetailProduct extends React.Component {
             <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
           </TouchableOpacity>
         </View>
+        { this.renderModalBid() }
       </View>
     )
+  }
+
+  handleBidPress(priceBid) {
+    //bid product
+    this.props.bibProduct(this.props.login.user.token, this.state.productSelected.auctionId, this.props.login.user.profile.accountId, priceBid, false);
+    this.setState({ productBid: this.state.productSelected, openModalBid: false  });
+    this.isHandleBid = true;
+  }
+
+  renderModalBid() {
+    if(this.state.openModalBid) {
+      return(
+        <ModalBid
+          title={this.state.productSelected.product.name}
+          data={this.state.productSelected}
+          open={this.state.openModalBid}
+          modalDidClose={() => this.setState({ openModalBid: false })}
+          onPressA={() => this.setState({ openModalBid: false })}
+          onPressB={(priceBid) => this.handleBidPress(priceBid)}
+        />
+      );
+    } else {
+      return null;
+    }
   }
 
   handleBid(data) {
@@ -107,19 +135,7 @@ class DetailProduct extends React.Component {
             { cancelable: false }
           );
         } else {
-          Alert.alert(
-            data.product.name,
-            I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-            [
-              {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-              {text: I18n.t('bid', {locale: language}), onPress: () => {
-                //bid product
-                this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
-                this.isHandleBid = true;
-              }},
-            ],
-            { cancelable: false }
-          );
+          this.setState({ openModalBid: true, productSelected: data });
         }
       } else {
         if(data.seller.accountId == this.props.login.user.profile.accountId) {
@@ -132,20 +148,7 @@ class DetailProduct extends React.Component {
             { cancelable: false }
           );
         } else {
-          Alert.alert(
-            data.product.name,
-            I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-            [
-              {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-              {text: I18n.t('bid', {locale: language}), onPress: () => {
-                //bid product
-                this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
-                this.setState({ productBid: data });
-                this.isHandleBid = true;
-              }},
-            ],
-            { cancelable: false }
-          );
+          this.setState({ openModalBid: true, productSelected: data });
         }
       }
 

@@ -9,6 +9,7 @@ import { Actions as NavigationActions } from 'react-native-router-flux'
 import Header from '../Components/Header'
 import ModalCategory from '../Components/ModalCategory'
 import ModalLoading from '../Components/ModalLoading'
+import ModalBid from '../Components/ModalBid'
 import ImageLoad from 'react-native-image-placeholder'
 import IO from 'socket.io-client/dist/socket.io'
 
@@ -29,6 +30,7 @@ class Home extends React.Component {
     this.socket = IO(ApiConfig.baseSocketIOURL);
     this.state = {
       openModalCategory: false,
+      openModalBid: false,
       categorySelected: { categoryId: -1, name: 'all' },
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       data: [],
@@ -36,6 +38,7 @@ class Home extends React.Component {
       isOpen: false,
       productBid: null,
       user: null,
+      productSelected: null,
     };
     this.loadCategory = false;
     this.clickBid = false;
@@ -135,20 +138,7 @@ class Home extends React.Component {
               { cancelable: false }
             );
           } else {
-            Alert.alert(
-              data.product.name,
-              I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-              [
-                {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-                {text: I18n.t('bid', {locale: language}), onPress: () => {
-                  //bid product
-                  this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
-                  this.setState({ productBid: data });
-                  this.isHandleBid = true;
-                }},
-              ],
-              { cancelable: false }
-            );
+            this.setState({ openModalBid: true, productSelected: data });
           }
         } else {
           if(data.seller.accountId == this.props.login.user.profile.accountId) {
@@ -161,20 +151,7 @@ class Home extends React.Component {
               { cancelable: false }
             );
           } else {
-            Alert.alert(
-              data.product.name,
-              I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-              [
-                {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-                {text: I18n.t('bid', {locale: language}), onPress: () => {
-                  //bid product
-                  this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
-                  this.setState({ productBid: data });
-                  this.isHandleBid = true;
-                }},
-              ],
-              { cancelable: false }
-            );
+            this.setState({ openModalBid: true, productSelected: data });
           }
         }
         this.clickBid = false;
@@ -336,9 +313,34 @@ class Home extends React.Component {
         />
 
         { this.renderModalCategory() }
+        { this.renderModalBid() }
         { this.renderModalLoading(fetching) }
       </View>
     )
+  }
+
+  handleBidPress(priceBid) {
+    //bid product
+    this.props.bibProduct(this.props.login.user.token, this.state.productSelected.auctionId, this.props.login.user.profile.accountId, priceBid, false);
+    this.setState({ productBid: this.state.productSelected, openModalBid: false  });
+    this.isHandleBid = true;
+  }
+
+  renderModalBid() {
+    if(this.state.openModalBid) {
+      return(
+        <ModalBid
+          title={this.state.productSelected.product.name}
+          data={this.state.productSelected}
+          open={this.state.openModalBid}
+          modalDidClose={() => this.setState({ openModalBid: false })}
+          onPressA={() => this.setState({ openModalBid: false })}
+          onPressB={(priceBid) => this.handleBidPress(priceBid)}
+        />
+      );
+    } else {
+      return null;
+    }
   }
 
   renderModalLoading(fetching) {
