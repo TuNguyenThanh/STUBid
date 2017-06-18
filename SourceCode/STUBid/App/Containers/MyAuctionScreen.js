@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -30,38 +30,49 @@ class MyAuction extends React.Component {
           titleStyle={styles.titleStyle}
         />
         <View style={{ flex: 1 }}>
-          {
-            this.state.data.length == 0 ?
-            this.renderEmptyAuction() :
-            this.renderMyAuction()
-          }
+          { this.renderView() }
         </View>
       </View>
     )
   }
 
-  renderMyAuction() {
-    return(
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Bạn không có cuộc đấu giá nào cả</Text>
-      </View>
-    );
+  renderView() {
+    const { language } = this.props;
+    if(this.props.login.user) {
+      if(this.state.data.length == 0) {
+        return(
+          <View style={styles.contentEmpty}>
+            <Icon name="legal" size={70} color={Colors.primary} />
+            <Text>{I18n.t('emptyAuctions', {locale: language})}</Text>
+          </View>
+        );
+      } else {
+        return(
+          <View style={styles.viewWrap}>
+            <Text>Bạn không có cuộc đấu giá nào cả</Text>
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View style={styles.viewWrap}>
+          <Text style={styles.titleStyle}>
+            {I18n.t('PleaseLoginViewYourAuctions', {locale: language})}
+          </Text>
+          <TouchableOpacity style={styles.buttonStyle} onPress={() => NavigationActions.loginScreen()}>
+            <Text style={styles.buttonTextStyle}>{I18n.t('login', {locale: language})}</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
   }
 
-  renderEmptyAuction() {
-    const { language } = this.props;
-    return(
-      <View style={styles.contentEmpty}>
-        <Icon name="legal" size={70} color={Colors.primary} />
-        <Text>{I18n.t('emptyAuctions', {locale: language})}</Text>
-      </View>
-    );
-  }
 }
 
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    login: state.login,
   }
 }
 
