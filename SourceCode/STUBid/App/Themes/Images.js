@@ -31,6 +31,7 @@ const images = {
   userIcon: require('../Images/user-icon.png'),
   acb: require('../Images/acb.png'),
   sacombank: require('../Images/sacombank.png'),
+  iconUpload: require('../Images/iconUpload.png'),
 }
 
 export default images

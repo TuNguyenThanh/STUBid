@@ -124,32 +124,59 @@ class Home extends React.Component {
       if(this.clickBid) {
         //check highestBidder id auctions
         const highestBidder = data.highestBidder;
-        if(highestBidder.accountId == this.props.login.user.profile.accountId) {
-          Alert.alert(
-            data.product.name,
-            I18n.t('youAreHighestBidder', {locale: language}),
-            [
-              {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
-            ],
-            { cancelable: false }
-          );
+        if(highestBidder) {
+          if(highestBidder.accountId == this.props.login.user.profile.accountId) {
+            Alert.alert(
+              data.product.name,
+              I18n.t('youAreHighestBidder', {locale: language}),
+              [
+                {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+              ],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert(
+              data.product.name,
+              I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
+              [
+                {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+                {text: I18n.t('bid', {locale: language}), onPress: () => {
+                  //bid product
+                  this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
+                  this.setState({ productBid: data });
+                  this.isHandleBid = true;
+                }},
+              ],
+              { cancelable: false }
+            );
+          }
         } else {
-          Alert.alert(
-            data.product.name,
-            I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
-            [
-              {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
-              {text: I18n.t('bid', {locale: language}), onPress: () => {
-                //bid product
-                this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
-                this.setState({ productBid: data });
-                this.isHandleBid = true;
-              }},
-            ],
-            { cancelable: false }
-          );
+          if(data.seller.accountId == this.props.login.user.profile.accountId) {
+            Alert.alert(
+              data.product.name,
+              I18n.t('YouCanNotBidBecauseYouSeller', {locale: language}),
+              [
+                {text: I18n.t('ok', {locale: language}), onPress: () => {}, style: 'cancel'},
+              ],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert(
+              data.product.name,
+              I18n.t('yesBid', {locale: language})+ ' ' + price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND ?',
+              [
+                {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+                {text: I18n.t('bid', {locale: language}), onPress: () => {
+                  //bid product
+                  this.props.bibProduct(this.props.login.user.token, auctionId, this.props.login.user.profile.accountId, price, false);
+                  this.setState({ productBid: data });
+                  this.isHandleBid = true;
+                }},
+              ],
+              { cancelable: false }
+            );
+          }
         }
-
         this.clickBid = false;
       }
     } else {

@@ -167,34 +167,35 @@ class UploadProduct extends React.Component {
     const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose } = this.state;
 
     //check
-    if(productName == '') {
-      this.message(I18n.t('pleaseEnterProductName', {locale: language}))
-    } else {
-      if(productName.length < 10) {
-        this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
-      } else {
-        if(productStartPrice == '') {
-          this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
-        } else {
-          if(productDescription == '') {
-            this.message(I18n.t('pleaseEnterDescription', {locale: language}))
-          } else {
-            if(productDescription.length < 10) {
-              this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
-            } else {
-              if(arrImageChoose.length == 0) {
-                this.message(I18n.t('pleaseChooseAtLeastOneImage', {locale: language}))
-              } else {
-                const step1 = {
-                  productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose
-                };
-                NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
-              }
-            }
-          }
-        }
-      }
-    }
+    const step1 = {
+      productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose
+    };
+    NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
+  
+    // if(productName == '') {
+    //   this.message(I18n.t('pleaseEnterProductName', {locale: language}))
+    // } else {
+    //   if(productName.length < 10) {
+    //     this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
+    //   } else {
+    //     if(productStartPrice == '') {
+    //       this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
+    //     } else {
+    //       if(productDescription == '') {
+    //         this.message(I18n.t('pleaseEnterDescription', {locale: language}))
+    //       } else {
+    //         if(productDescription.length < 10) {
+    //           this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
+    //         } else {
+    //           if(arrImageChoose.length == 0) {
+    //             this.message(I18n.t('pleaseChooseAtLeastOneImage', {locale: language}))
+    //           } else {
+    //             }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 
   renderModalCategory() {

@@ -122,11 +122,11 @@
   "emptyAuctions": "Bạn không có cuộc đấu giá nào cả",
   "chooseBankBrand": "Chọn ngân hàng",
   "step": "Bước",
-
   "pleaseChooseAtLeastOneImage": "Vui lòng chọn ít nhất một hình sản phẩm",
   "pleaseEnterProductNameLonger": "Vui lòng nhập tên sản phẩm nhiều hơn 10 ký tự",
   "pleaseEnterProductName": "Vui lòng nhập tên sản phẩm",
   "pleaseEnterStartPrice": "Vui lòng nhập giá bắt đầu",
   "pleaseEnterDescription": "Vui lòng miêu tả sản phẩm",
   "pleaseEnterDescriptionLonger": "Vui lòng miêu tả thêm về sản phẩm",
+  "YouCanNotBidBecauseYouSeller": "Bạn không thể đặt giá thầu vì bạn là người bán sản phẩm này",
 }

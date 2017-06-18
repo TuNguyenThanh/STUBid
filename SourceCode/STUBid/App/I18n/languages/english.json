@@ -122,12 +122,11 @@
   "emptyAuctions": "You do not have any auctions",
   "chooseBankBrand": "Choose bank brand",
   "step": "Step",
-
-  
   "pleaseEnterProductName": "Please enter product name",
   "pleaseEnterProductNameLonger": "Please enter a product name of more than 10 characters",
   "pleaseChooseAtLeastOneImage": "Please choose at least one image",
   "pleaseEnterStartPrice": "Please enter starting price",
   "pleaseEnterDescription": "Please descripe the product",
   "pleaseEnterDescriptionLonger": "Please descripe the product more",
+  "YouCanNotBidBecauseYouSeller": "You can not bid because you are the seller of this product",
 }

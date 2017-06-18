@@ -58,3 +58,16 @@ export function * uploadProduct(ProductApi, UserApi, action) {
     yield put(ProductActions.uploadProductFailure('Failure Upload Product'));
   }
 }
+
+export function * getInfoUploadProduct(ProductApi, action) {
+  try {
+    const response = yield call(ProductApi.getInfoUploadProduct);
+    if(response.ok) {
+      yield put(ProductActions.getInfoUploadSuccess(response.data.html));
+    } else {
+      yield put(ProductActions.getInfoUploadFailure(response.problem));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

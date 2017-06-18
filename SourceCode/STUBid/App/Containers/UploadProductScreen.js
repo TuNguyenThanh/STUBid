@@ -1,11 +1,12 @@
 import React from 'react'
-import { ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, Alert, Modal } from 'react-native'
 import { connect } from 'react-redux'
 import ProductActions from '../Redux/ProductRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ButtonChoose from '../Components/ButtonChoose'
 import Input from '../Components/Input'
 import ModalList from '../Components/ModalList'
+import ModalUpload from '../Components/ModalUpload'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 // Styles
@@ -37,7 +38,7 @@ class UploadProduct extends React.Component {
 
       openModalMembership: false,
       membershipSeleted: {id: 1, name: 'Tat ca'},
-      dataMembership: [{id: 1, name: 'Tat ca'}, {id: 2, name: 'premium'}]
+      dataMembership: [{id: 1, name: 'Tat ca'}, {id: 2, name: 'premium'}],
     };
     this.isUploadProduct = false;
   }
@@ -81,6 +82,7 @@ class UploadProduct extends React.Component {
 
   render () {
     const { language } = this.props;
+    const { fetching } = this.props.productState;
     return (
       <View style={styles.container}>
         <ScrollView style={styles.content} scrollEnabled={false} >
@@ -151,6 +153,7 @@ class UploadProduct extends React.Component {
         { this.renderModalPaymentMethod() }
         { this.renderModalDepositMethod() }
         { this.renderModalMembership() }
+        { fetching && <ModalUpload /> }
       </View>
     )
   }
