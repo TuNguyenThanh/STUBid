@@ -108,7 +108,7 @@ export default StyleSheet.create({
     textAlign: 'center'
   },
   itemBody: {
-    flex :2,
+    flex: 3,
     justifyContent: 'center',
     alignItems: 'center'
   },
