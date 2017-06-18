@@ -121,6 +121,7 @@ function loadAuctions () {
             auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((Date.now() - new Date(auction.activatedDate).getTime())/1000);
             auctions.push(auction);
         }, this);
+        auctions.sort((a,b) => auctionsTimeLeft[a.auctionId] > auctionsTimeLeft[b.auctionId])
         console.log('loaded ' + result.rowCount + ' auctions');
     })
     .catch(error => {
