@@ -12,6 +12,7 @@ export default () => {
     auctions: require('./AuctionsRedux').reducer,
     category: require('./CategoryRedux').reducer,
     account: require('./AccountRedux').reducer,
+    product: require('./ProductRedux').reducer,
   })
 
   return configureStore(rootReducer, rootSaga)

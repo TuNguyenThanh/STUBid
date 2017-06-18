@@ -1,6 +1,7 @@
 import React from 'react'
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
+import ProductActions from '../Redux/ProductRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ButtonChoose from '../Components/ButtonChoose'
 import Input from '../Components/Input'
@@ -19,23 +20,57 @@ class UploadProduct extends React.Component {
     super(props);
     this.state = {
       priceBid: '',
+      moneyReceivingAddress: '',
+      productReturningAddress: '',
 
       openModalTime: false,
-      timeSelected: '48',
-      dataTime: [12, 24, 48, 72],
+      timeSelected: 48,
+      dataTime: [ 12, 24, 48, 72],
 
       openModalPayment: false,
-      paymentMethodSeleted: 'SBid',
-      dataPayment: ['SBid', 'Banking', 'Buu dien'],
+      paymentMethodSeleted: {id: 1, name: 'SBid'},
+      dataPayment: [{id: 1, name: 'SBid'}, {id: 2, name: 'Banking'}, {id: 3, name: 'Buu dien'}],
 
       openModalDeposit: false,
-      depositMethodSeleted: 'SBid',
-      dataDeposit: ['Den SBid', 'Buu dien', 'Dich vu'],
+      depositMethodSeleted: {id: 1, name: 'SBid'},
+      dataDeposit: [{id: 1, name: 'SBid'}, {id: 2, name: 'Buu dien'}],
 
       openModalMembership: false,
-      membershipSeleted: 'Tat ca',
-      dataMembership: ['Tat ca', 'premium']
+      membershipSeleted: {id: 1, name: 'Tat ca'},
+      dataMembership: [{id: 1, name: 'Tat ca'}, {id: 2, name: 'premium'}]
     };
+    this.isUploadProduct = false;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { language } = this.props;
+    const { fetching, error, uploadSuccess } = nextProps.productState;
+
+    if(!fetching && this.isUploadProduct && uploadSuccess) {
+      Alert.alert(
+        I18n.t('upload', {locale: language}),
+        I18n.t('success', {locale: language}),
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
+            NavigationActions.tabbar({ type: 'reset' });
+          }},
+        ],
+        { cancelable: false }
+      );
+      this.isUploadProduct = false;
+    }
+
+    //error
+    if(!fetching && error) {
+      Alert.alert(
+        I18n.t('error', {locale: this.props.language}),
+        error,
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   handlePriceBid(text) {
@@ -72,12 +107,32 @@ class UploadProduct extends React.Component {
             onPress={() => this.setState({openModalPayment: true})}
           />
 
+          {
+            this.state.paymentMethodSeleted.id != '1' &&
+            <Input
+              title={'moneyReceivingAddress'}
+              placeholder={'moneyReceivingAddress'}
+              value={this.state.moneyReceivingAddress}
+              onChangeText={(moneyReceivingAddress) => this.setState({moneyReceivingAddress})}
+            />
+          }
+
           <ButtonChoose
             title={I18n.t('consignment', {locale: language})}
             item={this.state.depositMethodSeleted}
             nameIcon={'gift'}
             onPress={() => this.setState({openModalDeposit: true})}
           />
+
+          {
+            this.state.depositMethodSeleted.id != '1' &&
+            <Input
+              title={'productReturningAddress'}
+              placeholder={'productReturningAddress'}
+              value={this.state.productReturningAddress}
+              onChangeText={(productReturningAddress) => this.setState({productReturningAddress})}
+            />
+          }
 
           <ButtonChoose
             title={I18n.t('participants', {locale: language})}
@@ -157,18 +212,40 @@ class UploadProduct extends React.Component {
   }
 
   handleUploadProduct() {
-    NavigationActions.tabbar({ type: 'reset' });
+    const { priceBid, timeSelected, paymentMethodSeleted, depositMethodSeleted, membershipSeleted, moneyReceivingAddress, productReturningAddress } = this.state;
+    const token = this.props.login.user.token;
+
+    const product = {
+      productName: this.props.step1.productName,
+      description: this.props.step1.productDescription,
+      categoryId: this.props.step1.categorySelected.categoryId,
+      startPrice: this.props.step1.productStartPrice.replace(/\./g, ''),
+      ceilingPrice: this.props.step1.productCeilPrice.replace(/\./g, ''),
+      duration: timeSelected,
+      bidIncreasement: priceBid.replace(/\./g, ''),
+      productReturningAddress: productReturningAddress,
+      moneyReceivingBankRefId: this.props.login.user.bankRef ? this.props.login.user.bankRef.bankRefId : '',
+      moneyReceivingAddress: moneyReceivingAddress,
+      allowedUserLevel: membershipSeleted.id,
+      image: this.props.step1.arrImageChoose
+    };
+
+    this.props.uploadProduct(token, product);
+    this.isUploadProduct = true;
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    login: state.login,
+    productState: state.product,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    uploadProduct: (token, product) => dispatch(ProductActions.uploadProductRequest(token, product)),
   }
 }
 

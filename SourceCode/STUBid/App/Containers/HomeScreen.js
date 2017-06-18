@@ -26,7 +26,7 @@ import I18n from 'react-native-i18n'
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.socket = IO(ApiConfig.baseURL);
+    this.socket = IO(ApiConfig.baseSocketIOURL);
     this.state = {
       openModalCategory: false,
       categorySelected: { categoryId: -1, name: 'all' },
@@ -58,6 +58,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: -1 });
+    this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
 
     this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
       this.props.setData(data);
@@ -201,6 +202,17 @@ class Home extends React.Component {
     );
   }
 
+  handleUploadProductScreen() {
+    const { language } = this.state;
+    //Check login
+    if(this.props.login.user) {
+      NavigationActions.uploadProductNextScreen({ title: I18n.t('step', {locale: language}) + ' 1' })
+    } else {
+      //not login - not profile
+      NavigationActions.loginScreen();
+    }
+  }
+
   render () {
     const { language } = this.props;
     const hideImage = this.animated.interpolate({
@@ -271,7 +283,7 @@ class Home extends React.Component {
           </View>
 
           <Animated.View style={[styles.iconStyle, menuStyle]}>
-            <TouchableOpacity onPress={() => NavigationActions.uploadProductNextScreen({ title: I18n.t('step', {locale: language}) + ' 1' })}>
+            <TouchableOpacity onPress={() => this.handleUploadProductScreen()}>
               <Icon name="pencil" size={20} color={Colors.primary} />
             </TouchableOpacity>
           </Animated.View>
@@ -325,6 +337,7 @@ class Home extends React.Component {
   handleChooseItem(item) {
     this.setState({ openModalCategory: false, categorySelected: item});
     this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: item.categoryId });
+    this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
   }
 }
 

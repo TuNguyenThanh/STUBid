@@ -150,14 +150,51 @@ class UploadProduct extends React.Component {
     )
   }
 
+  message(mess) {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('error', {locale: language}),
+      mess,
+      [
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+      ],
+      { cancelable: false }
+    );
+  }
+
   handleUploadProductNext() {
     const { language } = this.props;
-    const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected } = this.state;
-    const step1 = {
-      productName, productStartPrice, productCeilPrice, productDescription, categorySelected
-    };
-    console.log(step1);
-    NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
+    const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose } = this.state;
+
+    //check
+    if(productName == '') {
+      this.message(I18n.t('pleaseEnterProductName', {locale: language}))
+    } else {
+      if(productName.length < 10) {
+        this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
+      } else {
+        if(productStartPrice == '') {
+          this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
+        } else {
+          if(productDescription == '') {
+            this.message(I18n.t('pleaseEnterDescription', {locale: language}))
+          } else {
+            if(productDescription.length < 10) {
+              this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
+            } else {
+              if(arrImageChoose.length == 0) {
+                this.message(I18n.t('pleaseChooseAtLeastOneImage', {locale: language}))
+              } else {
+                const step1 = {
+                  productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose
+                };
+                NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   renderModalCategory() {

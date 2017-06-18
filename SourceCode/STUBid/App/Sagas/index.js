@@ -3,6 +3,7 @@ import AuctionsAPI from '../Services/AuctionsApi'
 import CategoryAPI from '../Services/CategoryApi'
 import UserAPI from '../Services/UserApi'
 import AccountAPI from '../Services/AccountApi'
+import ProductAPI from '../Services/ProductApi'
 
 /* ------------- Types ------------- */
 
@@ -13,6 +14,7 @@ import { SearchTypes } from '../Redux/SearchRedux'
 import { CategoryTypes } from '../Redux/CategoryRedux'
 import { LoginTypes } from '../Redux/LoginRedux'
 import { AccountTypes } from '../Redux/AccountRedux'
+import { ProductTypes } from '../Redux/ProductRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -22,6 +24,7 @@ import { getAuctions, bidProduct } from './AuctionsSagas'
 import { searchs } from './SearchSagas'
 import { getCategory, getBankBrands } from './CategorySagas'
 import { login, loginToken } from './LoginSagas'
+import { uploadProduct } from './ProductSagas'
 import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword, editProfile, uploadAvatar } from './AccountSagas'
 
 /* ------------- API ------------- */
@@ -33,6 +36,7 @@ const AuctionsApi = AuctionsAPI.create()
 const CategoryApi = CategoryAPI.create()
 const UserApi = UserAPI.create()
 const AccountApi = AccountAPI.create()
+const ProductApi = ProductAPI.create()
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -64,5 +68,8 @@ export default function * root () {
     takeLatest(AccountTypes.CHANGE_PASSWORD_REQUEST, changePassword, AccountApi, UserApi),
     takeLatest(AccountTypes.EDIT_PROFILE_REQUEST, editProfile, AccountApi, UserApi),
     takeLatest(AccountTypes.UPLOAD_AVATAR_REQUEST, uploadAvatar, AccountApi, UserApi),
+
+    //Product
+    takeLatest(ProductTypes.UPLOAD_PRODUCT_REQUEST, uploadProduct, ProductApi, UserApi),
   ]
 }

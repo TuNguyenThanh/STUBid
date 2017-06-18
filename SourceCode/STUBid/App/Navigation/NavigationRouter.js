@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import LoginActions from '../Redux/LoginRedux'
 import { Scene, Router } from 'react-native-router-flux'
 import NavigationDrawer from './NavigationDrawer'
+import NavItems from './NavItems'
 import TabIcon from './TabIcon'
 import ModalLoading from '../Components/ModalLoading'
 
@@ -27,6 +28,7 @@ import CreactAccountScreen from '../Containers/CreactAccountScreen'
 import CheckCodeScreen from '../Containers/CheckCodeScreen'
 import ChangePasswordScreen from '../Containers/ChangePasswordScreen'
 import VersionAppScreen from '../Containers/VersionAppScreen'
+import InfoUploadProductScreen from '../Containers/InfoUploadProductScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -89,8 +91,11 @@ class NavigationRouter extends Component {
           <Scene key='creactAccountScreen' component={CreactAccountScreen} direction="vertical" hideNavBar />
           <Scene key='editProfileScreen' component={EditProfileScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
           <Scene key='detailProductScreen' component={DetailProductScreen} hideNavBar={false} titleStyle={Styles.title} />
-          <Scene key='uploadProductNextScreen' component={UploadProductNextScreen} title={'Step 1'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='uploadProductNextScreen' component={UploadProductNextScreen} title={'Step 1'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom}
+            renderRightButton={NavItems.infoUploadButton}
+          />
           <Scene key='uploadProductScreen' component={UploadProductScreen} title={'Step 2'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='infoUploadProductScreen' component={InfoUploadProductScreen} title={'SBid'} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
 
         </Scene>
       </Router>

@@ -73,7 +73,7 @@ class Tab1 extends React.Component {
           <View style={styles.itemRight}>
             <Text style={styles.fontStyle}>
               {
-                data.highestBidder.firstName ? data.highestBidder.lastName + data.highestBidder.firstName :
+                data.highestBidder ? data.highestBidder.lastName + data.highestBidder.firstName :
                 'Chua co nguoi dau gia'
               }
             </Text>
@@ -82,7 +82,7 @@ class Tab1 extends React.Component {
           <View style={styles.itemRight}>
             <Text style={styles.fontStyle}>
               {
-                data.highestBidder.price ?
+                data.highestBidder ?
                 data.highestBidder.price.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
                 data.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
               }
@@ -97,7 +97,7 @@ class Tab1 extends React.Component {
             <View style={styles.viewNextPrice}>
               <Text style={[styles.fontStyle, styles.priceBidStyle]}>
                 {
-                  data.highestBidder.price ?
+                  data.highestBidder ?
                   (data.highestBidder.price + data.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
                   (data.startPrice + data.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
                 }
