@@ -102,7 +102,8 @@ export default StyleSheet.create({
   },
   titleStyle: {
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   descriptionStyle: {
     textAlign: 'center'

@@ -39,6 +39,7 @@ class Home extends React.Component {
       productBid: null,
       user: null,
       productSelected: null,
+      page: 1,
     };
     this.loadCategory = false;
     this.clickBid = false;
@@ -61,7 +62,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: -1 });
-    this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
+    this.socket.emit('CLIENT-SEND-PAGE', { page: this.state.page });
 
     this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
       this.props.setData(data);
@@ -310,6 +311,8 @@ class Home extends React.Component {
           contentContainerStyle={styles.listView}
           dataSource={this.state.dataSource}
           renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
+          onEndReached={this.onEndReached.bind(this)}
+          onEndReachedThreshold ={10}
         />
 
         { this.renderModalCategory() }
@@ -317,6 +320,11 @@ class Home extends React.Component {
         { this.renderModalLoading(fetching) }
       </View>
     )
+  }
+
+  onEndReached() {
+    this.setState({ page: this.state.page + 1 });
+    this.socket.emit('CLIENT-SEND-PAGE', { page: this.state.page + 1 });
   }
 
   handleBidPress(priceBid) {
@@ -364,7 +372,7 @@ class Home extends React.Component {
   }
 
   handleChooseItem(item) {
-    this.setState({ openModalCategory: false, categorySelected: item});
+    this.setState({ openModalCategory: false, categorySelected: item, page: 1});
     this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: item.categoryId });
     this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
   }
