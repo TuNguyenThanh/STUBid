@@ -40,9 +40,9 @@ app.patch('/api/Accounts/changePassword', require('./controllers/changePassword'
 app.patch('/api/Accounts/updateProfile', require('./controllers/updateProfile'));
 app.patch('/api/Accounts/updateAvatar', require('./controllers/updateAvatar'));
 app.get('/api/BankBrands', require('./controllers/getBankBrands'));
+app.get('/api/guide', require('./controllers/getGuide'));
 
 app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
-app.get('/guide', require('./controllers/getGuide'));
 
 // socket.io configuration
 var io = require('socket.io')(server),

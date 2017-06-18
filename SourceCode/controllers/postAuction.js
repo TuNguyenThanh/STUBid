@@ -1,5 +1,6 @@
 const formidable = require('formidable'),
       fs = require('fs'),
+      ERROR = require('../error'),
       { DIRNAME } = require('../config'),
       { verify, refreshToken } = require('../helpers/jwt'),
       { insertAuction } = require('../models/auction');
@@ -28,7 +29,8 @@ module.exports = (req,res) => {
         });
     })
     .then(fields => {
-        if (!(fields.token && fields.productName && fields.description && fields.searchKey && fields.categoryId
+        console.log(fields);
+        if (!(fields.token && fields.productName && fields.description && fields.categoryId
         && fields.duration && fields.startPrice && fields.bidIncreasement))
             return Promise.reject({
                 status: 400,
@@ -52,7 +54,7 @@ module.exports = (req,res) => {
             moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
         } = auctionInfo;
         return insertAuction(
-            productName, description, JSON.parse(searchKey), parseInt(categoryId),
+            productName, description, JSON.parse('["test"]'), parseInt(categoryId),
             productImages,
             parseInt(duration), parseInt(startPrice), ceilingPrice?parseInt(ceilingPrice):null,
             parseInt(bidIncreasement), comment,

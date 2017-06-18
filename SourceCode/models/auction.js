@@ -113,6 +113,8 @@ function loadAuctions () {
         params = [];
     query(sql,params)
     .then(result => {
+        delete auctions;
+        auctions = [];
         result.rows.forEach((element, index) => {
             let auction = element.row_to_json,
                 page = Math.floor(index/20);
