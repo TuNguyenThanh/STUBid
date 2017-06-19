@@ -74,14 +74,21 @@ class Search extends React.Component {
   renderItem(item, rowID) {
     return(
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
-        <ImageLoad
-          style={styles.imgStyle}
-          placeholderStyle={{ flex: 1, resizeMode: 'center'}}
-          loadingStyle={{ size: 'small', color: 'blue' }}
-          resizeMode="contain"
-          source={{uri: item.product.images[0].url}}
-        />
-
+        {
+          item.product.images ?
+          <ImageLoad
+            style={styles.imgStyle}
+            placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+            loadingStyle={{ size: 'small', color: 'blue' }}
+            resizeMode="contain"
+            source={{uri: item.product.images[0].url}}
+          />
+          :
+          <Image
+            style={styles.imgStyle2}
+            source={Images.sbidIcon}
+          />
+        }
         <View style={styles.viewDetail}>
           <Text style={styles.titleProduct} numberOfLines={2}>{item.product.name}</Text>
           <View style={styles.viewTemp}>

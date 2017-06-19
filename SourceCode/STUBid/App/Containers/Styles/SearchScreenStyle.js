@@ -150,6 +150,11 @@ export default StyleSheet.create({
     flex: 1,
     margin: 8
   },
+  imgStyle2: {
+    flex: 1,
+    height: (Metrics.screenHeight / 5) - 16,
+    margin: 8
+  },
   viewLoading: {
     flex:1,
     justifyContent: 'center',

@@ -164,16 +164,26 @@ class Home extends React.Component {
   }
 
   renderItem(item, rowID) {
+    console.log(item.product);
     const { language } = this.props;
     return (
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
-        <ImageLoad
-          style={styles.imageProduct}
-          placeholderStyle={{ flex: 1, resizeMode: 'center'}}
-          loadingStyle={{ size: 'small', color: 'blue' }}
-          resizeMode="contain"
-          source={{uri: item.product.images[0].url}}
-        />
+        {
+          item.product.images ?
+          <ImageLoad
+            style={styles.imageProduct}
+            placeholderStyle={{ flex: 1, resizeMode: 'center'}}
+            loadingStyle={{ size: 'small', color: 'blue' }}
+            resizeMode="contain"
+            source={{uri: item.product.images[0].url}}
+          />
+          :
+          <Image
+            style={styles.imageProduct}
+            source={Images.sbidIcon}
+          />
+        }
+
         <Text style={[styles.textProduct, { height: 40 }]} numberOfLines={2}>{item.product.name}</Text>
         <View style={styles.viewItem}>
           <Text style={styles.textPriceNow}>

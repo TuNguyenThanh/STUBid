@@ -9,7 +9,7 @@ import 'moment/locale/vi'
 
 // Styles
 import styles from './Styles/Tab1ScreenStyle'
-import { Colors, Metrics } from '../Themes'
+import { Colors, Metrics, Images } from '../Themes'
 
 //I18n
 import I18n from 'react-native-i18n'
@@ -32,9 +32,11 @@ class Tab1 extends React.Component {
 
   componentDidMount() {
     let arrHinh = [];
-    this.state.data.product.images.map((img) => {
-      arrHinh.push({ url: img.url })
-    });
+    if(this.state.data.product.images) {
+      this.state.data.product.images.map((img) => {
+        arrHinh.push({ url: img.url })
+      });
+    }
 
     setTimeout(() => {
       this.setState({ arrImage: arrHinh });
@@ -110,8 +112,8 @@ class Tab1 extends React.Component {
   }
 
   renderImage() {
-    let arrImg = [];
-    if(this.state.arrImage) {
+    if(this.state.arrImage.length != 0) {
+      let arrImg = [];
       this.state.arrImage.map((img, index) => {
         arrImg.push(
           <View style={styles.slide} key={index}>
@@ -123,8 +125,15 @@ class Tab1 extends React.Component {
           </View>
         );
       });
+      return arrImg;
+    } else {
+      return (
+        <ImageLoad
+          style={styles.image}
+          source={Images.sbidIcon}
+        />
+      );
     }
-    return arrImg;
   }
 
   capitalizeEachWord(str) {

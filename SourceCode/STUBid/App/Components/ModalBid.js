@@ -65,11 +65,11 @@ class ModalCategory extends React.Component {
             <View style={styles.itemBody}>
               <View style={{ justifyContent: 'space-between', alignItems: 'center'}}>
                 <TouchableOpacity onPress={() => this.handleUp()}>
-                  <Icon name="caret-up" size={25} color={Colors.primary} />
+                  <Icon name="caret-up" size={35} color={Colors.primary} />
                 </TouchableOpacity>
                 <Text>{this.state.bidNumber}</Text>
                 <TouchableOpacity onPress={() => this.handleDown()}>
-                  <Icon name="caret-down" size={25} color={Colors.primary} />
+                  <Icon name="caret-down" size={35} color={Colors.primary} />
                 </TouchableOpacity>
               </View>
             </View>
