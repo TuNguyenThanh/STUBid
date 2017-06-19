@@ -21,15 +21,15 @@ export function * uploadProduct(ProductApi, UserApi, action) {
       { name: 'token', data: token},
       { name: 'productName', data: product.productName },
       { name: 'description', data: product.productName },
-      { name: 'categoryId', data: product.categoryId },
-      { name: 'startPrice', data: product.startPrice },
-      { name: 'ceilingPrice', data: product.ceilingPrice },
-      { name: 'duration', data: product.duration },
+      { name: 'categoryId', data: String(product.categoryId) },
+      { name: 'startPrice', data: String(product.startPrice) },
+      { name: 'ceilingPrice', data: String(product.ceilingPrice) },
+      { name: 'duration', data: String(product.duration) },
       { name: 'bidIncreasement', data: product.bidIncreasement },
       { name: 'productReturningAddress', data: product.productReturningAddress },
-      { name: 'moneyReceivingBankRefId', data: product.moneyReceivingBankRefId },
+      { name: 'moneyReceivingBankRefId', data: String(product.moneyReceivingBankRefId) },
       { name: 'moneyReceivingAddress', data: product.moneyReceivingAddress },
-      { name: 'allowedUserLevel', data: product.allowedUserLevel },
+      { name: 'allowedUserLevel', data: String(product.allowedUserLevel) },
     ]
     const dataUpload = dataProduct.concat(arrImagePush);
     const res = yield call(ProductApi.uploadProduct, dataUpload );

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator, ListView } from 'react-native'
+import { View, Text, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator, ListView, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import AccountActions from '../Redux/AccountRedux'
 import CategoryActions from '../Redux/CategoryRedux'
@@ -428,11 +428,19 @@ class EditProfile extends React.Component {
         {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
         {text: I18n.t('ok', {locale: language}), onPress: () => {
           const { token } = this.props.login.user;
-          this.props.uploadAvatar(image.path, token);
+          if(Platform.OS === 'ios') {
+            this.props.uploadAvatar(image.path, token);
+            this.setState({
+              urlImage: image.path
+            });
+          }
+          if(Platform.OS === 'android') {
+            this.props.uploadAvatar(image[0].path, token);
+            this.setState({
+              urlImage: image[0].path
+            });
+          }
           this.isUploadAvatar = true;
-          this.setState({
-            urlImage: image.path
-          });
         }},
       ],
       { cancelable: false }
