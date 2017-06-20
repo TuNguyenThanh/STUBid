@@ -1,0 +1,126 @@
+<ul class="container">
+  <li>
+    <div class="title" (click)="toggle('auction')">Đấu giá là gì?</div>
+    <div
+    [@slideOut]="openingGuide === 'auction'"
+    class="guide-content">
+      <p>Đấu giá trực tuyến là cách cho phép người tham gia đấu giá các sản phẩm hoặc các dịch vụ thông qua Internet.</p>
+      <p>Khi nói đến đấu giá trực tuyến là chúng ta nghĩ ngay đến eBay, website đấu giá trực tuyến lớn nhất trên thế giới hiện nay. Giống như hầu hết các công ty đấu giá, eBay không trực tiếp bán hàng của chính mình mà chỉ giúp cho các thành viên liệt kê và trưng bày sản phẩm của họ, đấu giá các sản phẩm và thanh toán chúng. Nó hoạt động giống như là một nơi họp chợ cho các thành viên hoặc các doanh nghiệp sử dụng để đấu giá các sản phẩm và dịch vụ.</p>
+      <p>Có một vài loại hình thức đấu giá trên mạng đang hiện hữu như:</p>
+      <p>- Đấu giá kiểu Anh, giá khởi điểm sẽ được đặt ở mức thấp và sau đó được nâng lên bới các ngưới tham giá đấu giá tiếp theo.</p>
+      <p>- Đấu giá Hà Lan, đồng thời nhiều món hàng giống nhau sẽ được đưa lên sàn đấu giá, tất cả những người đấu giá thắng sẽ trả cùng một giá – giá cao nhất mà tất cả các món hàng đó được bán. Hầu hết tất cả các sàn đấu giá trực tuyến đều sử dụng đấu giá kiểu Anh.</p>
+      <p>Những ưu điểm của mô hình thương mại này là:</p>
+      <ul>
+        <li>
+          <p><span class="high-light-red">Không ràng buộc thời gian.</span> Việc đặt giá có thể thực hiện bất kì lúc nào. Các sản phẩm được liệt kê trong một một vài ngày (thường là từ 1 đến 10 ngày, tùy theo ý thích của người bán) để người mua có thời gian tìm kiếm, quyết định và đặt giá. Giá trị của món hàng sẽ được nâng lên theo số lượng người tham giá đấu giá.</p></li>
+        <li>
+          <p><span class="high-light-red">Không ràng buộc lý.</span> Những người đấu giá có thể tham gia đấu giá từ bất kì nơi nào có truy cập Internet. Điều này làm các cuộc đấu giá thêm gần gũi và giảm chi phí tham dự một cuộc đấu giá, đồng thời cũng làm tăng số lượng các đặt giá có càng nhiều người đặt giá). Những món hàng không những không cần phải đưa đến sàn đấu giá mà còn giảm được chi phí, giảm được giá khởi điểm được chấp nhận của người bán.</p></li>
+        <li>
+          <p><span class="high-light-red">Sức mạnh của tương tác xã hội.</span> Tương tác xã hội mà liên quan đến quá trình đấu giá thì giống như việc đánh bạc. Những người đấu giá chờ đợi trong hi vọng là họ sẽ thắng. Cũng giống như sự ham mê cờ bạc, nhiều người tham gia đặt giá chủ yếu để "chơi trò chơi" chứ không muốn giành được món hàng. Và điều này tạo ra một sự phân chia lớn các khách hàng tiềm năng.</p></li>
+        <li>
+          <p><span class="high-light-red">Số lượng người đấu giá lớn.</span> Bởi vì tiềm năng có giá thấp, hàng hóa và dịch vụ đa dạng, dễ dàng tham gia và lợi ích xã hội của quá trình đấu giá.</p></li>
+        <li>
+          <p><span class="high-light-red">Số lượng người bán hàng lớn.</span> Bởi vì có nhiều người tham gia đặt giá, có thể đạt được giá cao, giảm chi phí bán hàng, dễ buôn bán.</p></li>
+      </ul>
+      <p>Số lượng lớn các người tham gia đấu giá sẽ khuyến khích nhiều người bán, ngược lại số lượng lớn các người bán sẽ làm tăng số lượng người đấu giá. Càng có nhiều hoạt động thì hệ thống càng lớn mạnh, và mô hình kinh doanh càng trở nên có giá trị cho những người tham gia.</p>
+      
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>
+  
+  <li>
+    <div class="title" (click)="toggle('register')">Tạo tài khoản</div>
+    <div
+    [@slideOut]="openingGuide === 'register'"
+    style="height: 0;"
+    class="guide-content">
+      <ol>
+        <li>Mở thẻ <b>Tài khoản</b>.</li>
+        <li>Nhấn <b>Đăng nhập</b>.</li>
+        <li>Nhấn <b>Tạo tài khoản mới</b> tại màn hình <b>Đăng nhập</b>.</li>
+        <li>Nhập đầy đủ các thông tin được yêu cầu.</li>
+        <li>Nhấn <b>đăng ký</b>.</li>
+        <li>Số điện thoại mà bạn nhập sẽ nhận được một đoạn mã xác thực.</li>
+        <li>Nhập mã xác thực vừa nhận được và nhấn <b>Xác thực</b>.</li>
+        <li>Hệ thống sẽ thông báo kết quả tạo tài khoản.</li>
+      </ol>
+
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="title" (click)="toggle('postAuction')">Tạo đấu giá</div>
+    <div
+    [@slideOut]="openingGuide === 'postAuction'"
+    style="height: 0;"
+    class="guide-content">
+      <ol>
+        <span class="note">Bạn cần <span class="high-light-red">đăng nhập</span> trước khi tạo đấu giá!</span>
+        <li>Nhấn biểu tượng <b>Tạo đấu giá</b> trên góc phải của màn hình.</li>
+        <li>Tên của sản phẩm phải có ít nhất 12 kí tự.</li>
+        <li>Giá khởi điểm và giá mua ngay phải là bội số của 1.000. <span class="note">Giá mua ngay có thể bỏ trống!</span></li>
+        <li>Miêu tả cho sản phẩm phải có ít nhất 35 kí tự.</li>
+        <li>Phải có ít nhất 1 hình ảnh của sản phẩm</li>
+        <li>Bước giá (số tiền mỗi lần gọi giá) phải là bội số của 1.000</li>
+        <li>Hình thức nhận tiền là cách thức là sBid chuyển số tiền đến người bán sản phẩm</li>
+        <li>Địa chỉ nhận sản phẩm được sBid dùng để gửi trả sản phẩm cho chủ nhân khi sản phẩm không đúng với miêu tả hoặc vi phạm các qui định sau:
+          <ul>
+            <li>Sản phẩm là vật thể.</li>
+            <li>Người đăng sản phẩm phải là chủ sở hửu.</li>
+            <li>Sản phẩm không phải là vật thể sống.</li>
+            <li>Sản phẩm không phải là hàng bị cấm, sai qui định pháp luật.</li>
+            <li>Sản phẩm là hàng thật.</li>
+          </ul>
+        </li>
+        <li>Chọn giới hạn cho cấp người dùng được tham gia đấu giá.</li>
+      </ol>
+
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="title" (click)="toggle('bid')">Tham gia đấu giá</div>
+    <div
+    [@slideOut]="openingGuide === 'bid'"
+    style="height: 0;"
+    class="guide-content">
+      <ol>
+        <li>Xem các phiên đấu giá đang mở tại <b>Trang chủ</b> hoặc <b>Tìm kiếm</b></li>
+        <li>Nhấn <b>BID</b></li>
+      </ol>
+
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>
+
+  <li>
+    <div class="title" (click)="toggle('payment')">Thanh toán</div>
+    <div
+    [@slideOut]="openingGuide === 'payment'"
+    style="height: 0;"
+    class="guide-content">
+      <ol>
+        <li>ABC</li>
+        <li>ABC</li>
+      </ol>
+
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>  
+
+  <li>
+    <div class="title" (click)="toggle('fineSystem')">Hệ thống phạt</div>
+    <div
+    [@slideOut]="openingGuide === 'fineSystem'"
+    style="height: 0;"
+    class="guide-content">
+      <p>Khi người chiến thắng đấu giá không thực hiện thanh toán trong vòng 72h từ lúc chiến thắng đấu giá, tài khoản sẽ bị khóa 7 ngày và bị <b>đưa vào danh sách đen</b>. Tài khoản vi phạm khi đang nằm trong danh sách đen sẽ bị khóa tài khoản vĩnh viễn.</p>
+      <p>Hệ thống sẽ tự động xóa tài khoản khỏi danh sách đen khi đã tham gia và hoàn thành thanh toán cho <b class="high-light-red">3</b> phiên đấu giá</p>
+
+      <div class="text-right"><span class="close" (click)="openingGuide = ''">x</span></div>
+    </div>
+  </li>
+
+</ul>

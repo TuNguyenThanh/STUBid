@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+}
+a {
+    text-decoration: none
+}
+
+.text-right { text-align: right }
+.high-light-red { color: red }
+.note { font-size: 0.7em; font-style: italic }

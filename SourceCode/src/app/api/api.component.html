@@ -1,0 +1,66 @@
+<div class="container">
+    <span class="selector" [ngClass]="{selected: view==0}" (click)="view=0">Routes</span>
+    <div class="vertical-seperator">&#x000A0;</div>
+    <span class="selector" [ngClass]="{selected: view==1}" (click)="view=1">Socket events</span>
+    <div class="vertical-seperator">&#x000A0;</div>
+    <span class="selector" [ngClass]="{selected: view==2}" (click)="view=2">Errors</span>
+
+    <div *ngFor="let route of routes; let i = index; trackBy : index"
+    [ngClass]="['api', 'api-' + route.method]"
+    [hidden]="view!==0"
+    >
+        <div class="header">
+            <div [ngClass]="['method', 'method-' + route.method]">
+                {{route.method}}
+            </div>
+            <div class="route">
+                {{route.route}}
+            </div>
+        </div>
+        <pre *ngIf="route.parameterType">Parameters:<br/>{{route.parameterType}} {{jsonFormat(route.parameters)}}</pre>
+        <pre>Response:<br/>{{jsonFormat(route.response)}}</pre>
+    </div>
+
+    <div *ngFor="let sEvent of socketEvents; let i = index; trackBy : index"
+    [ngClass]="['api', 'api-' + sEvent['event-type']]"
+    [hidden]="view!==1"
+    >
+        <div class="header">
+            <div [ngClass]="['method', 'method-' + sEvent['event-type']]">
+                {{sEvent['event-type']}}
+            </div>
+            <div class="route">
+                &#x0028;{{sEvent['event-name']}}&#x00029;
+            </div>
+        </div>
+        <pre>Data:<br/>{{jsonFormat(sEvent['data'])}}</pre>
+    </div>
+
+    <table class="error" [hidden]="view!==2">
+        <thead>
+            <th>HTTP Status</th>
+            <th>Code</th>
+            <th>Field</th>
+            <th>Message</th>
+        </thead>
+        <tr *ngFor="let item of errors[500]; let i = index; trackBy : index"
+
+        >
+            <td>500</td>
+            <td>{{item.code}}</td>
+            <td>{{item.field}}</td>
+            <td>{{item.message}}</td>
+        </tr>
+
+        <tr *ngFor="let item of errors[400]; let i = index; trackBy : index"
+
+        >
+            <td>400</td>
+            <td>{{item.code}}</td>
+            <td>{{item.field}}</td>
+            <td>{{item.message}}</td>
+        </tr>
+    </table>
+
+    <button class="go-to-top" (click)="goToTop()">&#x02191;</button>
+</div>

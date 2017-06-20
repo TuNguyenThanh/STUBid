@@ -1,0 +1,34 @@
+ul.container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: justify;
+    >li {
+        margin: 20px;
+        box-shadow: 5px 5px 15px rgb(127, 127, 127)
+    }
+    .title {
+        font-size: 1.8em;
+        cursor: pointer;
+        padding: 5px 25px;
+        background-color: rgb(102, 51, 0 );
+        color: rgb(255, 235, 160)
+    }
+    div.guide-content {
+        overflow-y: hidden;
+        font-size: 1.2em;
+        padding: 0 25px;
+        position: relative;
+        background-color: rgb(255, 235, 160);
+        ol {
+            padding: 20px 25px;
+        }
+    }
+    span.close {
+        cursor: pointer;
+        font-size: 2.5em;
+        opacity: 0.4;
+        font-family: sans-serif;
+        &:hover { opacity: 1 }
+    }
+}

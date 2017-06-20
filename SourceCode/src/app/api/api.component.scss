@@ -1,0 +1,71 @@
+.container { width: 75%; margin: auto; padding: 0 2em; background-color: #fff }
+.selector {
+    display: inline-block;
+    padding: 0.4em 1.1em;
+    font-size: 1.4em;
+    opacity: 0.4;
+    cursor: pointer;
+    &:hover { opacity: 1 }
+    &.selected { opacity: 1 }
+}
+.vertical-seperator {
+    display: inline-block;
+    font-size: 1.4em;
+    padding: 0;
+    border-left: solid 2px #444
+}
+.api {
+    font-family: sans-serif;
+    padding: 8px;
+    margin-bottom: 2em;
+    &.api-post, &.api-emit { background-color: #844284 }
+    &.api-get, &.api-on { background-color: #848442 }
+    &.api-put { background-color: #424284 }
+    &.api-patch { background-color: #428484 }
+    &.api-delete { background-color: #844242 }
+    .header { padding: 4px; font-size: 1.2em; color: #fff; }
+    .header div { display: inline-block }
+    .method { text-transform: uppercase; font-weight: 500 }
+    .method-post, .method-emit { color: #ffd2ff }
+    .method-get, .method-on { color: #ffffd2 }
+    .method-put { color: #d2d2ff }
+    .method-patch { color: #d2ffff }
+    .method-delete { color: #ffd2d2 }
+    pre { margin-top: 8px; margin-bottom: 0; padding: 1em; border-radius: 0.4em; overflow: auto; line-height: 1.45; background-color: #f1f1f8; font-family: monospace }
+    .type { color: #070 }
+}
+
+.error {
+    width: 100%;
+    margin-bottom: 2em;
+    border: 1px solid black;
+    border-spacing: 0;
+    font-size: 1.2em;
+    th {
+        border: 1px solid black;
+    }
+    td {
+        padding: 0.2em 0.4em;
+        border: 1px solid black;
+    }
+    tr {
+        &:nth-child(odd) {
+            background-color: #f1f1f8
+        }
+    }
+}
+
+.go-to-top {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 0 0.2em;
+    font-size: 2em;
+    background-color: #0e5aa8;
+    color: #fff;
+    border-width: 1px;
+    outline: none;
+    box-shadow: 2px 2px 4px #444;
+    transition: box-shadow 0.4s ease;
+    &:hover { box-shadow: none }
+}

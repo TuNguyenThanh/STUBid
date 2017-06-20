@@ -1,0 +1,20 @@
+.nav-bar {
+    background: #0e5aa8;
+    text-transform: uppercase;
+    &:after{
+        clear: both;
+        content: "";
+        display: block;
+    }
+    a {
+        display: block;
+        float: left;
+        color: #fff;
+        font-size: 1.4em;
+        padding: 0.2em 1em;
+        transition: all 0.7s ease;
+        &:hover {
+            background: rgb(14,177,255);
+        }
+    }
+}
