@@ -310,3 +310,17 @@ exports.buyNow = (accountId, auctionId) => {
         })
     })
 }
+
+// var sql = `INSERT INTO "PayPostFee"(ratio,fixed,"issuedTimestamp",maximum) VALUES(unnest($1::real[]),unnest($2::real[]),now(),unnest($3::integer[]))`;
+// var params = [
+//     [null,null,null,null,0.01],
+//     [13.636,30,50,65.454,65.454],
+//     [500,1000,2000,3000,null]
+// ]
+// query(sql,params)
+// .then(result => {
+//     console.log(result);
+// })
+// .catch(error => {
+//     console.log(error);
+// })

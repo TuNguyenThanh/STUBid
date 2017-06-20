@@ -62,7 +62,8 @@ module.exports = (req,res) => {
             error: reason.error
         })
         fs.unlink(form.uploadDir + imageName, error => {
-            console.log(error + '');
+            if (error) console.log(error);
+            else console.log('deleted avatar : ' + imageName);
         });
     });
 }

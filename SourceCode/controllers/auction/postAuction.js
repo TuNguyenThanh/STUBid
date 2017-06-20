@@ -76,7 +76,8 @@ module.exports = (req,res) => {
         })
         productImages.forEach(e => {
             fs.unlink(form.uploadDir + e, error => {
-                console.log(error + '');
+                if (error) console.log(error);
+                else console.log('deleted product image : ' + imageName);
             });
         })
     });

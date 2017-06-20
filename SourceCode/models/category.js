@@ -1,17 +1,10 @@
 var { query } = require('../helpers/db');
-var categorys = [];
-loadCategorys();
 
-function loadCategorys() {
-    let sql = `SELECT * FROM "Category"`;
-    query(sql,[])
-    .then(result => {
-        categorys = result.rows;
-        console.log('loaded ' + result.rowCount + ' categories');
-    })
-    .catch(error => {
-        console.log(error);
+exports.getCategorys = () => {
+    new Promise((resolve,reject) => {
+        let sql = `SELECT * FROM "Category" ORDER BY "categoryId" ASC`;
+        query(sql,[])
+        .then(result => resolve(result.rows))
+        .catch(error => reject(error));
     })
 }
-
-exports.getCategorys = () => { return categorys }

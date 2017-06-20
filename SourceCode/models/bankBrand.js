@@ -1,5 +1,5 @@
-const { query } = require('../helpers/db'),
-      { DOMAIN_NAME } = require('../config')
+const { query } = require('../helpers/db');
+const { DOMAIN_NAME } = require('../config');
 
 exports.getBankBrands = () => {
     return new Promise((resolve,reject) => {

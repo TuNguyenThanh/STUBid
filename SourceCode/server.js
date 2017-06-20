@@ -26,7 +26,6 @@ server.listen(config.PORT, () => {
   console.log('Server is running');
 });
 
-
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
@@ -44,7 +43,7 @@ app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAva
 
 app.get('/api/BankBrands', require('./controllers/bank/getBankBrands'));
 
-app.get('/api/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
+app.get('/api/Categorys', require('./controllers/category/getCategory'));
 app.get('/api/guide', require('./controllers/webview/getGuide'));
 
 app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
