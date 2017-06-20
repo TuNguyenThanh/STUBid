@@ -1,5 +1,6 @@
-const { verify, refreshToken } = require('../../helpers/jwt'),
-      { bid, getAuctions } = require('../../models/auction');
+const { verify, refreshToken } = require('../../helpers/jwt');
+const { bid, getAuctions } = require('../../models/auction');
+const ERROR = require('../../error.json');
 
 module.exports = (req, res, sockets) => {
     var { token, auctionId, accountId, price } = req.body;

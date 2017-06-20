@@ -8,10 +8,11 @@ module.exports = (req,res) => {
             result
         })
     })
-    .catch(error => {
-        res.send({
+    .catch(reason => {
+        console.log(reason);
+        res.status(reason.status).send({
             success: false,
-            error: error + ''
+            error: reason.error
         })
     })
 }

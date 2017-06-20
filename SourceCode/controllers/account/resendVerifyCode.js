@@ -1,5 +1,6 @@
-var { resetVerifyCode } = require('../../models/account'),
-    { sendSMS } = require('../../helpers/sms');
+const { resetVerifyCode } = require('../../models/account');
+const { sendSMS } = require('../../helpers/sms');
+const ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var { phoneNumber, email, username } = req.body;

@@ -59,7 +59,7 @@ var errors = {
             },
             {
                 "code": 1020,
-                "message": "Wong username or password"
+                "message": "Wrong username or password"
             },
             {
                 "code": 1021,
@@ -76,6 +76,14 @@ var errors = {
             {
                 "code": 1040,
                 "message": "Email not found"
+            },
+            {
+                "code": 1050,
+                "message": "Auction closed"
+            },
+            {
+                "code": 1051,
+                "message": "Someone bidded that price"
             }
         ]
     }
