@@ -83,9 +83,8 @@ class Home extends React.Component {
     }
 
     if(!fetchingCategory && categoryProduct && this.loadCategory) {
-      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
       this.setState({
-        data: categoryProductNew,
+        data: categoryProduct,
       });
       this.loadCategory = false;
     }
@@ -164,7 +163,6 @@ class Home extends React.Component {
   }
 
   renderItem(item, rowID) {
-    console.log(item.product);
     const { language } = this.props;
     return (
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>

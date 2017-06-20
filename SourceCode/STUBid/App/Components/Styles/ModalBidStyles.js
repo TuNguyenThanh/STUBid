@@ -111,7 +111,8 @@ export default StyleSheet.create({
   itemBody: {
     flex: 3,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   itemBody1: {
     flex :1,

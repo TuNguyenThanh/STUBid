@@ -17,7 +17,11 @@ export default StyleSheet.create({
     borderRadius: 2,
   },
   viewInput: {
-    height: 40
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   titleStyle: {
     fontFamily: Fonts.type.quicksand,
@@ -27,5 +31,9 @@ export default StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.type.quicksand,
   },
-
+  textStyle: {
+    fontFamily: Fonts.type.quicksand,
+    color: Colors.primary,
+    fontSize: 18
+  }
 })

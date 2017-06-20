@@ -1,11 +1,12 @@
 import React from 'react'
-import { ScrollView, Text } from 'react-native'
+import { ScrollView, View, Text, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import ProductActions from '../Redux/ProductRedux'
 import HTMLView from 'react-native-htmlview'
 
 // Styles
 import styles from './Styles/InfoUploadProductScreenStyle'
+import { Colors } from '../Themes'
 
 class InfoUploadProduct extends React.Component {
   constructor(props) {
@@ -34,13 +35,23 @@ class InfoUploadProduct extends React.Component {
   }
 
   render () {
-    const htmlContent = `<p><a href="http://jsdf.co">&hearts; nice job!</a></p>`;
     return (
       <ScrollView style={styles.container}>
-        <HTMLView
-          value={this.state.htmlContent}
-          stylesheet={styles}
-        />
+        {
+          this.state.htmlContent != '' ?
+          <HTMLView
+            value={this.state.htmlContent}
+            stylesheet={styles}
+          />
+          :
+          <View style={styles.viewLoading}>
+            <ActivityIndicator
+              animating={true}
+              size="large"
+              color={Colors.primary}
+            />
+          </View>
+        }
       </ScrollView>
     )
   }

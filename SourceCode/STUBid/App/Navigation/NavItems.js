@@ -52,7 +52,7 @@ export default {
   infoUploadButton () {
     return (
       <TouchableOpacity onPress={() => NavigationActions.infoUploadProductScreen()}>
-        <Icon name="book" size={20} color={Colors.primary} />
+        <Icon name="bookmark" size={20} color={Colors.primary} />
       </TouchableOpacity>
     )
   },

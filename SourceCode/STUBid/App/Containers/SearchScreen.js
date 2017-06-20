@@ -33,9 +33,8 @@ class Search extends React.Component {
   componentDidMount() {
     const { categoryProduct } = this.props.category;
     if(categoryProduct && this.loadCategory) {
-      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(categoryProduct);
       this.setState({
-        data: categoryProductNew,
+        data: categoryProduct,
       });
       this.loadCategory = false;
     }

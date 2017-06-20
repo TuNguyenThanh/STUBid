@@ -29,7 +29,7 @@ const create = (baseURL = ApiConfig.baseURL) => {
   }
 
   const getInfoUploadProduct = () => {
-    return api.get('guide');
+    return api.get('guide/uploadProduct');
   }
   return {
     // a list of the API functions from step 2

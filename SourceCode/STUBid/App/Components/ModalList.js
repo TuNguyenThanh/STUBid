@@ -61,7 +61,7 @@ class ModalList extends React.Component {
     const { language } = this.props;
     return(
       <TouchableOpacity style={styles.rowCategory} onPress={this.handleCategoryItem.bind(this, item)}>
-        <Text style={styles.titleItemStyle}>{item.name ? item.name : item}</Text>
+        <Text style={styles.titleItemStyle}>{item.name ? item.name : item} {this.props.textItem}</Text>
       </TouchableOpacity>
     );
   }

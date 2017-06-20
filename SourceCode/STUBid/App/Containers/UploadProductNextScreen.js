@@ -37,9 +37,8 @@ class UploadProduct extends React.Component {
 
   componentDidMount() {
     if(this.props.category.categoryProduct) {
-      const categoryProductNew = [{categoryId: -1, name: 'all'}].concat(this.props.category.categoryProduct);
       this.setState({
-        data: categoryProductNew,
+        data: this.props.category.categoryProduct,
       });
     }
   }
@@ -64,7 +63,7 @@ class UploadProduct extends React.Component {
           <ScrollView style={styles.content}>
 
             <Input
-              title={I18n.t('productName', {locale: language})}
+              title={I18n.t('productName', {locale: language}) + ' *'}
               placeholder={I18n.t('productName', {locale: language})}
               value={this.state.productName}
               onChangeText={(productName) => this.setState({ productName })}
@@ -74,8 +73,9 @@ class UploadProduct extends React.Component {
             />
 
             <Input
-              title={I18n.t('productStartPrice', {locale: language})}
-              placeholder={'1.000 vnd'}
+              type={'money'}
+              title={I18n.t('productStartPrice', {locale: language}) + ' *'}
+              placeholder={'1.000'}
               keyboardType={'numeric'}
               autoCapitalize={'none'}
               autoCorrect={false}
@@ -85,16 +85,17 @@ class UploadProduct extends React.Component {
             />
 
             <Input
+              type={'money'}
               ref={(input) => this.productCeilPrice = input}
               title={I18n.t('productCeilPrice', {locale: language})}
-              placeholder={'5.000 vnd'}
+              placeholder={'6.000'}
               keyboardType={'numeric'}
               value={this.state.productCeilPrice}
               onChangeText={(text) => this.onChangedProductCeilPrice(text)}
             />
 
             <Input
-              title={I18n.t('productDescription', {locale: language})}
+              title={I18n.t('productDescription', {locale: language}) + ' *'}
               placeholder={I18n.t('productDescription', {locale: language})}
               value={this.state.productDescription}
               onChangeText={(productDescription) => this.setState({ productDescription })}
@@ -108,7 +109,7 @@ class UploadProduct extends React.Component {
 
             <View style={styles.viewImage}>
               <View style={styles.viewTitleImageStyle}>
-                <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language})}</Text>
+                <Text style={styles.titleStyle}>{I18n.t('productImage', {locale: language}) + ' *'}</Text>
                 {
                   this.state.arrImageChoose.length != 0 &&
                   <TouchableOpacity onPress={() => this.cancelImageChoose()}>
@@ -167,35 +168,43 @@ class UploadProduct extends React.Component {
     const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose } = this.state;
 
     //check
-    const step1 = {
-      productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose
-    };
-    NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
-  
-    // if(productName == '') {
-    //   this.message(I18n.t('pleaseEnterProductName', {locale: language}))
-    // } else {
-    //   if(productName.length < 10) {
-    //     this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
-    //   } else {
-    //     if(productStartPrice == '') {
-    //       this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
-    //     } else {
-    //       if(productDescription == '') {
-    //         this.message(I18n.t('pleaseEnterDescription', {locale: language}))
-    //       } else {
-    //         if(productDescription.length < 10) {
-    //           this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
-    //         } else {
-    //           if(arrImageChoose.length == 0) {
-    //             this.message(I18n.t('pleaseChooseAtLeastOneImage', {locale: language}))
-    //           } else {
-    //             }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    if(productName == '') {
+      this.message(I18n.t('pleaseEnterProductName', {locale: language}))
+    } else {
+      if(productName.length < 10) {
+        this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
+      } else {
+        if(productStartPrice == '') {
+          this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
+        } else {
+
+
+          if(productDescription == '') {
+            this.message(I18n.t('pleaseEnterDescription', {locale: language}))
+          } else {
+            if(productDescription.length < 10) {
+              this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
+            } else {
+              if(arrImageChoose.length == 0) {
+                this.message(I18n.t('pleaseChooseAtLeastOneImage', {locale: language}))
+              } else {
+                if(productCeilPrice != '') {
+                  if (parseInt(productCeilPrice) <= (parseInt(productStartPrice) * 5)) {
+                    this.message(I18n.t('TheCeilingPriceGreaterThan5xStartingPrice', {locale: language}));
+                    return;
+                  }
+                }
+
+                const step1 = {
+                  productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose
+                };
+                NavigationActions.uploadProductScreen({ title: I18n.t('step', {locale: language}) + ' 2', step1 })
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   renderModalCategory() {

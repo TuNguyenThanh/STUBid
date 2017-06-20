@@ -19,26 +19,27 @@ import I18n from 'react-native-i18n'
 class UploadProduct extends React.Component {
   constructor(props) {
     super(props);
+    const { language } = this.props;
     this.state = {
       priceBid: '',
       moneyReceivingAddress: '',
       productReturningAddress: '',
 
       openModalTime: false,
-      timeSelected: 48,
-      dataTime: [ 12, 24, 48, 72],
+      timeSelected: 12,
+      dataTime: [ 12, 24, 48, 72, 96, 120, 144, 168],
 
       openModalPayment: false,
       paymentMethodSeleted: {id: 1, name: 'SBid'},
-      dataPayment: [{id: 1, name: 'SBid'}, {id: 2, name: 'Banking'}, {id: 3, name: 'Buu dien'}],
+      dataPayment: [{id: 1, name: 'SBid'}, {id: 2, name: I18n.t('banking', {locale: language})}, {id: 3, name: I18n.t('postOffice', {locale: language})}],
 
       openModalDeposit: false,
       depositMethodSeleted: {id: 1, name: 'SBid'},
-      dataDeposit: [{id: 1, name: 'SBid'}, {id: 2, name: 'Buu dien'}],
+      dataDeposit: [{id: 1, name: 'SBid'}, {id: 2, name: I18n.t('postOffice', {locale: language})}],
 
       openModalMembership: false,
-      membershipSeleted: {id: 1, name: 'Tat ca'},
-      dataMembership: [{id: 1, name: 'Tat ca'}, {id: 2, name: 'premium'}],
+      membershipSeleted: {id: 1, name: I18n.t('all', {locale: language})},
+      dataMembership: [{id: 1, name: I18n.t('all', {locale: language})}, {id: 2, name: 'Premium'}],
     };
     this.isUploadProduct = false;
   }
@@ -88,7 +89,8 @@ class UploadProduct extends React.Component {
         <ScrollView style={styles.content} scrollEnabled={false} >
 
           <Input
-            title={I18n.t('amountPerABid', {locale: language})}
+            type={'money'}
+            title={I18n.t('amountPerABid', {locale: language}) + ' *'}
             placeholder={'VND'}
             keyboardType={'numeric'}
             value={this.state.priceBid}
@@ -97,7 +99,7 @@ class UploadProduct extends React.Component {
 
           <ButtonChoose
             title={I18n.t('auctionTime', {locale: language})}
-            item={this.state.timeSelected + ' hour'}
+            item={this.state.timeSelected + ' ' + I18n.t('hour', {locale: language})}
             nameIcon={'clock-o'}
             onPress={() => this.setState({openModalTime: true})}
           />
@@ -110,10 +112,10 @@ class UploadProduct extends React.Component {
           />
 
           {
-            this.state.paymentMethodSeleted.id != '1' &&
+            this.state.paymentMethodSeleted.id == '3' &&
             <Input
-              title={'moneyReceivingAddress'}
-              placeholder={'moneyReceivingAddress'}
+              title={I18n.t('moneyReceivingAddress', {locale: language}) + ' *'}
+              placeholder={I18n.t('moneyReceivingAddress', {locale: language})}
               value={this.state.moneyReceivingAddress}
               onChangeText={(moneyReceivingAddress) => this.setState({moneyReceivingAddress})}
             />
@@ -129,8 +131,8 @@ class UploadProduct extends React.Component {
           {
             this.state.depositMethodSeleted.id != '1' &&
             <Input
-              title={'productReturningAddress'}
-              placeholder={'productReturningAddress'}
+              title={I18n.t('consignmentAddress', {locale: language}) + ' *'}
+              placeholder={I18n.t('consignmentAddress', {locale: language})}
               value={this.state.productReturningAddress}
               onChangeText={(productReturningAddress) => this.setState({productReturningAddress})}
             />
@@ -162,6 +164,7 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     return(
       <ModalList
+        textItem={I18n.t('hour', {locale: language})}
         logo={<Icon name="clock-o" size={30} color={Colors.primary} />}
         title={I18n.t('auctionTime', {locale: language})}
         open={this.state.openModalTime}
@@ -217,15 +220,18 @@ class UploadProduct extends React.Component {
   handleUploadProduct() {
     const { priceBid, timeSelected, paymentMethodSeleted, depositMethodSeleted, membershipSeleted, moneyReceivingAddress, productReturningAddress } = this.state;
     const token = this.props.login.user.token;
+    const upCeilPrice =  parseInt(this.props.step1.productCeilPrice.replace(/\./g, ''));
+    const upStartPrice =  parseInt(this.props.step1.productStartPrice.replace(/\./g, ''));
+    const upBidPrice =  parseInt(priceBid.replace(/\./g, ''));
 
     const product = {
       productName: this.props.step1.productName,
       description: this.props.step1.productDescription,
       categoryId: this.props.step1.categorySelected.categoryId,
-      startPrice: this.props.step1.productStartPrice.replace(/\./g, ''),
-      ceilingPrice: this.props.step1.productCeilPrice.replace(/\./g, ''),
+      startPrice: upStartPrice,
+      ceilingPrice: upCeilPrice,
       duration: timeSelected,
-      bidIncreasement: priceBid.replace(/\./g, ''),
+      bidIncreasement: upBidPrice,
       productReturningAddress: productReturningAddress,
       moneyReceivingBankRefId: this.props.login.user.bankRef ? this.props.login.user.bankRef.bankRefId : '',
       moneyReceivingAddress: moneyReceivingAddress,
@@ -233,8 +239,44 @@ class UploadProduct extends React.Component {
       image: this.props.step1.arrImageChoose
     };
 
-    this.props.uploadProduct(token, product);
-    this.isUploadProduct = true;
+    //thieu paymentMethodSeleted
+    if(priceBid == '') {
+        this.message('Vui long nhap so tien moi lan dau gia');
+    } else {
+      const temp = (parseInt(this.props.step1.productCeilPrice.replace(/\./g, '')) - parseInt(this.props.step1.productStartPrice.replace(/\./g, ''))) / parseInt(priceBid.replace(/\./g, ''));
+      if(temp < 5){
+        this.message('Số tiền mỗi lần dự thầu phải nhỏ hơn ít nhất x5 giá trần');
+      } else {
+        if(paymentMethodSeleted.id === 3) {
+          if(moneyReceivingAddress == '') {
+            this.message('Vui long nhap dia chi');
+            return;
+          }
+        }
+
+        if(depositMethodSeleted.id === 2) {
+          if(productReturningAddress == '') {
+            this.message('Vui long nhap dia chi');
+            return;
+          }
+        }
+
+        this.props.uploadProduct(token, product);
+        this.isUploadProduct = true;
+      }
+    }
+  }
+
+  message(mess) {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('error', {locale: language}),
+      mess,
+      [
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+      ],
+      { cancelable: false }
+    );
   }
 }
 

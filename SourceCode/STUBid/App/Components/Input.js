@@ -20,6 +20,10 @@ export default class Input extends React.Component {
             value={this.props.value}
             onChangeText={this.props.onChangeText}
           />
+          {
+            this.props.type == 'money' &&
+            <Text style={styles.textStyle}>.000VND</Text>
+          }
         </View>
       </View>
     )

@@ -25,7 +25,6 @@ class DetailProduct extends React.Component {
       openModalBid: false,
       productSelected: null,
     };
-
     this.isHandleBid = false;
   }
 
