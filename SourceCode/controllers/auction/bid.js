@@ -3,8 +3,8 @@ const { bid, getAuctions } = require('../../models/auction');
 const ERROR = require('../../error.json');
 
 module.exports = (req, res, sockets) => {
-    var { token, auctionId, accountId, price } = req.body;
-    if (!token || !auctionId || !accountId || !price)
+    var { token, auctionId, accountId, price, buyNow } = req.body;
+    if (!token || !auctionId || !accountId || !price || !buyNow)
         return res.status(400).send({
             success: false,
             error: ERROR[400][0]
@@ -17,7 +17,7 @@ module.exports = (req, res, sockets) => {
             error: ERROR[400][1]
         });
         token = refreshToken(obj);
-        return bid(auctionId, accountId, price)
+        return bid(auctionId, accountId, price, buyNow)
     })
     .then(result => {
         sockets.forEach(socket => {

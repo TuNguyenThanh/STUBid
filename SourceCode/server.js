@@ -30,7 +30,6 @@ app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions')
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
 app.patch('/api/Auctions/bid', (req,res) => require('./controllers/auction/bid')(req, res, sockets));
-app.patch('/api/Auctions/buyNow', (req,res) => require('./controllers/auction/buyNow')(req, res, sockets));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));

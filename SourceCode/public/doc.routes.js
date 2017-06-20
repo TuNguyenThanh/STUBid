@@ -178,19 +178,6 @@ var routes = [
             }
         },
         {
-            "method": "patch",
-            "route": "/Auctions/buyNow",
-            "parameterType": "application/json",
-            "parameters": {
-                "token": "string",
-                "auctionId": "number"
-            },
-            "response": {
-                "success": "boolean",
-                "token": "string"
-            }
-        },
-        {
             "method": "get",
             "route": "/guide",
             "response": {

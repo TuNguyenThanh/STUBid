@@ -198,7 +198,7 @@ exports.insertAuction = (
     })
 }
 
-exports.bid = (auctionId, accountId, price) => {
+exports.bid = (auctionId, accountId, price, buyNow) => {
     return new Promise((resolve,reject) => {
         var index, auction;
         auction = auctions.find((e,i) => {
@@ -216,25 +216,28 @@ exports.bid = (auctionId, accountId, price) => {
             error: ERROR[400][51]
         });
         var sql = `
-            WITH "latestBid" AS (
-                INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
-                VALUES (now(),$1,$2,$3)
-                RETURNING "bidderAccountId", price, timestamp
-            )
-            SELECT row_to_json(bid) AS "highestBidder"
-            FROM (
-                SELECT
-                "Account"."accountId",
-                "Profile"."firstName",
-                "Profile"."lastName",
-                "Profile"."phoneNumber",
-                "latestBid".price,
-                "latestBid".timestamp
-                FROM "latestBid"
-                INNER JOIN "Account" ON "Account"."accountId" = "latestBid"."bidderAccountId"
-                INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
-            ) AS bid
-        `,
+        WITH "latestBid" AS (
+            INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
+            VALUES (now(),$1,$2,$3)
+            RETURNING "bidderAccountId", price, timestamp
+        )${buyNow?`, auction AS (
+            UPDATE "Auction" SET state = 3
+            WHERE "auctionId"=$1
+            RETURNING "auctionId"
+        )`:''}
+        SELECT row_to_json(bid) AS "highestBidder"
+        FROM (
+            SELECT
+            "Account"."accountId",
+            "Profile"."firstName",
+            "Profile"."lastName",
+            "Profile"."phoneNumber",
+            "latestBid".price,
+            "latestBid".timestamp
+            FROM "latestBid"
+            INNER JOIN "Account" ON "Account"."accountId" = "latestBid"."bidderAccountId"
+            INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+        ) AS bid`,
         params = [price,auctionId,accountId];
         query(sql,params)
         .then(result => {
@@ -279,7 +282,7 @@ exports.buyNow = (accountId, auctionId) => {
             WITH auction AS (
                 UPDATE "Auction" SET state = 3
                 WHERE "auctionId"=$1
-                RETURNING "ceilingPrice"
+                RETURNING "auctionId"
             ),
             "latestBid" AS (
                 INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
