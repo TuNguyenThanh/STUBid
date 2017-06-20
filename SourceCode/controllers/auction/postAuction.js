@@ -1,9 +1,9 @@
 const formidable = require('formidable'),
       fs = require('fs'),
-      ERROR = require('../error'),
-      { DIRNAME } = require('../config'),
-      { verify, refreshToken } = require('../helpers/jwt'),
-      { insertAuction } = require('../models/auction');
+      ERROR = require('../../error'),
+      { DIRNAME } = require('../../config'),
+      { verify, refreshToken } = require('../../helpers/jwt'),
+      { insertAuction } = require('../../models/auction');
 
 module.exports = (req,res) => {
     var productImages = [], token = '', auctionInfo;

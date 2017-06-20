@@ -1,6 +1,6 @@
-const { verify, refreshToken } = require('../helpers/jwt'),
-      { changePassword } = require('../models/account'),
-      ERROR = require('../error.json');
+const { verify, refreshToken } = require('../../helpers/jwt'),
+      { changePassword } = require('../../models/account'),
+      ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var { token, currentPassword, newPassword } = req.body;

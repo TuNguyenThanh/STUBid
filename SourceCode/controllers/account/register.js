@@ -1,6 +1,6 @@
-var { register, exist, pushRegisterQueue } = require('../models/account'),
-    { sendSMS } = require('../helpers/sms'),
-    ERROR = require('../error.json');
+var { register, exist, pushRegisterQueue } = require('../../models/account'),
+    { sendSMS } = require('../../helpers/sms'),
+    ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var { firstName, lastName, phoneNumber, email, username, password, verifyCode } = req.body;

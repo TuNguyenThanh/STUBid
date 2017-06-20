@@ -1,4 +1,4 @@
-const { getBankBrands } = require('../models/bankBrand');
+const { getBankBrands } = require('../../models/bankBrand');
 
 module.exports = (req,res) => {
     getBankBrands()

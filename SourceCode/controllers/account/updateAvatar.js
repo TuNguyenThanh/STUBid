@@ -1,9 +1,9 @@
 const formidable = require('formidable'),
       fs = require('fs'),
-      { DIRNAME, DOMAIN_NAME } = require('../config'),
-      { verify, refreshToken } = require('../helpers/jwt'),
-      { updateAvatar } = require('../models/account'),
-      ERROR = require('../error.json');
+      { DIRNAME, DOMAIN_NAME } = require('../../config'),
+      { verify, refreshToken } = require('../../helpers/jwt'),
+      { updateAvatar } = require('../../models/account'),
+      ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var imageName = '', token = '';

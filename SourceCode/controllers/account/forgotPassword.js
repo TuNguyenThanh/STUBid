@@ -1,7 +1,7 @@
-const { sendResetPasswordEmail } = require('../helpers/mailer'),
-      { sign } = require('../helpers/jwt'),
-      { forgotPassword } = require('../models/account'),
-      ERROR = require('../error.json');
+const { sendResetPasswordEmail } = require('../../helpers/mailer'),
+      { sign } = require('../../helpers/jwt'),
+      { forgotPassword } = require('../../models/account'),
+      ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var { email } = req.body;

@@ -1,6 +1,6 @@
-const { verify } = require('../helpers/jwt'),
-      { resetPassword } = require('../models/account'),
-      ERROR = require('../error.json');
+const { verify } = require('../../helpers/jwt'),
+      { resetPassword } = require('../../models/account'),
+      ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     var { verifyToken } = req.query;

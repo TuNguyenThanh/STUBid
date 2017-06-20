@@ -1,6 +1,6 @@
-var { login } = require('../models/account'),
-    { sign, verify } = require('../helpers/jwt'),
-    ERROR = require('../error.json');
+var { login } = require('../../models/account'),
+    { sign, verify } = require('../../helpers/jwt'),
+    ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
     new Promise((resolve,reject) => {

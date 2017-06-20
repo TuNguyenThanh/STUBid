@@ -26,21 +26,26 @@ server.listen(config.PORT, () => {
   console.log('Server is running');
 });
 
-app.get('/api/Auctions/page/:page', require('./controllers/getAuctions'));
-app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/getAuctionsByCategory'));
-app.post('/api/Auctions/uploadProduct', require('./controllers/postAuction'));
-app.patch('/api/Auctions/bid', (req,res) => require('./controllers/bid')(req, res, sockets));
+
+app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
+app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
+app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
+app.patch('/api/Auctions/bid', (req,res) => require('./controllers/auction/bid')(req, res, sockets));
+app.patch('/api/Auctions/buyNow', (req,res) => require('./controllers/auction/buyNow')(req, res, sockets));
+
+app.post('/api/Accounts/register', require('./controllers/account/register'));
+app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
+app.post('/api/Accounts/login', require('./controllers/account/login'));
+app.post('/api/Accounts/forgotPassword', require('./controllers/account/forgotPassword'));
+app.get('/Accounts/resetPassword', require('./controllers/account/resetPassword'));
+app.patch('/api/Accounts/changePassword', require('./controllers/account/changePassword'));
+app.patch('/api/Accounts/updateProfile', require('./controllers/account/updateProfile'));
+app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAvatar'));
+
+app.get('/api/BankBrands', require('./controllers/bank/getBankBrands'));
+
 app.get('/api/Categorys', (req,res) => res.send({ ok: true, result: getCategorys() }));
-app.post('/api/Accounts/register', require('./controllers/register'));
-app.post('/api/Accounts/resendVerifyCode', require('./controllers/resendVerifyCode'));
-app.post('/api/Accounts/login', require('./controllers/login'));
-app.post('/api/Accounts/forgotPassword', require('./controllers/forgotPassword'));
-app.get('/Accounts/resetPassword', require('./controllers/resetPassword'));
-app.patch('/api/Accounts/changePassword', require('./controllers/changePassword'));
-app.patch('/api/Accounts/updateProfile', require('./controllers/updateProfile'));
-app.patch('/api/Accounts/updateAvatar', require('./controllers/updateAvatar'));
-app.get('/api/BankBrands', require('./controllers/getBankBrands'));
-app.get('/api/guide', require('./controllers/getGuide'));
+app.get('/api/guide', require('./controllers/webview/getGuide'));
 
 app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
 

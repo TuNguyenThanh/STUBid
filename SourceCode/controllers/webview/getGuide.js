@@ -1,6 +1,6 @@
 const fs = require('fs');
-const ERROR = require('../error.json');
-const { DIRNAME } = require('../config');
+const ERROR = require('../../error.json');
+const { DIRNAME } = require('../../config');
 
 module.exports = (req,res) => {
     fs.readFile(DIRNAME + '/public/guide.html', "utf8", (err, data) => {
