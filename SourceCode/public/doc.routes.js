@@ -170,8 +170,7 @@ var routes = [
                 "token": "string",
                 "auctionId": "number",
                 "accountId": "number",
-                "price": "number",
-                "buyNow": "boolean"
+                "price": "number"
             },
             "response": {
                 "success": "boolean",
