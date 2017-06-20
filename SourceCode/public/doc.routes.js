@@ -179,7 +179,7 @@ var routes = [
         },
         {
             "method": "get",
-            "route": "/guide",
+            "route": "/guide/{usage}",
             "response": {
                 "success": "boolean",
                 "html": "string"

@@ -43,6 +43,7 @@ app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAva
 app.get('/api/BankBrands', require('./controllers/bank/getBankBrands'));
 
 app.get('/api/Categorys', require('./controllers/category/getCategory'));
+app.get('/api/guide/:usage', require('./controllers/webview/getGuide'));
 app.get('/api/guide', require('./controllers/webview/getGuide'));
 
 app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
