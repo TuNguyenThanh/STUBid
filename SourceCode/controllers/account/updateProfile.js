@@ -6,7 +6,7 @@ module.exports = (req,res) => {
     var { token, firstName, lastName, phoneNumber, email, bankRef } = req.body;
     if (!token || !firstName || !lastName || !phoneNumber || !email ||
     (bankRef === undefined) || (bankRef && bankRef.bankAccountNumber && !bankRef.bankBrandId))
-        return res.status(400).send({
+        return res.send({
             success: false,
             error: ERROR[400][0]
         })

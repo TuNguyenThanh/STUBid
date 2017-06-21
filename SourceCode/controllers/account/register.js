@@ -6,7 +6,7 @@ module.exports = (req,res) => {
     var { firstName, lastName, phoneNumber, email, username, password, verifyCode } = req.body;
     if (!verifyCode) {
         if (!firstName || !lastName || !phoneNumber || !email || !username || !password) {
-            return res.status(400).send({
+            return res.send({
                 success: false,
                 error: ERROR[400][0]
             })
@@ -32,7 +32,7 @@ module.exports = (req,res) => {
     }
     else {
         if (!phoneNumber || !email || !username) {
-            return res.status(400).send({
+            return res.send({
                 success: false,
                 error: ERROR[400][0]
             })

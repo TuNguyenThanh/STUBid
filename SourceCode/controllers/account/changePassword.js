@@ -5,7 +5,7 @@ const { verify, refreshToken } = require('../../helpers/jwt'),
 module.exports = (req,res) => {
     var { token, currentPassword, newPassword } = req.body;
     if (!token || !currentPassword || !newPassword) {
-        return res.status(400).send({
+        return res.send({
             success: false,
             error: ERROR[400][0]
         })

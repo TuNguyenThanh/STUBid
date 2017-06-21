@@ -5,7 +5,7 @@ const ERROR = require('../../error.json');
 module.exports = (req,res) => {
     var { phoneNumber, email, username } = req.body;
     if (!phoneNumber || !email || !username) {
-        res.status(400).send({
+        res.send({
             success: false,
             error: ERROR[400][0]
         })

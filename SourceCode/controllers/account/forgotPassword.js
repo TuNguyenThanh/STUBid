@@ -6,7 +6,7 @@ const { sendResetPasswordEmail } = require('../../helpers/mailer'),
 module.exports = (req,res) => {
     var { email } = req.body;
     if (!email) {
-        return res.status(400).send({
+        return res.send({
             success: false,
             error: ERROR[400][0]
         })

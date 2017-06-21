@@ -1,10 +1,11 @@
 const { verify, refreshToken } = require('../../helpers/jwt');
-const { bid, getAuctions } = require('../../models/auction');
+const { getMyAuctions } = require('../../models/auction');
 const ERROR = require('../../error.json');
 
-module.exports = (req, res, sockets) => {
-    var { token, auctionId, accountId, price, buyNow } = req.body;
-    if (!token || !auctionId || !accountId || !price || !buyNow)
+module.exports = (req,res) => {
+    var { token } = req.params;
+    // let page = req.params.page?req.params.page:1;
+    if (!token)
         return res.send({
             success: false,
             error: ERROR[400][0]
@@ -17,17 +18,17 @@ module.exports = (req, res, sockets) => {
             error: ERROR[400][1]
         });
         token = refreshToken(obj);
-        return bid(auctionId, accountId, price, buyNow)
+        return getMyAuctions(obj.accountId)
     })
-    .then(result => {
-        sockets.forEach(socket => {
-            socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page - 1, socket.categoryId));
+    .then(value => {
+        res.send({
+            success: true,
+            myAuctions: value
         })
-        res.send({ success: true, token })
     })
     .catch(reason => {
         console.log(reason);
-        res.send({
+        return res.send({
             success: false,
             error: reason.error
         })
