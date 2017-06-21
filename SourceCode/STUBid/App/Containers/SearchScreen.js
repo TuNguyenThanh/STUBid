@@ -58,16 +58,16 @@ class Search extends React.Component {
     // }
 
     //error - not internet
-    if(!fetching && error){
-      Alert.alert(
-        'Error',
-        error,
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-        ],
-        { cancelable: false }
-      )
-    }
+    // if(!fetching && error){
+    //   Alert.alert(
+    //     'Error',
+    //     error,
+    //     [
+    //       {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+    //     ],
+    //     { cancelable: false }
+    //   )
+    // }
   }
 
   renderItem(item, rowID) {

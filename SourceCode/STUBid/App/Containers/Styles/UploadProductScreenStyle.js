@@ -24,4 +24,18 @@ export default StyleSheet.create({
     fontFamily: Fonts.type.quicksand,
     fontSize: Normalize(21)
   },
+  viewNote: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 20
+  },
+  textNote: {
+    fontSize: 18,
+    fontFamily: Fonts.type.quicksand,
+    color: '#F00',
+    fontWeight: 'bold'
+  },
+  textFontStyle: {
+    fontFamily: Fonts.type.quicksand,
+  }
 })

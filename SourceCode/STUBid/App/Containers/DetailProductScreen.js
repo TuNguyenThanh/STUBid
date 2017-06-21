@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -48,15 +48,16 @@ class DetailProduct extends React.Component {
     }
 
     //error - not internet
-    if(!fetching && error) {
+    if(!fetching && error && this.isHandleBid) {
       Alert.alert(
-        'Error',
+        I18n.t('error', {locale: language}),
         error,
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],
         { cancelable: false }
       );
+      this.isHandleBid = false;
     }
   }
 
@@ -64,27 +65,40 @@ class DetailProduct extends React.Component {
     const { language } = this.props;
     return (
       <View style={styles.container}>
-        <ScrollableTabView
-          style={{ flex: 1 }}
-          tabBarBackgroundColor={'#FFF'}
-          tabBarUnderlineStyle={{ backgroundColor: Colors.primary, borderRadius: 5 }}
-          tabBarActiveTextColor={Colors.primary}
-          tabBarInactiveTextColor={'#900'}
-          tabBarTextStyle={styles.fontStyle}
-        >
-          <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} />
-          <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} />
-        </ScrollableTabView>
-        <View style={styles.viewBid}>
-          <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
-            <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
-          </TouchableOpacity>
-          <View style={styles.line} />
-          <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data)}>
-            <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
-          </TouchableOpacity>
-        </View>
-        { this.renderModalBid() }
+        {
+          this.state.data ?
+          <View style={{flex: 1}}>
+            <ScrollableTabView
+              style={{ flex: 1 }}
+              tabBarBackgroundColor={'#FFF'}
+              tabBarUnderlineStyle={{ backgroundColor: Colors.primary, borderRadius: 5 }}
+              tabBarActiveTextColor={Colors.primary}
+              tabBarInactiveTextColor={'#900'}
+              tabBarTextStyle={styles.fontStyle}
+            >
+              <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} />
+              <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} />
+            </ScrollableTabView>
+            <View style={styles.viewBid}>
+              <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
+                <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
+              </TouchableOpacity>
+              <View style={styles.line} />
+              <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data)}>
+                <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
+              </TouchableOpacity>
+            </View>
+            { this.renderModalBid() }
+          </View>
+          :
+          <View style={styles.viewLoading}>
+            <ActivityIndicator
+              animating={true}
+              size="large"
+              color={Colors.primary}
+            />
+          </View>
+        }
       </View>
     )
   }
@@ -158,28 +172,39 @@ class DetailProduct extends React.Component {
   }
 
   handleBuyNow(data) {
+    console.log(data);
     const { language } = this.props;
     const price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
-    if(data.ceilingPrice < price) {
-      // Buy now disable
-      Alert.alert(
-        I18n.t('buyNow', {locale: language}),
-        I18n.t('youOnlyBid', {locale: language}),
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-        ],
-        { cancelable: false }
-      );
+    //Check login
+    if(this.props.login.user) {
+      if(data.ceilingPrice < price) {
+        // Buy now disable
+        Alert.alert(
+          I18n.t('buyNow', {locale: language}),
+          I18n.t('youOnlyBid', {locale: language}),
+          [
+            {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+          ],
+          { cancelable: false }
+        );
+      } else {
+        let _this = this;
+        Alert.alert(
+          I18n.t('buyNow', {locale: language}),
+          I18n.t('buyProductPrice', {locale: language}) + ' ' + data.ceilingPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VNĐ ?',
+          [
+            {text: I18n.t('ok', {locale: language}), onPress: () => {
+              this.props.bibProduct(this.props.login.user.token, data.product.auctionId, this.props.login.user.profile.accountId, data.ceilingPrice, true);
+              this.isHandleBid = true;
+            }},
+            {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
+          ],
+          { cancelable: false }
+        );
+      }
     } else {
-      Alert.alert(
-        I18n.t('buyNow', {locale: language}),
-        I18n.t('buyProductPrice', {locale: language}) + ' ' + data.ceilingPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VNĐ ?',
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-          {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
-        ],
-        { cancelable: false }
-      );
+      //not login - not profile
+      NavigationActions.loginScreen();
     }
   }
 

@@ -20,6 +20,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   titleModalCategory: {
+    textAlign: 'center',
     color: Colors.primary,
     fontFamily: Fonts.type.quicksand,
     fontSize: 18,

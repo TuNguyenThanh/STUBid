@@ -86,7 +86,11 @@ class UploadProduct extends React.Component {
     const { fetching } = this.props.productState;
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.content} scrollEnabled={false} >
+        <ScrollView
+          style={styles.content}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
 
           <Input
             type={'money'}
@@ -145,6 +149,15 @@ class UploadProduct extends React.Component {
             onPress={() => this.setState({openModalMembership: true})}
           />
 
+          <View style={styles.viewNote}>
+            <Text style={styles.textNote}>{I18n.t('termsOf', {locale: language})}</Text>
+            <Text style={styles.textFontStyle}>
+              {I18n.t('note1', {locale: language})}
+            </Text>
+            <Text style={styles.textFontStyle}>
+              {I18n.t('note2', {locale: language})}
+            </Text>
+          </View>
 
         </ScrollView>
 
@@ -218,6 +231,7 @@ class UploadProduct extends React.Component {
   }
 
   handleUploadProduct() {
+    const { language } = this.props;
     const { priceBid, timeSelected, paymentMethodSeleted, depositMethodSeleted, membershipSeleted, moneyReceivingAddress, productReturningAddress } = this.state;
     const token = this.props.login.user.token;
     const upCeilPrice =  parseInt(this.props.step1.productCeilPrice.replace(/\./g, ''));
@@ -241,22 +255,22 @@ class UploadProduct extends React.Component {
 
     //thieu paymentMethodSeleted
     if(priceBid == '') {
-        this.message('Vui long nhap so tien moi lan dau gia');
+        this.message(I18n.t('pleaseEnterAmountPerABid', {locale: language}));
     } else {
       const temp = (parseInt(this.props.step1.productCeilPrice.replace(/\./g, '')) - parseInt(this.props.step1.productStartPrice.replace(/\./g, ''))) / parseInt(priceBid.replace(/\./g, ''));
       if(temp < 5){
-        this.message('Số tiền mỗi lần dự thầu phải nhỏ hơn ít nhất x5 giá trần');
+        this.message(I18n.t('theBidAmountMustBeAtLeastx5CeilingPrice', {locale: language}));
       } else {
         if(paymentMethodSeleted.id === 3) {
           if(moneyReceivingAddress == '') {
-            this.message('Vui long nhap dia chi');
+            this.message(I18n.t('pleaseEnterAnAddress', {locale: language}));
             return;
           }
         }
 
         if(depositMethodSeleted.id === 2) {
           if(productReturningAddress == '') {
-            this.message('Vui long nhap dia chi');
+            this.message(I18n.t('pleaseEnterAnAddress', {locale: language}));
             return;
           }
         }

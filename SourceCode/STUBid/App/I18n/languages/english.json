@@ -139,4 +139,10 @@
 
   "wrongUsernameOrPassword": "Wrong username or password",
   "CLIENT_ERROR": "CLIENT ERROR",
+  "pleaseEnterAmountPerABid": "Please enter amount per a bid",
+  "pleaseEnterAnAddress": "Please enter an address",
+  "theBidAmountMustBeAtLeastx5CeilingPrice": "The bid amount must be at least x5 ceiling price",
+  "termsOf": "Terms of",
+  "note1": "After completing the product launch, bring this product to SBid for us to authenticate and open the auction as soon as possible.",
+  "note2": "Thank you for using our service.",
 }

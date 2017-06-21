@@ -139,4 +139,10 @@
 
   "wrongUsernameOrPassword": "Tên đăng nhập hoặc mật khẩu sai",
   "CLIENT_ERROR": "CLIENT ERROR",
+  "pleaseEnterAmountPerABid": "Vui lòng nhập số tiền cho mỗi giá thầu",
+  "pleaseEnterAnAddress": "Vui lòng nhập địa chỉ",
+  "theBidAmountMustBeAtLeastx5CeilingPrice": "Số tiền mỗi lần dự thầu phải nhỏ hơn ít nhất x5 giá trần",
+  "termsOf": "Điều khoản",
+  "note1": "Sau khi hoàn tất việc đăng sản phẩm, bạn hãy đem sản phẩm này đến SBid để chúng tôi xác thực và mở đấu giá trong thời gian sớm nhất có thể.",
+  "note2": "Cảm ơn bạn đã tin dùng dịch vụ của chúng tôi.",
 }

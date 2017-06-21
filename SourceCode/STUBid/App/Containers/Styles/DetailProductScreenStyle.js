@@ -29,4 +29,9 @@ export default StyleSheet.create({
   fontStyle: {
     fontFamily: Fonts.type.quicksand,
   },
+  viewLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 })
