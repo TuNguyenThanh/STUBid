@@ -18,9 +18,9 @@ module.exports = function (socket) {
         socket.interval = setInterval(() => {
             let { auctions, closedAuctions } = getAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
             socket.emit('SERVER-SEND-AUCTIONS', auctions);
-            if (closedAttenedAuctions && closedAttenedAuctions.length > 0) {
+            if (closedAuctions && closedAuctions.length > 0) {
                 if (socket.attendedIds && socket.attendedIds.length > 0) {
-                    closedAttenedAuctions.forEach(e => {
+                    closedAuctions.forEach(e => {
                         socket.attendedIds.splice(socket.attendedIds.indexOf(e.auctionId),1);
                     })
                     sendClosedAttendedAuctions();
