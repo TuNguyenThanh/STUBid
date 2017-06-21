@@ -1,10 +1,8 @@
 const { verify, refreshToken } = require('../../helpers/jwt');
 const { getMyAuctions } = require('../../models/auction');
-const ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
-    var { token } = req.params;
-    // let page = req.params.page?req.params.page:1;
+    let { token } = req.params;
     if (!token)
         return res.send({
             success: false,
@@ -14,21 +12,20 @@ module.exports = (req,res) => {
     .then(obj => {
         if (!obj.accountId)
             return Promise.reject({
-            success: false,
-            error: ERROR[400][1]
-        });
-        token = refreshToken(obj);
-        return getMyAuctions(obj.accountId)
+                status: 400,
+                error: ERROR[400][1]
+            });
+        return getMyAuctions(obj.accountId, [0])
     })
-    .then(value => {
+    .then(unactivatedAuctions => {
         res.send({
             success: true,
-            myAuctions: value
+            unactivatedAuctions
         })
     })
     .catch(reason => {
         console.log(reason);
-        return res.send({
+        res.send({
             success: false,
             error: reason.error
         })

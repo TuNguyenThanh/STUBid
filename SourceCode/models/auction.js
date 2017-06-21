@@ -4,11 +4,13 @@ const { timeLeftFormat } = require('../helpers/time'),
       ERROR = require('../error.json');
 
 var auctions = [],
-    auctionsTimeLeft = {};
+    auctionsTimeLeft = {},
+    closedAuctions = [];
 loadAuctions();
 setInterval(() => countDown(), 1000);
 
 function countDown() {
+    closedAuctions = [];
     for (var i = auctions.length - 1; i >= 0; i--) {
         var element = auctions[i],
             timeLeft = auctionsTimeLeft[element.auctionId];
@@ -18,10 +20,11 @@ function countDown() {
             element.timeLeft = timeLeftFormat(timeLeft);
         }
         else {
+            closedAuctions.push(element);
             let auctionId = element.auctionId;
             delete auctionsTimeLeft[auctionId];
             delete auctions[i];
-            let sql = `UPDATE "Auction" SET state=0 WHERE "auctionId"=$1`;
+            let sql = `UPDATE "Auction" SET state=2 WHERE "auctionId"=$1`;
             let params = [auctionId];
             query(sql,params)
             .then(value => {
@@ -105,7 +108,7 @@ function loadAuctions () {
     })
 };
 
-exports.getMyAuctions = (accountId) => {
+exports.getMyAuctions = (accountId, states) => {
     return new Promise((resolve, reject) => {
         let sql = `SELECT "Auction"."auctionId", "Auction"."createdDate", "Auction"."activatedDate",
         "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice",
@@ -150,27 +153,86 @@ exports.getMyAuctions = (accountId) => {
             WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
         ) AS "bids"
         FROM "Auction"
-        WHERE "Auction"."sellerAccountId" = $1
+        WHERE "Auction"."sellerAccountId" = $1 AND "Auction".state = ANY($2::smallint[])
         ORDER BY "createdDate" DESC`;
-        let params = [accountId];
+        let params = [accountId, states];
         query(sql,params)
         .then(result => {
-            console.log(result);
             resolve(result.rows)
         })
         .catch(error => reject(error) )
     });
 };
 
-exports.getAuctions = (page, categoryId) => {
-    if (page !== undefined) {
-        if (categoryId && categoryId === -1)
-            return auctions.slice(0, page*10 + 9);
-        else {
-            return auctions.filter(e => { return e.product.category.categoryId == categoryId }).slice(0, page*10 + 9);
-        }
-    }
-    return [];
+exports.getAtendedAuctions = (accountId) => {
+    return new Promise((resolve, reject) => {
+        let sql = `WITH "latestBids" AS (
+            SELECT *
+            FROM "BidHistory" WHERE "bidderAccountId" = $1
+            ORDER BY timestamp DESC
+        ),
+        auctions AS (
+            SELECT "Auction"."auctionId", "Auction"."createdDate", "Auction"."activatedDate",
+                "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice",
+                "Auction"."bidIncreasement", "Auction".state,
+                (
+                    SELECT row_to_json(product)
+                    FROM (
+                        SELECT "Product"."productId", "Product"."name", "Product"."description",
+                        (
+                            SELECT array_to_json(array_agg(row_to_json(image)))
+                            FROM (
+                                SELECT "imageId", name, CONCAT ('${DOMAIN_NAME}/images/product/',name) AS url
+                                FROM "Image" AS image
+                                WHERE image."productId" = "Product"."productId"
+                            ) AS image
+                        ) AS images,
+                        (
+                            SELECT row_to_json(category)
+                            FROM "Category" AS category
+                            WHERE category."categoryId" = "Product"."categoryId"
+                        ) AS category
+                        FROM "Product"
+                        WHERE "Product"."productId" = "Auction"."productId"
+                    ) AS product
+                ) AS product,
+                (
+                    SELECT row_to_json(bid)
+                    FROM (
+                        SELECT "Account"."accountId", "Profile"."firstName", "Profile"."lastName",
+                        "Profile"."phoneNumber", "BidHistory".price, "BidHistory".timestamp
+                        FROM "BidHistory"
+                        INNER JOIN "Account" ON "Account"."accountId" = "BidHistory"."bidderAccountId"
+                        INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
+                        ORDER BY price DESC
+                        LIMIT 1
+                    ) AS bid
+                ) AS "highestBidder",
+                (
+                    SELECT count("BidHistory"."bidHistoryId")
+                    FROM "BidHistory"
+                    WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
+                ) AS "bids"
+                FROM "Auction"
+                WHERE "Auction"."auctionId" IN (SELECT DISTINCT "auctionId" FROM "latestBids")}
+            )
+        SELECT * FROM auctions`;
+        let params = [accountId];
+        query(sql,params)
+        .then(value => resolve(value.rows))
+        .catch(reason => reject(reason));
+    });
+}
+
+exports.getAuctions = (page, categoryId, accountId, attendedIds) => {
+    if (page == undefined) return [];
+    let result = { auctions, closedAuctions }
+    if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
+    if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId === accountId);
+    if (categoryId && categoryId > 0) result.auctions = result.auctions.filter(e => e.product.category.categoryId == categoryId);
+    result.auctions = result.auctions.slice(0, page*10 + 9);
+    return result;
 };
 
 exports.insertAuction = (
@@ -182,7 +244,6 @@ exports.insertAuction = (
     moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
 ) => {
     return new Promise((resolve,reject) => {
-        console.log(productImages);
         let sql = `WITH
         "insertProductResult" AS (
             INSERT INTO "Product"(name,description,"searchKey","categoryId")

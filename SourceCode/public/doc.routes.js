@@ -184,5 +184,46 @@ var routes = [
                 "success": "boolean",
                 "html": "string"
             }
+        },
+        {
+            "method": "get",
+            "route": "/myUnactivatedAuctions/{token}",
+            "response": {
+                "success": "boolean",
+                "unactivatedAuctions": [{
+                    "auctionId": "number",
+                    "createdDate": "string",
+                    "activatedDate": "string",
+                    "duration": "number",
+                    "startPrice": "number",
+                    "ceilingPrice": "number",
+                    "bidIncreasement": "number",
+                    "product": {
+                        "productId": "number",
+                        "name": "string",
+                        "description": "string",
+                        "images": [{
+                            "imageId": "number",
+                            "name": "string",
+                            "url": "string"
+                        }],
+                        "category": {
+                            "categoryId": "number",
+                            "name": "string",
+                            "description": "string",
+                            "createdDate": "string"
+                        }
+                    },
+                    "highestBidder": {
+                        "accountId": "number",
+                        "firstName": "string",
+                        "lastName": "string",
+                        "phoneNumber": "string",
+                        "price": "number",
+                        "timestamp": "string"
+                    },
+                    "bids": "number"
+                }]
+            }
         }
     ]

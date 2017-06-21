@@ -5,7 +5,7 @@ module.exports = (req,res) => {
     .then(categorys => {
         res.send({
             success: true,
-            result
+            result: categorys
         })
     })
     .catch(reason => {

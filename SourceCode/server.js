@@ -1,6 +1,4 @@
 var config = require('./config');
-var { getAuctions } = require('./models/auction');
-var { getCategorys } = require('./models/category');
 
 // http request configuration
 var url = require('url');
@@ -29,8 +27,8 @@ server.listen(config.PORT, () => {
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
-app.patch('/api/Auctions/bid', (req,res) => require('./controllers/auction/bid')(req, res, sockets));
-app.get('/api/Auctions/myAuctions/:token', require('./controllers/auction/getMyAuctions'));
+app.patch('/api/Auctions/bid', (req,res) => require('./controllers/auction/bid')(req, res));
+app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
@@ -50,43 +48,5 @@ app.get('/api/guide', require('./controllers/webview/getGuide'));
 app.get('/api', (req,res) => { res.sendFile(__dirname + '/public/index.html') });
 
 // socket.io configuration
-var io = require('socket.io')(server),
-    sockets = [];
-let interval = setInterval(() => {
-  sockets.forEach(socket => {
-    socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page - 1, socket.categoryId));
-  })
-}, 1000);
-
-io.on('connection', function (socket) {
-  if (
-    socket.handshake.query.appName === 'sbid'
-    || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true
-  ) {
-    socket.page = 1;
-    socket.categoryId = -1;
-    sockets.push(socket);
-  }
-  else {
-    socket.disconnect();
-    console.log('disconnect due to handshake failed');
-  }
-
-  socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
-
-  socket.on('CLIENT-SEND-PAGE', data => {
-    console.log(data);
-    socket.page = data.page;
-  });
-
-  socket.on('CLIENT-SEND-CATEGORY', data => {
-    console.log(data);
-    socket.page = 1;
-    socket.categoryId = data.categoryId;
-  });
-
-  socket.on('disconnect', () => {
-    sockets.splice(sockets.indexOf(socket),1);
-    console.log('disconnect');
-  });
-});
+var io = require('socket.io')(server);
+io.on('connection', require('./controllers/socket'));
