@@ -136,4 +136,7 @@
   "postOffice": "Bưu điện",
   "banking": "Ngân hàng",
   "hour": "Giờ",
+
+  "wrongUsernameOrPassword": "Tên đăng nhập hoặc mật khẩu sai",
+  "CLIENT_ERROR": "CLIENT ERROR",
 }

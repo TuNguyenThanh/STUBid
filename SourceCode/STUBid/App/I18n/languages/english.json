@@ -136,4 +136,7 @@
   "postOffice": "Post office",
   "banking": "Banking",
   "hour": "Hour",
+
+  "wrongUsernameOrPassword": "Wrong username or password",
+  "CLIENT_ERROR": "CLIENT ERROR",
 }

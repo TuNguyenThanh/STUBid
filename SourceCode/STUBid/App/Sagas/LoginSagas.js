@@ -1,6 +1,7 @@
 import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
+import { Error } from '../Helper/';
 
 // attempts to login
 export function * login (api, action) {
@@ -10,7 +11,7 @@ export function * login (api, action) {
     if(response.ok) {
       const data = response.data;
       if(data.error) {
-        yield put(LoginActions.loginFailure(data.error));
+        yield put(LoginActions.loginFailure(Error(data.error.code)));
       } else {
         yield put(LoginActions.loginSuccess(data));
       }
@@ -29,7 +30,7 @@ export function * loginToken (api, action) {
     if(response.ok) {
       const data = response.data;
       if(data.error) {
-        yield put(LoginActions.loginTokenFailure(data.error.message));
+        yield put(LoginActions.loginTokenFailure(Error(data.error.code)));
       } else {
         yield put(LoginActions.loginTokenSuccess(data));
       }

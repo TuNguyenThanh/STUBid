@@ -78,8 +78,8 @@ class LoginScreen extends React.Component {
     if(!fetching && error && !user){
       this.setState({ isLoading: false });
       Alert.alert(
-        'Error',
-        error,
+        I18n.t('error', {locale: language}),
+        I18n.t(error, {locale: language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],
