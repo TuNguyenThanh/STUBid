@@ -18,7 +18,7 @@ module.exports = (req,res) => {
         .then(() => res.send({ success: true }))
         .catch(reason => {
             console.log(reason);
-            res.status(reason.status).send({ success: false, error: reason.error })
+            res.send({ success: false, error: reason.error })
         })
     }
 }

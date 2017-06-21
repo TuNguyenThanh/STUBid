@@ -28,7 +28,7 @@ module.exports = (req,res) => {
     })
     .then(account => {
         res.send({
-            ok: true,
+            success: true,
             token: sign({
                 accountId: account.accountId,
                 username: account.username,
@@ -47,8 +47,8 @@ module.exports = (req,res) => {
     })
     .catch(reason => {
         console.log(reason);
-        res.status(reason.status).send({
-            ok: false,
+        res.send({
+            success: false,
             error: reason.error
         });
     })

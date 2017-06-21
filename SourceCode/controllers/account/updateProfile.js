@@ -25,7 +25,7 @@ module.exports = (req,res) => {
     })
     .catch(reason => {
         console.log(reason);
-        res.status(reason.status).send({
+        res.send({
             success: false,
             error: reason.error
         });

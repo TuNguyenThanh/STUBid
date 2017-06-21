@@ -4,13 +4,13 @@ module.exports = (req,res) => {
     getCategorys()
     .then(categorys => {
         res.send({
-            ok: true,
+            success: true,
             result
         })
     })
     .catch(reason => {
-        res.status(reason.status).send({
-            ok: false,
+        res.send({
+            success: false,
             error: reason.error
         })
     })

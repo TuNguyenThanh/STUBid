@@ -6,7 +6,7 @@ module.exports = (req,res) => {
     var { verifyToken } = req.query;
     if (!verifyToken) {
         return res.status(400).send({
-            ok: false,
+            success: false,
             error: ERROR[400][0]
         })
     }
@@ -24,8 +24,8 @@ module.exports = (req,res) => {
     })
     .catch(reason => {
         console.log(reason);
-        res.status(reason.status).send({
-            ok: false,
+        res.send({
+            success: false,
             error: reason.error
         })
     })

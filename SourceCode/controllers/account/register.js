@@ -18,14 +18,14 @@ module.exports = (req,res) => {
         })
         .then(() => {
             res.send({
-                ok: true,
+                success: true,
                 step: 1
             })
         })
         .catch(reason => {
             console.log(reason);
-            res.status(reason.status).send({
-                ok: false,
+            res.send({
+                success: false,
                 error: reason.error
             })
         })
@@ -40,14 +40,14 @@ module.exports = (req,res) => {
         register(verifyCode, phoneNumber, email, username)
         .then(() => {
             res.send({
-                ok: true,
+                success: true,
                 step: 2
             })
         })
         .catch(reason => {
             console.log(reason);
-            res.status(reason.status).send({
-                ok: false,
+            res.send({
+                success: false,
                 error: reason.error
             })
         })
