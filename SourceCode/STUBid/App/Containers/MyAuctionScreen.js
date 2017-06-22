@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
+import MyAuctionTab1 from './MyAuctionTab1Screen'
+import MyAuctionTab2 from './MyAuctionTab2Screen'
 
 // Styles
 import styles from './Styles/MyAuctionScreenStyle'
@@ -16,7 +19,7 @@ class MyAuction extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: []
+      data: ['a']
     };
   }
 
@@ -48,9 +51,17 @@ class MyAuction extends React.Component {
         );
       } else {
         return(
-          <View style={styles.viewWrap}>
-            <Text>Bạn không có cuộc đấu giá nào cả</Text>
-          </View>
+          <ScrollableTabView
+            style={{ flex: 1 }}
+            tabBarBackgroundColor={'#FFF'}
+            tabBarUnderlineStyle={{ backgroundColor: Colors.primary, borderRadius: 5 }}
+            tabBarActiveTextColor={Colors.primary}
+            tabBarInactiveTextColor={'#900'}
+            tabBarTextStyle={styles.fontStyle}
+          >
+            <MyAuctionTab1 tabLabel={'Đang đấu giá'}/>
+            <MyAuctionTab2 tabLabel={'Danh sách đăng'}/>
+          </ScrollableTabView>
         );
       }
     } else {

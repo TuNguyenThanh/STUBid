@@ -38,5 +38,8 @@ export default StyleSheet.create({
   buttonTextStyle: {
     color: Colors.primary,
     fontFamily: Fonts.type.quicksand
-  }
+  },
+  fontStyle: {
+    fontFamily: Fonts.type.quicksand,
+  },
 })
