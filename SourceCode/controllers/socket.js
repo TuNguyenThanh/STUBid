@@ -1,9 +1,11 @@
 const { getAuctions, getMyAuctions, getAtendedAuctions } = require('../models/auction')
+const config = require('../config')
 
 module.exports = function (socket) {
     if (socket.handshake.query.appName === 'sbid'
         || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true)
     {
+        // console.log('connect');
         socket.page = 1;
         socket.categoryId = -1;
         setSocketInterval();
@@ -14,7 +16,8 @@ module.exports = function (socket) {
     }
 
     function setSocketInterval() {
-        while(Date.now()/1000 != parseInt(Date.now()/1000)) {}
+        // while(Date.now()/1000 != parseInt(Date.now()/1000)) {}
+        // console.log('setinterval');
         socket.interval = setInterval(() => {
             let { auctions, closedAuctions } = getAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
             socket.emit('SERVER-SEND-AUCTIONS', auctions);

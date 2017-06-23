@@ -4,7 +4,7 @@ const ERROR = require('../../error.json');
 
 module.exports = (req, res) => {
     var { token, auctionId, accountId, price, buyNow } = req.body;
-    if (!token || !auctionId || !accountId || !price || !buyNow)
+    if (!token || !auctionId || !accountId || !price)
         return res.send({
             success: false,
             error: ERROR[400][0]
@@ -17,7 +17,7 @@ module.exports = (req, res) => {
                 error: ERROR[400][1]
             });
         token = refreshToken(obj);
-        return bid(auctionId, accountId, price, buyNow)
+        return bid(auctionId, accountId, price, buyNow?buyNow:false)
     })
     .then(result => {
         // sockets.forEach(socket => {
