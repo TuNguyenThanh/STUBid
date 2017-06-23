@@ -3,6 +3,7 @@ const { getCategorys } = require('../../models/category');
 module.exports = (req,res) => {
     getCategorys()
     .then(categorys => {
+        console.log(categorys);
         res.send({
             success: true,
             result: categorys

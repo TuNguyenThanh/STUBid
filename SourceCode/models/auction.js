@@ -257,13 +257,15 @@ exports.insertAuction = (
             INSERT INTO "Auction"(
                 "createdDate", "activatedDate", duration, "startPrice", "ceilingPrice",
                 "bidIncreasement", comment, state,
-                "productReturningAddress", "productId", "sellerAccountId",
+                "productId", "sellerAccountId",
+                "shippingAddress", "shippingType", "shippingFee",
                 "moneyReceivingBankRefId", "moneyReceivingAddress", "allowedUserLevel")
             VALUES(
                 now(),now(),$6,$7,$8,
                 $9,$10,1,
-                $11,(SELECT "productId" FROM "insertProductResult"),$12,
-                $13,$14,$15)
+                (SELECT "productId" FROM "insertProductResult"),$12,
+                $11,$13,
+                $14,$15,$16)
             RETURNING "auctionId")
         SELECT * FROM "insertAuctionResult"`
         let params = [
@@ -271,7 +273,8 @@ exports.insertAuction = (
             productImages,
             duration, startPrice, ceilingPrice,
             bidIncreasement, comment,
-            productReturningAddress, accountId,
+            accountId,
+            productReturningAddress?productReturningAddress:null, productReturningAddress?2:null, null,
             moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
         ];
         query(sql,params)
