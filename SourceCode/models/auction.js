@@ -339,64 +339,20 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
         query(sql,params)
         .then(result => {
             if (result.rowCount > 0) {
-                auction.highestBidder = result.rows[0].highestBidder;
-                let page = Math.floor(index/10) + 1;
-                    categoryId = auction.product.category.categoryId;
-                    pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
-                resolve({ auction, page, categoryId, pageInCategory });
-            }
-            else {
-                reject({
-                    status: 500,
-                    error: ERROR[500][1]
-                });
-            }
-        })
-        .catch(error => {
-            reject(error);
-        })
-    })
-}
-
-exports.buyNow = (accountId, auctionId) => {
-    return new Promise((resolve,reject) => {
-        var index, auction;
-        auction = auctions.find((e,i) => {
-            if (e.auctionId == auctionId) {
-                index = i;
-                return true;
-            }
-        });
-        if (!auction) return reject({
-            status: 400,
-            error: ERROR[400][50]
-        });
-        if (auction.highestBidder && auction.highestBidder.price >= price) return reject({
-            status: 400,
-            error: ERROR[400][51]
-        });
-        var sql = `
-            WITH auction AS (
-                UPDATE "Auction" SET state = 3
-                WHERE "auctionId"=$1
-                RETURNING "auctionId"
-            ),
-            "latestBid" AS (
-                INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
-                VALUES (now(),(SELECT "ceilingPrice" FROM auction),$1,$2)
-                RETURNING "bidderAccountId", price, timestamp
-            )
-            SELECT * FROM "latestBid"
-        `,
-        params = [auctionId,accountId];
-        query(sql,params)
-        .then(result => {
-            if (result.rowCount > 0) {
-                let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
-                delete auctionsTimeLeft[auctionId];
-                auctions.splice(auctionIndex,1);
-                console.log(`close auction : ${auctionId}`);
-                resolve();
+                if (buyNow) {
+                    let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
+                    delete auctionsTimeLeft[auctionId];
+                    auctions.splice(auctionIndex,1);
+                    console.log(`close auction : ${auctionId}`);
+                    resolve();
+                }
+                else {
+                    auction.highestBidder = result.rows[0].highestBidder;
+                    let page = Math.floor(index/10) + 1;
+                        categoryId = auction.product.category.categoryId;
+                        pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
+                    resolve({ auction, page, categoryId, pageInCategory });
+                }
             }
             else {
                 reject({
