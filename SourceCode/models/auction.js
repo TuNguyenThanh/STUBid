@@ -258,13 +258,13 @@ exports.insertAuction = (
                 "createdDate", "activatedDate", duration, "startPrice", "ceilingPrice",
                 "bidIncreasement", comment, state,
                 "productId", "sellerAccountId",
-                "shippingAddress", "shippingType", "shippingFee",
+                "shippingAddress", "shippingTypeId", "shippingFeeId",
                 "moneyReceivingBankRefId", "moneyReceivingAddress", "allowedUserLevel")
             VALUES(
                 now(),now(),$6,$7,$8,
                 $9,$10,1,
-                (SELECT "productId" FROM "insertProductResult"),$12,
-                $11,$13,
+                (SELECT "productId" FROM "insertProductResult"),$11,
+                $12,$13,null,
                 $14,$15,$16)
             RETURNING "auctionId")
         SELECT * FROM "insertAuctionResult"`
@@ -274,7 +274,7 @@ exports.insertAuction = (
             duration, startPrice, ceilingPrice,
             bidIncreasement, comment,
             accountId,
-            productReturningAddress?productReturningAddress:null, productReturningAddress?2:null, null,
+            productReturningAddress?productReturningAddress:null, productReturningAddress?1:null,
             moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
         ];
         query(sql,params)
