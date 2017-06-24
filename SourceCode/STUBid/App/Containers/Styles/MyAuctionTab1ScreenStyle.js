@@ -5,6 +5,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.lightgray,
+    marginBottom: 60,
   },
   listviewStyle: {
     paddingTop: 8,

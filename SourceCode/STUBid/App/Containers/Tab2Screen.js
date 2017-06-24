@@ -10,16 +10,31 @@ import styles from './Styles/Tab2ScreenStyle'
 class Tab2 extends React.Component {
   constructor(props) {
     super(props);
+
+    let data = [];
+    if(this.props.screen == 'HOME') {
+      data = this.props.auctions.listData[this.props.rowID];
+    } else if(this.props.screen == 'MYAUCTIONS') {
+      data = this.props.auctions.myListAuction[this.props.rowID];
+    }
+
     this.state = {
-      data: this.props.auctions.listData[this.props.rowID]
+      data
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    const { listData } = nextProps.auctions;
-    this.setState({
-      data: listData[this.props.rowID],
-    });
+    const { listData, myListAuction } = nextProps.auctions;
+
+    if(this.props.screen == 'HOME') {
+      this.setState({
+        data: listData[this.props.rowID],
+      });
+    } else if(this.props.screen == 'MYAUCTIONS') {
+      this.setState({
+        data: myListAuction[this.props.rowID],
+      });
+    }
   }
 
   render() {

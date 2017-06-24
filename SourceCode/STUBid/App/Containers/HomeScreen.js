@@ -165,7 +165,7 @@ class Home extends React.Component {
   renderItem(item, rowID) {
     const { language } = this.props;
     return (
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'HOME' })}>
         {
           item.product.images ?
           <ImageLoad

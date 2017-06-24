@@ -21,7 +21,7 @@ class DetailProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.auctions.data[this.props.rowID],
+      data: [],//this.props.auctions.data[this.props.rowID],
       openModalBid: false,
       productSelected: null,
     };
@@ -29,11 +29,18 @@ class DetailProduct extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetching, listData, bidSuccess, error } = nextProps.auctions;
+    const { fetching, listData, bidSuccess, error, myListAuction } = nextProps.auctions;
     const { language } = this.props;
-    this.setState({
-      data: listData[this.props.rowID],
-    });
+
+    if(this.props.screen == 'HOME') {
+      this.setState({
+        data: listData[this.props.rowID],
+      });
+    } else if(this.props.screen == 'MYAUCTIONS') {
+      this.setState({
+        data: myListAuction[this.props.rowID],
+      });
+    }
 
     if(!fetching && bidSuccess && this.isHandleBid) {
       Alert.alert(
@@ -76,8 +83,8 @@ class DetailProduct extends React.Component {
               tabBarInactiveTextColor={'#900'}
               tabBarTextStyle={styles.fontStyle}
             >
-              <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} />
-              <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} />
+              <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} screen={this.props.screen} />
+              <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} screen={this.props.screen} />
             </ScrollableTabView>
             <View style={styles.viewBid}>
               <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
@@ -194,7 +201,7 @@ class DetailProduct extends React.Component {
           I18n.t('buyProductPrice', {locale: language}) + ' ' + data.ceilingPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VNĐ ?',
           [
             {text: I18n.t('ok', {locale: language}), onPress: () => {
-              this.props.bibProduct(this.props.login.user.token, data.product.auctionId, this.props.login.user.profile.accountId, data.ceilingPrice, true);
+              this.props.bibProduct(this.props.login.user.token, data.auctionId, this.props.login.user.profile.accountId, data.ceilingPrice, true);
               this.isHandleBid = true;
             }},
             {text: I18n.t('cancel', {locale: language}), onPress: () => {}},

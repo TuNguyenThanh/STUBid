@@ -17,17 +17,17 @@ import I18n from 'react-native-i18n'
 class Tab1 extends React.Component {
   constructor(props) {
     super(props);
+    let data = [];
+    if(this.props.screen == 'HOME') {
+      data = this.props.auctions.listData[this.props.rowID];
+    } else if(this.props.screen == 'MYAUCTIONS') {
+      data = this.props.auctions.myListAuction[this.props.rowID];
+    }
+
     this.state = {
       arrImage: [],
-      data: this.props.auctions.listData[this.props.rowID]
+      data
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { listData } = nextProps.auctions;
-    this.setState({
-      data: listData[this.props.rowID],
-    });
   }
 
   componentDidMount() {
@@ -41,6 +41,20 @@ class Tab1 extends React.Component {
     setTimeout(() => {
       this.setState({ arrImage: arrHinh });
     }, 100);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { listData, myListAuction } = nextProps.auctions;
+
+    if(this.props.screen == 'HOME') {
+      this.setState({
+        data: listData[this.props.rowID],
+      });
+    } else if(this.props.screen == 'MYAUCTIONS') {
+      this.setState({
+        data: myListAuction[this.props.rowID],
+      });
+    }
   }
 
   render () {

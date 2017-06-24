@@ -1,12 +1,18 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
+import AuctionsActions from '../Redux/AuctionsRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import MyAuctionTab1 from './MyAuctionTab1Screen'
 import MyAuctionTab2 from './MyAuctionTab2Screen'
+import IO from 'socket.io-client/dist/socket.io'
+
+//Key config - AsyncStorage
+import AppConfig from '../Config/AppConfig'
+import ApiConfig from '../Config/ApiConfig'
 
 // Styles
 import styles from './Styles/MyAuctionScreenStyle'
@@ -19,8 +25,33 @@ class MyAuction extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: ['a']
+      data: [],
     };
+  }
+
+  componentDidMount() {
+    if(this.props.login.user) {
+      this.socket = IO(ApiConfig.baseSocketIOURL);
+
+      //my auctions
+      this.socket.emit('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', { accountId: this.props.login.user.profile.accountId});
+      this.socket.emit('CLIENT-REQUEST-HOME-VIEW');
+      this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
+      this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
+        this.props.myAuctions(data);
+      });
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { myListAuction } = nextProps.auctions;
+
+    if(myListAuction) {
+      this.setState({
+        data: myListAuction
+      });
+    }
   }
 
   render() {
@@ -84,11 +115,13 @@ const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
     login: state.login,
+    auctions: state.auctions,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    myAuctions: (data) => dispatch(AuctionsActions.myAuctions(data)),
   }
 }
 
