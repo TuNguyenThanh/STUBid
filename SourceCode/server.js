@@ -10,10 +10,11 @@ app.use(function (req, res, next) {
   let url_parts = url.parse(req.url),
       pathname = url_parts.pathname;
   if ((new RegExp(/^\/api\/\w+/).test(pathname)
-      && req.header('App-Name') !== 'sbid'))
+      && req.header('App-Name') && req.header('App-Name') !== 'sbid'))
     return res.status(404).send();
 
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 var bodyParser = require('body-parser');

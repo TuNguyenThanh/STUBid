@@ -187,7 +187,7 @@ var routes = [
         },
         {
             "method": "get",
-            "route": "/myUnactivatedAuctions/{token}",
+            "route": "/Auctions/myUnactivatedAuctions/{token}",
             "response": {
                 "success": "boolean",
                 "unactivatedAuctions": [{
