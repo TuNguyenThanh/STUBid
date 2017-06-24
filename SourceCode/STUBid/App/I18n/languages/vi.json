@@ -165,5 +165,5 @@
   "canNotSendVerificationCodeViaSMS": "Hệ thống gửi SMS đã gặp sự cố. Vui lòng thử lại sau!",
   "canNotSendVerificationCodeViaEmail": "Hệ thống gửi email đang gặp sự cố. Vui lòng thử lại sau!",
   "formParsingFailed": "Máy chủ đã gặp sự cố phân tích dữ liệu. Vui lòng thử lại sau!",
-
+  "accountActived": "Tài khoản đã kích hoạt",
 }

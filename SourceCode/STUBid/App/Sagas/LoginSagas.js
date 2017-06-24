@@ -1,7 +1,7 @@
 import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
-import { Error } from '../Helper/';
+import { Error } from '../Helper/'
 
 // attempts to login
 export function * login (api, action) {

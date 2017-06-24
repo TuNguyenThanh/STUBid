@@ -12,7 +12,7 @@ class Tab2 extends React.Component {
     super(props);
 
     let data = [];
-    if(this.props.screen == 'HOME') {
+    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
       data = this.props.auctions.listData[this.props.rowID];
     } else if(this.props.screen == 'MYAUCTIONS') {
       const temp = this.props.auctions.myListAuction.concat(this.props.auctions.myListAuctionClose);
@@ -27,7 +27,7 @@ class Tab2 extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { listData, myListAuction, myListAuctionClose } = nextProps.auctions;
 
-    if(this.props.screen == 'HOME') {
+    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
       this.setState({
         data: listData[this.props.rowID],
       });

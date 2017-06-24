@@ -46,7 +46,7 @@ class CreactAccount extends React.Component {
       if(!fetching && !success && error) {
         Alert.alert(
           I18n.t('error', {locale: language}),
-          error,
+          I18n.t(error, {locale: language}),
           [
             {text: I18n.t('ok', {locale: language}), onPress: () => {}},
           ],

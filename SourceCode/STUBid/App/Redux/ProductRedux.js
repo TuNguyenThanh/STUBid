@@ -11,6 +11,10 @@ const { Types, Creators } = createActions({
   getInfoUploadRequest: [],
   getInfoUploadSuccess: ['dataInfo'],
   getInfoUploadFailure: ['error'],
+
+  getProductUnActivityRequest: ['token'],
+  getProductUnActivitySuccess: ['data'],
+  getProductUnActivityFailure: ['error'],
 })
 
 export const ProductTypes = Types
@@ -22,7 +26,8 @@ export const INITIAL_STATE = Immutable({
   error: null,
   fetching: false,
   uploadSuccess: false,
-  dataInfo: null
+  dataInfo: null,
+  data: [],
 })
 
 /* ------------- Reducers ------------- */
@@ -37,6 +42,8 @@ export const uploadProductFailure = (state, { error }) => state.merge({ fetching
 export const failure = (state, { error }) => state.merge({ fetching: false, error})
 
 export const success = (state, { dataInfo }) => state.merge({ fetching: false, dataInfo})
+
+export const getProductUnActivitySuccess = (state, { data }) => state.merge({ fetching: false, data })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -47,6 +54,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_INFO_UPLOAD_REQUEST]: request,
   [Types.GET_INFO_UPLOAD_SUCCESS]: success,
   [Types.GET_INFO_UPLOAD_FAILURE]: failure,
+
+  [Types.GET_PRODUCT_UN_ACTIVITY_REQUEST]: request,
+  [Types.GET_PRODUCT_UN_ACTIVITY_SUCCESS]: getProductUnActivitySuccess,
+  [Types.GET_PRODUCT_UN_ACTIVITY_FAILURE]: failure,
 })
 
 /* ------------- Selectors ------------- */

@@ -72,7 +72,7 @@ class Search extends React.Component {
 
   renderItem(item, rowID) {
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'SEARCH' })}>
         {
           item.product.images ?
           <ImageLoad

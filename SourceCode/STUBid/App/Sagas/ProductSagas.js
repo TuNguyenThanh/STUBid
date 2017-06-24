@@ -71,3 +71,18 @@ export function * getInfoUploadProduct(ProductApi, action) {
     console.log(e);
   }
 }
+
+export function * getProductUnActivity(ProductApi, action) {
+  try {
+    const { token } = action;
+    const response = yield call(ProductApi.getProductUnActivity, token);
+    if(response.ok) {
+      const data = response.data.results;
+      yield put(ProductActions.getProductUnActivitySuccess(data));
+    } else {
+      yield put(ProductActions.getProductUnActivityFailure(response.problem));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

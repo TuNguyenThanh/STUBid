@@ -98,7 +98,7 @@ class EditProfile extends React.Component {
     if(!fetching && error) {
       Alert.alert(
         I18n.t('error', {locale: this.props.language}),
-        error,
+        I18n.t(error, {locale: this.props.language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],

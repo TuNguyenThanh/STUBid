@@ -31,10 +31,16 @@ const create = (baseURL = ApiConfig.baseURL) => {
   const getInfoUploadProduct = () => {
     return api.get('guide/uploadProduct');
   }
+
+  const getProductUnActivity = (token) => {
+    return api.get('Auctions/myUnactivatedAuctions/' + token);
+  }
+
   return {
     // a list of the API functions from step 2
     uploadProduct,
-    getInfoUploadProduct
+    getInfoUploadProduct,
+    getProductUnActivity
   }
 }
 

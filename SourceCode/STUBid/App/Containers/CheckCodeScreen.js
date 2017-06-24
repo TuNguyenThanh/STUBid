@@ -17,7 +17,7 @@ class CheckCode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: '123456',
+      code: '',
     };
     this.isCheckCode = false;
     this.isGetCode = false;
@@ -64,7 +64,7 @@ class CheckCode extends React.Component {
         I18n.t('getCode', {locale: this.props.language}),
         I18n.t('success', {locale: this.props.language}) + ', ' + I18n.t('pleaseCheckSMS', {locale: language}),
         [
-          {text: 'OK', onPress: () => {}},
+          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],
         { cancelable: false }
       );
@@ -73,8 +73,8 @@ class CheckCode extends React.Component {
 
     if(!fetching && codeSuccess && this.isCheckCode) {
       Alert.alert(
-        'Thong bao',
-        'Account Actived',
+        I18n.t('success', {locale: language}),
+        I18n.t('accountActived', {locale: language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {
             if(this.props.isPop) {
@@ -93,8 +93,8 @@ class CheckCode extends React.Component {
     //error
     if(!fetching && error) {
       Alert.alert(
-        'Error',
-        error,
+        I18n.t('Error', {locale: language}),
+        I18n.t(error, {locale: language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},
         ],

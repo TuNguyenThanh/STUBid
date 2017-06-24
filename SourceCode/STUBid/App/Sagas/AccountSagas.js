@@ -4,6 +4,7 @@ import AccountActions from '../Redux/AccountRedux'
 import LoginActions from '../Redux/LoginRedux'
 import RNFetchBlob from 'react-native-fetch-blob'
 import ApiConfig from '../Config/ApiConfig'
+import { Error } from '../Helper/'
 
 export function * createAcccount(api, action) {
   // make the call to the api
@@ -12,7 +13,7 @@ export function * createAcccount(api, action) {
   if (response.ok) {
     const data = response.data;
     if(data.error) {
-      yield put(AccountActions.accountRegisterFailure(data.error));
+      yield put(AccountActions.accountRegisterFailure(Error(data.error.code)));
     } else {
       yield put(AccountActions.accountRegisterSuccess());
     }
@@ -28,7 +29,7 @@ export function * checkCode(api, action) {
   if (response.ok) {
     const data = response.data;
     if(data.error) {
-      yield put(AccountActions.checkCodeFailure(data.error));
+      yield put(AccountActions.checkCodeFailure(Error(data.error.code)));
     } else {
       yield put(AccountActions.checkCodeSuccess());
     }
@@ -45,7 +46,7 @@ export function * getNewCode(api, action) {
     const data = response.data;
     if(data) {
       if(data.error) {
-        yield put(AccountActions.getNewCodeFailure(data.error));
+        yield put(AccountActions.getNewCodeFailure(Error(data.error.code)));
       } else {
         yield put(AccountActions.getNewCodeSuccess());
       }
@@ -61,12 +62,11 @@ export function * forgotPassword(api, action) {
   // make the call to the api
   const { email } = action;
   const response = yield call(api.forgotPassword, email);
-
   if (response.ok) {
     const data = response.data;
     if(data) {
       if(data.error) {
-        yield put(AccountActions.forgotPasswordFailure(data.error));
+        yield put(AccountActions.forgotPasswordFailure(Error(data.error.code)));
       } else {
         yield put(AccountActions.forgotPasswordSuccess());
       }
@@ -82,7 +82,6 @@ export function * changePassword(AccountApi, UserApi, action) {
   // make the call to the api
   const { token, oldPassword, newPassword } = action;
   const response = yield call(AccountApi.changePassword, token, oldPassword, newPassword);
-
   if (response.ok) {
     const data = response.data;
     if(data.success) {
@@ -102,7 +101,7 @@ export function * changePassword(AccountApi, UserApi, action) {
       }
 
     } else {
-      yield put(AccountActions.changePasswordFailure(data.error));
+      yield put(AccountActions.changePasswordFailure(Error(data.error.code)));
     }
   } else {
     yield put(AccountActions.changePasswordFailure(response.problem));
@@ -113,7 +112,6 @@ export function * editProfile(AccountApi, UserApi, action) {
   // make the call to the api
   const { info } = action;
   const response = yield call(AccountApi.editProfile, info);
-  console.log(response);
 
   if (response.ok) {
     const data = response.data;
@@ -134,7 +132,7 @@ export function * editProfile(AccountApi, UserApi, action) {
       }
 
     } else {
-      yield put(AccountActions.editProfileFailure(data.error));
+      yield put(AccountActions.editProfileFailure(Error(data.error.code)));
     }
   } else {
     yield put(AccountActions.editProfileFailure(response.problem));

@@ -132,8 +132,9 @@ class LoginScreen extends React.Component {
 	}
 
   message(mess) {
+    const { language } = this.props;
     Alert.alert(
-      'Thong bao',
+      I18n.t('error', {locale: language}),
       mess,
       [
         {text: 'OK', onPress: () => {}},

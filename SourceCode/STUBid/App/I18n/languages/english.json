@@ -165,5 +165,6 @@
   "canNotSendVerificationCodeViaSMS": "The SMS Sender System has encountered an error. Please try again later!",
   "canNotSendVerificationCodeViaEmail": "The Email Sender System has encountered an error. Please try again later!",
   "formParsingFailed": "The server has encountered an error when parsing data. Please try again later!",
+  "accountActived": "Account Actived",
 
 }

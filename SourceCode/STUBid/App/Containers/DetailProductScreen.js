@@ -32,7 +32,7 @@ class DetailProduct extends React.Component {
     const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose } = nextProps.auctions;
     const { language } = this.props;
 
-    if(this.props.screen == 'HOME') {
+    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
       this.setState({
         data: listData[this.props.rowID],
       });
