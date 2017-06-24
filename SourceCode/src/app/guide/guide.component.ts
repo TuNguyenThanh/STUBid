@@ -6,11 +6,11 @@ import { trigger, state, transition, animate, style } from '@angular/core';
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.scss'],
   animations: [trigger('slideOut', [
-        state('true', style({ height: '*' })),
-        state('false', style({ height: '10px' })),
-        transition('1 => 0', animate('400ms ease')),
-        transition('0 => 1', animate('400ms ease'))
-    ])]
+    state('true', style({ height: '*' })),
+    state('false', style({ height: '10px' })),
+    transition('1 => 0', animate('400ms ease')),
+    transition('0 => 1', animate('400ms ease'))
+  ])]
 })
 export class GuideComponent implements OnInit {
   openingGuide: string;

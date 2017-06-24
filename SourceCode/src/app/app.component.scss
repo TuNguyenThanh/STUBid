@@ -1,6 +1,7 @@
+@import '../styles.scss';
+
 .nav-bar {
-    background: #0e5aa8;
-    text-transform: uppercase;
+    background: $color-primary;
     &:after{
         clear: both;
         content: "";
@@ -17,4 +18,5 @@
             background: rgb(14,177,255);
         }
     }
+    .float-right { float: right }
 }

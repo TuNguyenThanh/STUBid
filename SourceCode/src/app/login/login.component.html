@@ -1,0 +1,12 @@
+<form [formGroup]="formLogin">
+  <input formControlName="username"
+  type="text" name="username" placeholder="Username">
+  <input formControlName="password"
+  type="password" name="password" placeholder="Password">
+  <button [ngClass]="{ 'loading': loading, 'radius': radius }"
+  type="submit" (click)="submit()">
+    <span *ngIf="!loading">Đăng nhập</span>
+    <div *ngIf="loading"
+    class="loader"></div>
+  </button>
+</form>
