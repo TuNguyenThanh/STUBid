@@ -29,7 +29,7 @@ class DetailProduct extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetching, listData, bidSuccess, error, myListAuction } = nextProps.auctions;
+    const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose } = nextProps.auctions;
     const { language } = this.props;
 
     if(this.props.screen == 'HOME') {
@@ -37,8 +37,9 @@ class DetailProduct extends React.Component {
         data: listData[this.props.rowID],
       });
     } else if(this.props.screen == 'MYAUCTIONS') {
+      const temp = myListAuction.concat(myListAuctionClose);
       this.setState({
-        data: myListAuction[this.props.rowID],
+        data: temp[this.props.rowID],
       });
     }
 

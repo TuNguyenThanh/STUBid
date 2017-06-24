@@ -35,21 +35,31 @@ class MyAuction extends React.Component {
 
       //my auctions
       this.socket.emit('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', { accountId: this.props.login.user.profile.accountId});
-      this.socket.emit('CLIENT-REQUEST-HOME-VIEW');
       this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
       this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
         this.props.myAuctions(data);
+      });
+
+      //
+      this.socket.on('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', (data) => {
+        this.props.myAuctionsClose(data);
       });
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { myListAuction } = nextProps.auctions;
+    const { myListAuction, myListAuctionClose } = nextProps.auctions;
 
     if(myListAuction) {
       this.setState({
-        data: myListAuction
+        data: this.state.data.concat(myListAuction)
+      });
+    }
+
+    if(myListAuctionClose) {
+      this.setState({
+        data: this.state.data.concat(myListAuctionClose)
       });
     }
   }
@@ -122,6 +132,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     myAuctions: (data) => dispatch(AuctionsActions.myAuctions(data)),
+    myAuctionsClose: (data) => dispatch(AuctionsActions.myAuctionsClose(data)),
   }
 }
 

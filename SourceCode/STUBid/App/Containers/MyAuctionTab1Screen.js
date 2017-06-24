@@ -20,13 +20,12 @@ class MyAuctionTab1 extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, myListAuction } = nextProps.auctions;
+    const { fetching, error, myListAuction, myListAuctionClose } = nextProps.auctions;
+    const temp = myListAuction.concat(myListAuctionClose);
 
-    if(myListAuction) {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(myListAuction),
-      });
-    }
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(temp),
+    });
   }
 
   render () {
@@ -79,7 +78,7 @@ class MyAuctionTab1 extends React.Component {
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>{item.timeLeft}</Text>
+            <Text style={styles.titleTime}>{item.timeLeft ? item.timeLeft : 'Đã kết thúc'}</Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>

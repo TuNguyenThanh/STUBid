@@ -15,6 +15,7 @@ const { Types, Creators } = createActions({
   setData: ['listData'],
 
   myAuctions: ['myListAuction'],
+  myAuctionsClose: ['myListAuctionClose'],
 })
 
 export const AuctionsTypes = Types
@@ -26,6 +27,7 @@ export const INITIAL_STATE = Immutable({
   data: [],
   listData: [],
   myListAuction: [],
+  myListAuctionClose: [],
   error: null,
   fetching: false,
   bidSuccess: null,
@@ -50,6 +52,8 @@ export const setData = (state, { listData }) => state.merge({ listData })
 
 export const myAuctionSetData = (state, { myListAuction }) => state.merge({ myListAuction })
 
+export const myAuctionCloseSetData = (state, { myListAuctionClose }) => state.merge({ myListAuctionClose })
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -63,7 +67,9 @@ export const reducer = createReducer(INITIAL_STATE, {
 
   [Types.SET_DATA]: setData,
 
-  [Types.MY_AUCTIONS]: myAuctionSetData
+  [Types.MY_AUCTIONS]: myAuctionSetData,
+
+  [Types.MY_AUCTIONS_CLOSE]: myAuctionCloseSetData,
 })
 
 /* ------------- Selectors ------------- */

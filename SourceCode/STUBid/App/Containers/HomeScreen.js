@@ -63,7 +63,7 @@ class Home extends React.Component {
   componentDidMount() {
     this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: -1 });
     this.socket.emit('CLIENT-SEND-PAGE', { page: this.state.page });
-
+    this.socket.emit('CLIENT-REQUEST-HOME-VIEW');
     this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
       this.props.setData(data);
     });
