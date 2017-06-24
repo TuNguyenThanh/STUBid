@@ -16,36 +16,34 @@ module.exports = function (socket) {
     }
 
     function setSocketInterval() {
-        // while(Date.now()/1000 != parseInt(Date.now()/1000)) {}
-        // console.log('setinterval');
-        socket.interval = setInterval(() => {
-            let { auctions, closedAuctions } = getAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
-            socket.emit('SERVER-SEND-AUCTIONS', auctions);
-            if (closedAuctions && closedAuctions.length > 0) {
-                if (socket.attendedIds && socket.attendedIds.length > 0) {
-                    closedAuctions.forEach(e => {
-                        socket.attendedIds.splice(socket.attendedIds.indexOf(e.auctionId),1);
-                    })
-                    sendClosedAttendedAuctions();
+        setTimeout(function() {
+            socket.interval = setInterval(() => {
+                let { auctions, closedAuctions } = getAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
+                socket.emit('SERVER-SEND-AUCTIONS', auctions);
+                if (closedAuctions && closedAuctions.length > 0) {
+                    if (socket.attendedIds && socket.attendedIds.length > 0) {
+                        sendClosedAttendedAuctions();
+                    }
+                    else {
+                        sendMyClosedAuctions();
+                    }
                 }
-                else {
-                    sendMyClosedAuctions();
-                }
-            }
-        }, 1000);
+            }, 1000);
+        }, 1000 - Date.now()%1000);
     }
 
     function sendClosedAttendedAuctions() {
-        let attendedIds = [];
+        socket.attendedIds = [];
         let closedAttenedAuctions = [];
         getAtendedAuctions(socket.accountId)
         .then(value => {
             value.forEach(function(auction) {
                 if (auction.state === 1)
-                    attendedIds.push(auction.auctionId);
+                    socket.attendedIds.push(auction.auctionId);
                 else closedAttenedAuctions.push(auction);
-            }, this);
-            socket.emit('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', { closedAttenedAuctions })
+            });
+            console.log(socket.attendedIds);
+            socket.emit('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', closedAttenedAuctions)
         })
         .catch(reason => console.log(reason))
     }
@@ -53,12 +51,19 @@ module.exports = function (socket) {
     function sendMyClosedAuctions() {
         getMyAuctions(socket.accountId, [2])
         .then(value => {
-            socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', { myClosedAuctions: value })
+            socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', value)
         })
         .catch(reason => console.log(reason))
     }
 
     socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
+
+    socket.on('CLIENT-REQUEST-HOME-VIEW', data => {
+        socket.page = 1;
+        socket.categoryId = -1;
+        delete socket.accountId;
+        delete socket.attendedIds;
+    })
 
     socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
         console.log(data);
@@ -67,7 +72,7 @@ module.exports = function (socket) {
         socket.accountId = data.accountId;
         if (!data.accountId) {
             delete socket.accountId;
-            delete data.attendedIds;
+            delete socket.attendedIds;
         }
         else {
             sendClosedAttendedAuctions()

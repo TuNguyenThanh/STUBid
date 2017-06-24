@@ -176,6 +176,14 @@ exports.getAtendedAuctions = (accountId) => {
                 "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice",
                 "Auction"."bidIncreasement", "Auction".state,
                 (
+                    SELECT row_to_json(seller)
+                    FROM (
+                        SELECT "Account"."accountId", "Profile"."firstName", "Profile"."lastName", "Profile"."phoneNumber"
+                        FROM "Account" INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        WHERE "Account"."accountId" = "Auction"."sellerAccountId"
+                    ) AS seller
+                ) AS seller,
+                (
                     SELECT row_to_json(product)
                     FROM (
                         SELECT "Product"."productId", "Product"."name", "Product"."description",
@@ -215,7 +223,7 @@ exports.getAtendedAuctions = (accountId) => {
                     WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
                 ) AS "bids"
                 FROM "Auction"
-                WHERE "Auction"."auctionId" IN (SELECT DISTINCT "auctionId" FROM "latestBids")}
+                WHERE "Auction"."auctionId" IN (SELECT DISTINCT "auctionId" FROM "latestBids")
             )
         SELECT * FROM auctions`;
         let params = [accountId];
@@ -224,16 +232,6 @@ exports.getAtendedAuctions = (accountId) => {
         .catch(reason => reject(reason));
     });
 }
-
-exports.getAuctions = (page, categoryId, accountId, attendedIds) => {
-    if (page == undefined) return [];
-    let result = { auctions, closedAuctions }
-    if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
-    if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId === accountId);
-    if (categoryId && categoryId > 0) result.auctions = result.auctions.filter(e => e.product.category.categoryId == categoryId);
-    result.auctions = result.auctions.slice(0, page*10 + 9);
-    return result;
-};
 
 exports.insertAuction = (
     productName, description, searchKey, categoryId,
@@ -410,6 +408,16 @@ exports.buyNow = (accountId, auctionId) => {
         })
     })
 }
+
+exports.getAuctions = (page, categoryId, accountId, attendedIds) => {
+    if (page == undefined) return [];
+    let result = { auctions, closedAuctions }
+    if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
+    else if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId === accountId);
+    if (categoryId && categoryId > 0) result.auctions = result.auctions.filter(e => e.product.category.categoryId == categoryId);
+    result.auctions = result.auctions.slice(0, page*10 + 9);
+    return result;
+};
 
 // var sql = `INSERT INTO "PayPostFee"(ratio,fixed,"issuedTimestamp",maximum) VALUES(unnest($1::real[]),unnest($2::real[]),now(),unnest($3::integer[]))`;
 // var params = [
