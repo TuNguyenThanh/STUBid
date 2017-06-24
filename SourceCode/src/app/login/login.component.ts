@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { trigger, state, transition, animate, style } from '@angular/core';
+import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 
 import { AuthService } from '../service/auth.service';
@@ -21,12 +21,19 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    public router: Router
   ) {
-    this.formLogin = this.formBuilder.group({
-      username: ['testadmin', Validators.minLength(8)],
-      password: ['123456', Validators.minLength(8)]
-    });
+    let token = this.authService.token;
+    if (token) {
+      this.router.navigate(['/dashboard']);
+    }
+    else {
+      this.formLogin = this.formBuilder.group({
+        username: ['testadmin', Validators.minLength(8)],
+        password: ['123456', Validators.minLength(8)]
+      });
+    }
   }
 
   ngOnInit() {
@@ -39,9 +46,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(username, md5.appendStr(password).end())
     .then(() => {
       let that = this;
-      setTimeout(function() {
-        that.loading = !that.loading;
-      }, 2000);
+      that.loading = !that.loading;
+      this.router.navigate(['/dashboard']);
     })
     .catch(error => {
       this.loading = !this.loading;

@@ -6,8 +6,8 @@ import { Constants } from './constant';
 
 @Injectable()
 export class AuthService {
-  private token;
-  private profile;
+  public token;
+  public profile;
 
   constructor(private baseService: BaseService) { }
 

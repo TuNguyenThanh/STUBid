@@ -13,7 +13,8 @@ import { HomeComponent } from './home/home.component';
 import { ApiComponent } from './api/api.component';
 import { GuideComponent } from './guide/guide.component';
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -21,15 +22,15 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HomeComponent,
     ApiComponent,
     GuideComponent,
-    LoginComponent,
-    DashboardComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    DashboardModule
   ],
   providers: [BaseService],
   bootstrap: [AppComponent]

@@ -8,5 +8,6 @@ export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'api', component: ApiComponent },
     { path: 'guide', component: GuideComponent },
-    { path: 'login', component: LoginComponent }
+    { path: 'login', component: LoginComponent },
+    { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' }
 ]
