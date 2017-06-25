@@ -1,4 +1,4 @@
-const { getAuctions, getMyAuctions, getAtendedAuctions } = require('../models/auction')
+const { selectAuctions, getMyAuctions, getAtendedAuctions, selectMyAuctions } = require('../models/auction')
 const config = require('../config')
 
 module.exports = function (socket) {
@@ -18,15 +18,11 @@ module.exports = function (socket) {
     function setSocketInterval() {
         setTimeout(function() {
             socket.interval = setInterval(() => {
-                let { auctions, closedAuctions } = getAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
+                let { auctions, closedAuctions } = selectAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
                 if (closedAuctions && closedAuctions.length > 0) {
-                    if (socket.attendedIds && socket.attendedIds.length > 0) {
-                        sendClosedAttendedAuctions();
-                    }
-                    else {
+                    if (socket.attendedIds && socket.attendedIds.length > 0)
                         sendMyClosedAuctions();
-                    }
                 }
             }, 1000);
         }, 1000 - Date.now()%1000);
@@ -48,6 +44,41 @@ module.exports = function (socket) {
         .catch(reason => console.log(reason))
     }
 
+    socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
+
+    socket.on('CLIENT-REQUEST-HOME-VIEW', data => {
+        socket.page = 1;
+        socket.categoryId = -1;
+        delete socket.accountId;
+        delete socket.attendedIds;
+        clearInterval(socket.intervalMyAuctionsView);
+        delete socket.intervalMyAuctionsView;
+    })
+
+    socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
+        console.log(data);
+        socket.page = 1;
+        socket.categoryId = -1;
+        socket.accountId = data.accountId;
+        sendClosedAttendedAuctions();
+    })
+
+    socket.on('CLIENT-REQUEST-MY-AUCTIONS-VIEW', data => {
+        console.log(data);
+        socket.pageMyAuctionsView = 1;
+        socket.categoryId = -1;
+        socket.accountId = data.accountId;
+        sendMyClosedAuctions();
+        setTimeout(function() {
+            socket.intervalMyAuctionsView = setInterval(() => {
+                let { auctions, closedAuctions } = selectMyAuctions(socket.pageMyAuctionsView - 1, socket.accountId);
+                socket.emit('SERVER-SEND-MY-AUCTIONS', auctions);
+                if (closedAuctions && closedAuctions.length > 0) 
+                    sendMyClosedAuctions();
+            }, 1000);
+        }, 1000 - Date.now()%1000);
+    })
+
     function sendMyClosedAuctions() {
         getMyAuctions(socket.accountId, [2])
         .then(value => {
@@ -56,41 +87,10 @@ module.exports = function (socket) {
         .catch(reason => console.log(reason))
     }
 
-    socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
-
-    socket.on('CLIENT-REQUEST-HOME-VIEW', data => {
-        socket.page = 1;
-        socket.categoryId = -1;
-        delete socket.accountId;
-        delete socket.attendedIds;
-    })
-
-    socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
+    socket.on('CLIENT-SEND-MY-AUCTIONS-PAGE', data => {
         console.log(data);
-        socket.page = 1;
-        socket.categoryId = -1;
-        socket.accountId = data.accountId;
-        if (!data.accountId) {
-            delete socket.accountId;
-            delete socket.attendedIds;
-        }
-        else {
-            sendClosedAttendedAuctions()
-        }
-    })
-
-    socket.on('CLIENT-REQUEST-MY-AUCTIONS-VIEW', data => {
-        console.log(data);
-        socket.page = 1;
-        socket.categoryId = -1;
-        delete data.attendedIds;
-        if (!data.accountId)
-            delete socket.accountId;
-        else {
-            socket.accountId = data.accountId;
-            sendMyClosedAuctions();   
-        }
-    })
+        socket.pageMyAuctionsView = data.page;
+    });
 
     socket.on('CLIENT-SEND-PAGE', data => {
         console.log(data);
@@ -105,6 +105,8 @@ module.exports = function (socket) {
 
     socket.on('disconnect', () => {
         clearInterval(socket.interval);
+        clearInterval(socket.intervalMyAuctionsView);
+        delete socket.intervalMyAuctionsView;
         console.log('disconnect');
     });
 }

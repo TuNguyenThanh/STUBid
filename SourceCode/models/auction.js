@@ -260,7 +260,7 @@ exports.insertAuction = (
                 "moneyReceivingBankRefId", "moneyReceivingAddress", "allowedUserLevel")
             VALUES(
                 now(),now(),$6,$7,$8,
-                $9,$10,1,
+                $9,$10,0,
                 (SELECT "productId" FROM "insertProductResult"),$11,
                 $12,$13,null,
                 $14,$15,$16)
@@ -337,11 +337,20 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
         query(sql,params)
         .then(result => {
             if (result.rowCount > 0) {
-                auction.highestBidder = result.rows[0].highestBidder;
-                let page = Math.floor(index/10) + 1;
-                    categoryId = auction.product.category.categoryId;
-                    pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
-                resolve({ auction, page, categoryId, pageInCategory });
+                if (buyNow) {
+                    let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
+                    delete auctionsTimeLeft[auctionId];
+                    auctions.splice(auctionIndex,1);
+                    console.log(`close auction : ${auctionId}`);
+                    resolve();
+                }
+                else {
+                    auction.highestBidder = result.rows[0].highestBidder;
+                    let page = Math.floor(index/10) + 1;
+                        categoryId = auction.product.category.categoryId;
+                        pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
+                    resolve({ auction, page, categoryId, pageInCategory });
+                }
             }
             else {
                 reject({
@@ -409,12 +418,21 @@ exports.buyNow = (accountId, auctionId) => {
     })
 }
 
-exports.getAuctions = (page, categoryId, accountId, attendedIds) => {
+exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
     if (page == undefined) return [];
     let result = { auctions, closedAuctions }
     if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
     else if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId === accountId);
     if (categoryId && categoryId > 0) result.auctions = result.auctions.filter(e => e.product.category.categoryId == categoryId);
+    result.auctions = result.auctions.slice(0, page*10 + 9);
+    return result;
+};
+
+exports.selectMyAuctions = (page, accountId) => {
+    console.log(accountId);
+    if (page == undefined) return [];
+    let result = { auctions, closedAuctions }
+    if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId == accountId);
     result.auctions = result.auctions.slice(0, page*10 + 9);
     return result;
 };

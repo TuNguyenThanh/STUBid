@@ -1,5 +1,5 @@
 const { verify, refreshToken } = require('../../helpers/jwt');
-const { bid, getAuctions } = require('../../models/auction');
+const { bid, selectAuctions } = require('../../models/auction');
 const ERROR = require('../../error.json');
 
 module.exports = (req, res) => {
@@ -21,7 +21,7 @@ module.exports = (req, res) => {
     })
     .then(result => {
         // sockets.forEach(socket => {
-        //     socket.emit('SERVER-SEND-AUCTIONS', getAuctions(socket.page - 1, socket.categoryId));
+        //     socket.emit('SERVER-SEND-AUCTIONS', selectAuctions(socket.page - 1, socket.categoryId));
         // })
         res.send({ success: true, token })
     })

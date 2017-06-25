@@ -20,7 +20,7 @@ module.exports = (req,res) => {
     .then(unactivatedAuctions => {
         res.send({
             success: true,
-            unactivatedAuctions
+            results: unactivatedAuctions
         })
     })
     .catch(reason => {

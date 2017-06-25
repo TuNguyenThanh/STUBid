@@ -64,49 +64,6 @@ var socketEvents = [
     },
     {
         "event-type": "emit",
-        "event-name": "'CLIENT-REQUEST-MY-AUCTIONS-VIEW'",
-        "data": { "accountId": "number"}
-    },
-    {
-        "event-type": "on",
-        "event-name": "'SERVER-SEND-MY-CLOSED-AUCTIONS'",
-        "data": [{
-            "auctionId": "number",
-            "createdDate": "string",
-            "activatedDate": "string",
-            "duration": "number",
-            "startPrice": "number",
-            "ceilingPrice": "number",
-            "bidIncreasement": "number",
-            "product": {
-                "productId": "number",
-                "name": "string",
-                "description": "string",
-                "images": [{
-                    "imageId": "number",
-                    "name": "string",
-                    "url": "string"
-                }],
-                "category": {
-                    "categoryId": "number",
-                    "name": "string",
-                    "description": "string",
-                    "createdDate": "string"
-                }
-            },
-            "highestBidder": {
-                "accountId": "number",
-                "firstName": "string",
-                "lastName": "string",
-                "phoneNumber": "string",
-                "price": "number",
-                "timestamp": "string"
-            },
-            "bids": "number"
-        }]
-    },
-    {
-        "event-type": "emit",
         "event-name": "'CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW'",
         "data": { "accountId": "number"}
     },
@@ -154,4 +111,45 @@ var socketEvents = [
             "bids": "number"
         }]
     },
+    {
+        "event-type": "emit",
+        "event-name": "'CLIENT-REQUEST-MY-AUCTIONS-VIEW'",
+        "data": { "accountId": "number"}
+    },
+    {
+        "event-type": "on",
+        "event-name": "'SERVER-SEND-MY-CLOSED-AUCTIONS'",
+        "data": [{
+            "auctionId": "number",
+            "createdDate": "string",
+            "activatedDate": "string",
+            "duration": "number",
+            "startPrice": "number",
+            "ceilingPrice": "number",
+            "bidIncreasement": "number",
+            "product": {
+                "productId": "number",
+                "name": "string",
+                "description": "string",
+                "images": [{
+                    "imageId": "number",
+                    "name": "string",
+                    "url": "string"
+                }],
+                "category": {
+                    "categoryId": "number",
+                    "name": "string",
+                    "description": "string",
+                    "createdDate": "string"
+                }
+            },
+            "highestBidder": "null",
+            "bids": "number"
+        }]
+    },
+    {
+        "event-type": "emit",
+        "event-name": "'CLIENT-SEND-MY-AUCTIONS-PAGE'",
+        "data": { "page": "number"}
+    }
 ]

@@ -1,9 +1,9 @@
-var { getAuctions } = require('../../models/auction');
+var { selectAuctions } = require('../../models/auction');
 
 module.exports = (req,res) => {
     let page = req.params.page?req.params.page:1;
     res.send({
         success: true,
-        result: getAuctions(page-1, -1)
+        result: selectAuctions(page-1, -1)
     })
 }
