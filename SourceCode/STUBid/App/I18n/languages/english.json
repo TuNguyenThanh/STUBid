@@ -144,7 +144,6 @@
   "termsOf": "Terms of",
   "note1": "After completing the product launch, bring this product to SBid for us to authenticate and open the auction as soon as possible.",
   "note2": "Thank you for using our service.",
-
   "missingParameters": "Missing parameters.",
   "authenticationTokenIsNotValid": "Authentication is not valid",
   "authenticationTokenHasBeenExpired": "Authentication has been expired. Please retry!",
@@ -166,5 +165,7 @@
   "canNotSendVerificationCodeViaEmail": "The Email Sender System has encountered an error. Please try again later!",
   "formParsingFailed": "The server has encountered an error when parsing data. Please try again later!",
   "accountActived": "Account Actived",
+  "productId": "Product Id",
+  "createDate": "Create date",
 
 }

@@ -144,7 +144,6 @@
   "termsOf": "Điều khoản",
   "note1": "Sau khi hoàn tất việc đăng sản phẩm, bạn hãy đem sản phẩm này đến SBid để chúng tôi xác thực và mở đấu giá trong thời gian sớm nhất có thể.",
   "note2": "Cảm ơn bạn đã tin dùng dịch vụ của chúng tôi.",
-
   "missingParameters": "Thiếu dữ liệu.",
   "authenticationTokenIsNotValid": "Thông tin xác thực không hợp lệ.",
   "authenticationTokenHasBeenExpired": "Thông tin xác thực đã hết hạn. Vui lòng đăng nhập lại!",
@@ -166,4 +165,6 @@
   "canNotSendVerificationCodeViaEmail": "Hệ thống gửi email đang gặp sự cố. Vui lòng thử lại sau!",
   "formParsingFailed": "Máy chủ đã gặp sự cố phân tích dữ liệu. Vui lòng thử lại sau!",
   "accountActived": "Tài khoản đã kích hoạt",
+  "productId": "Mã sản phẩm",
+  "createDate": "Ngày đăng",
 }

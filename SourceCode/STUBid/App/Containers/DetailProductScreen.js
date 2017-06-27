@@ -29,7 +29,7 @@ class DetailProduct extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose } = nextProps.auctions;
+    const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose, myAuctionsHanding } = nextProps.auctions;
     const { language } = this.props;
 
     if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
@@ -40,6 +40,10 @@ class DetailProduct extends React.Component {
       const temp = myListAuction.concat(myListAuctionClose);
       this.setState({
         data: temp[this.props.rowID],
+      });
+    } else if (this.props.screen == 'MYAUCTION_TAB2_1') {
+      this.setState({
+        data: myAuctionsHanding[this.props.rowID],
       });
     }
 

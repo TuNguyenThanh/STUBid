@@ -98,7 +98,7 @@ class MyAuctionTab2 extends React.Component {
 
   renderItemHandling(item, rowID) {
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTION_TAB2_1' })}>
         {
           item.product.images ?
           <ImageLoad
@@ -155,7 +155,7 @@ class MyAuctionTab2 extends React.Component {
 
   renderItemProcessed(item, rowID) {
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })}>
         {
           item.product.images ?
           <ImageLoad
@@ -178,7 +178,7 @@ class MyAuctionTab2 extends React.Component {
               <Icon name="dollar" size={15} color={Colors.primary} />
             </View>
             <Text style={styles.titlePriceNow}>
-              {item.startPrice}
+              {item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')}
             </Text>
           </View>
           <View style={styles.viewTemp}>

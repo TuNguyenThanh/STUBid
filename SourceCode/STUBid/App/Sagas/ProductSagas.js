@@ -23,7 +23,7 @@ export function * uploadProduct(ProductApi, UserApi, action) {
       { name: 'description', data: product.description },
       { name: 'categoryId', data: String(product.categoryId) },
       { name: 'startPrice', data: String(product.startPrice) },
-      { name: 'ceilingPrice', data: String(product.ceilingPrice) },
+      { name: 'ceilingPrice', data: product.ceilingPrice ? String(product.ceilingPrice) : null },
       { name: 'duration', data: String(product.duration) },
       { name: 'bidIncreasement', data: String(product.bidIncreasement) },
       { name: 'productReturningAddress', data: product.productReturningAddress },
