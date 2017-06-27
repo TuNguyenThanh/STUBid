@@ -60,12 +60,12 @@ var socketEvents = [
     {
         "event-type": "emit",
         "event-name": "'CLIENT-SEND-PAGE'",
-        "data": { "page": "number"}
+        "data": { "page": "number" }
     },
     {
         "event-type": "emit",
         "event-name": "'CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW'",
-        "data": { "accountId": "number"}
+        "data": { "accountId": "number" }
     },
     {
         "event-type": "on",
@@ -114,7 +114,7 @@ var socketEvents = [
     {
         "event-type": "emit",
         "event-name": "'CLIENT-REQUEST-MY-AUCTIONS-VIEW'",
-        "data": { "accountId": "number"}
+        "data": { "accountId": "number" }
     },
     {
         "event-type": "on",
@@ -150,6 +150,18 @@ var socketEvents = [
     {
         "event-type": "emit",
         "event-name": "'CLIENT-SEND-MY-AUCTIONS-PAGE'",
-        "data": { "page": "number"}
+        "data": { "page": "number" }
+    },
+    {
+        "event-type": "emit",
+        "event-name": "'CLIENT-REQUEST-SEARCH-VIEW'",
+        "data": {}
+    },
+    {
+        "event-type": "emit",
+        "event-name": "'CLIENT-SEND-SEARCH-KEY'",
+        "data": {
+            "searchKey": "string"
+        }
     }
 ]
