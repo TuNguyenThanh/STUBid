@@ -91,15 +91,19 @@ class DetailProduct extends React.Component {
               <Tab1 tabLabel={I18n.t('auction', {locale: language})} rowID={this.props.rowID} screen={this.props.screen} />
               <Tab2 tabLabel={I18n.t('detailProduct', {locale: language})} rowID={this.props.rowID} screen={this.props.screen} />
             </ScrollableTabView>
-            <View style={styles.viewBid}>
-              <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
-                <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
-              </TouchableOpacity>
-              <View style={styles.line} />
-              <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data)}>
-                <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
-              </TouchableOpacity>
-            </View>
+            {
+              (this.props.screen != 'MYAUCTION_TAB2_1' && this.props.data.timeLeft != undefined ) &&
+              <View style={styles.viewBid}>
+                <TouchableOpacity style={styles.button} onPress={() => this.handleBid(this.state.data)}>
+                  <Text style={styles.titleButton}>{I18n.t('bid', {locale: language})}</Text>
+                </TouchableOpacity>
+                <View style={styles.line} />
+                <TouchableOpacity style={styles.button} onPress={() => this.handleBuyNow(this.state.data)}>
+                  <Text style={styles.titleButton}>{I18n.t('buyNow', {locale: language})}</Text>
+                </TouchableOpacity>
+              </View>
+            }
+
             { this.renderModalBid() }
           </View>
           :

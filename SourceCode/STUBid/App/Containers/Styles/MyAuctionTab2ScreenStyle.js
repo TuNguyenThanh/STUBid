@@ -9,7 +9,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.lightgray,
   },
   viewWrap: {
-    height: Metrics.screenHeight / 1.8,
+    height: Metrics.screenHeight / 2,
     width: Metrics.screenWidth
   },
   viewHeaderTitleStyle: {
