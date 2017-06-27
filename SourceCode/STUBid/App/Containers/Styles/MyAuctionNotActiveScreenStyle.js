@@ -33,5 +33,28 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row'
   },
-
+  viewQRCodeStyle: {
+    flex: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  viewImageQRCode: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    position: "absolute",
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  viewWrapQRCode: {
+    padding: 3,
+    backgroundColor: Colors.lightgray
+  },
+  imgLogoStyle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20
+  }
 })

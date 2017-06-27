@@ -1,8 +1,9 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import { connect } from 'react-redux'
 import Swiper from 'react-native-swiper'
 import ImageLoad from 'react-native-image-placeholder'
+import QRCode from 'react-native-qrcode'
 import moment from 'moment'
 import 'moment/locale/vi'
 
@@ -16,11 +17,10 @@ import I18n from 'react-native-i18n'
 class MyAuctionNotActive extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props.data);
-
     this.state = {
       arrImage: [],
       data: this.props.data,
+      text: 'https://github.com/tunguyenthanh',
     };
   }
 
@@ -64,11 +64,28 @@ class MyAuctionNotActive extends React.Component {
 
           <View style={styles.rowItem}>
             <Text style={styles.textTitleStyle}>{I18n.t('category', {locale: language})}: </Text>
-            <Text style={styles.textStyle}>{data.product.category.name}</Text>
+            <Text style={styles.textStyle}>{I18n.t(data.product.category.name, {locale: language})}</Text>
           </View>
 
-          <View style={{flex: 10, backgroundColor: 'red'}}>
-
+          <View style={styles.viewQRCodeStyle}>
+            <QRCode
+              value={this.state.text}
+              size={200}
+              bgColor={Colors.primary}
+              fgColor={Colors.lightgray}
+            />
+            <View style={styles.viewImageQRCode}>
+              <View style={styles.viewWrapQRCode}>
+                <Image
+                  source={Images.sbidIcon}
+                  style={styles.imgLogoStyle}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+          </View>
+          <View style={{ alignItems: 'center'}}>
+            <Text style={styles.textTitleStyle}>{I18n.t('scanIt', {locale: language})}</Text>
           </View>
         </View>
       </View>
