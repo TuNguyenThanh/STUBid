@@ -1,7 +1,8 @@
 const { timeLeftFormat } = require('../helpers/time'),
       { query } = require('../helpers/db'),
       { DOMAIN_NAME } = require('../config'),
-      ERROR = require('../error.json');
+      ERROR = require('../error.json'),
+      latinize = require('latinize');
 
 var auctions = [],
     auctionsTimeLeft = {},
@@ -448,7 +449,8 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
     if (searchKey) {
         let searchArray = searchKey.toLowerCase().split(' ');
         results = results.filter(e => {
-            e = (e.product.name + e.product.category.name + e.seller.firstName + e.seller.lastName).toLowerCase();
+            //e = (e.product.name + e.product.category.name + e.seller.firstName + e.seller.lastName).toLowerCase();
+            e = latinize(e.product.name).toLowerCase();
             for (var i = 0; i < searchArray.length; i++) {
                 var element = searchArray[i];
                 if (e.indexOf(element) >= 0) return true;
