@@ -1,8 +1,8 @@
-// const baseURL = 'https://sbid.herokuapp.com/api/';
-// const baseSocketIOURL = 'https://sbid.herokuapp.com/';
+const baseURL = 'https://sbid.herokuapp.com/api/';
+const baseSocketIOURL = 'https://sbid.herokuapp.com/';
 
-const baseURL = 'http://192.168.5.21:3000/api/';
-const baseSocketIOURL = 'http://192.168.5.21:3000/';
+// const baseURL = 'http://192.168.5.21:3000/api/';
+// const baseSocketIOURL = 'http://192.168.5.21:3000/';
 
 const headers = {
   "App-Name": "sbid"

@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ModalCategory from '../Components/ModalCategory'
 import ImageLoad from 'react-native-image-placeholder'
+import Highlighter from 'react-native-highlight-words'
+import latinize from 'latinize'
 import { searchAuctions } from '../Helper/SocketIO'
 
 // Styles
@@ -95,7 +97,14 @@ class Search extends React.Component {
           />
         }
         <View style={styles.viewDetail}>
-          <Text style={styles.titleProduct} numberOfLines={2}>{item.product.name}</Text>
+          <Highlighter
+            style={styles.titleProduct}
+            numberOfLines={2}
+            highlightStyle={{ color: '#F00', fontSize: 16 }}
+            searchWords={[this.state.keySearch]}
+            textToHighlight={item.product.name}
+            sanitize={latinize}
+          />
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
               <Icon name="dollar" size={15} color={Colors.primary} />
