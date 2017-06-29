@@ -13,7 +13,7 @@ function countDown() {
     closedAuctions = [];
     for (var i = auctions.length - 1; i >= 0; i--) {
         var element = auctions[i],
-            timeLeft = auctionsTimeLeft[element.auctionId];
+            timeLeft = auctionsTimeLeft[auctions[i].auctionId];
         if (timeLeft > 0) {
             timeLeft--;
             auctionsTimeLeft[element.auctionId] = timeLeft;
