@@ -49,6 +49,8 @@ module.exports = function (socket) {
         console.log(data);
         homeViewPage= 1;
         homeViewCategoryId = data.categoryId;
+        let auctions = selectAuctions(homeViewPage- 1, homeViewCategoryId, accountId, attendedIds);
+        socket.emit('SERVER-SEND-AUCTIONS', auctions);
     });
 
     // ATTENDED AUCTIONS
@@ -135,7 +137,10 @@ module.exports = function (socket) {
 
     socket.on('CLIENT-SEND-SEARCH-CATEGORY', data => {
         console.log(data);
+        searchViewPage = 1;
         searchViewCategoryId = data.categoryId;
+        let auctions = selectSearchAuctions(searchViewPage - 1, searchViewCategoryId, searchKey);
+        socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
     });
 
     socket.on('CLIENT-SEND-SEARCH-KEY', data => {
