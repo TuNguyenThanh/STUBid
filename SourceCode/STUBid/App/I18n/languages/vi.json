@@ -135,7 +135,7 @@
   "consignmentAddress": "Địa chỉ nhận gửi hàng",
   "postOffice": "Bưu điện",
   "banking": "Ngân hàng",
-  "hour": "Giờ",
+  "hour": "Tiếng",
   "wrongUsernameOrPassword": "Tên đăng nhập hoặc mật khẩu sai",
   "CLIENT_ERROR": "CLIENT ERROR",
   "pleaseEnterAmountPerABid": "Vui lòng nhập số tiền cho mỗi giá thầu",

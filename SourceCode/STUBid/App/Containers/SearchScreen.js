@@ -100,7 +100,7 @@ class Search extends React.Component {
           <Highlighter
             style={styles.titleProduct}
             numberOfLines={2}
-            highlightStyle={{ color: '#F00', fontSize: 16 }}
+            highlightStyle={{ color: '#F00' }}
             searchWords={[this.state.keySearch]}
             textToHighlight={item.product.name}
             sanitize={latinize}
@@ -186,8 +186,6 @@ class Search extends React.Component {
             autoCapitalize={'none'}
             autoCorrect={false}
             placeholder={I18n.t('search', {locale: language})}
-            returnKeyType={'search'}
-            onSubmitEditing={() => alert('search')}
             onChangeText={(keySearch) => this.handleSearch(keySearch)}
             value={this.state.keySearch}
           />
