@@ -6,7 +6,7 @@ import AuctionsActions from '../Redux/AuctionsRedux'
 import ImageLoad from 'react-native-image-placeholder'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import IO from 'socket.io-client/dist/socket.io'
+import { myAuctionsHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -15,6 +15,9 @@ import ApiConfig from '../Config/ApiConfig'
 // Styles
 import styles from './Styles/MyAuctionTab2ScreenStyle'
 import { Images, Colors } from '../Themes'
+
+//I18n
+import I18n from 'react-native-i18n'
 
 class MyAuctionTab2 extends React.Component {
   constructor(props) {
@@ -28,14 +31,9 @@ class MyAuctionTab2 extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = IO(ApiConfig.baseSocketIOURL);
-
-    // my auctions
-    this.socket.emit('CLIENT-REQUEST-MY-AUCTIONS-VIEW', { accountId: this.props.login.user.profile.accountId });
-    this.socket.emit('CLIENT-SEND-MY-AUCTIONS-PAGE', { page: 1 });
-    this.socket.on('SERVER-SEND-MY-AUCTIONS', (data) => {
+    myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
       this.props.myAuctionsHanding(data);
-    });
+    }, this.props.login.user.profile.accountId, 1);
 
     this.props.getProductUnActivity(this.props.login.user.token);
     this.isGetProductUnActivity = true;
@@ -97,6 +95,7 @@ class MyAuctionTab2 extends React.Component {
   }
 
   renderItemHandling(item, rowID) {
+    const { language } = this.props;
     return(
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTION_TAB2_1' })}>
         {
@@ -154,6 +153,7 @@ class MyAuctionTab2 extends React.Component {
   }
 
   renderItemProcessed(item, rowID) {
+    const { language } = this.props;
     return(
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })}>
         {
@@ -185,7 +185,7 @@ class MyAuctionTab2 extends React.Component {
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>Not active</Text>
+            <Text style={styles.titleTime}>{I18n.t('notActive', {locale: language})}</Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
@@ -193,7 +193,7 @@ class MyAuctionTab2 extends React.Component {
             </View>
             <View style={styles.viewPriceBid}>
               <Text style={styles.titlePriceNext}>
-              Not active
+              {I18n.t('notActive', {locale: language})}
               </Text>
             </View>
           </View>

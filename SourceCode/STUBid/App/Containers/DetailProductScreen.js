@@ -21,7 +21,7 @@ class DetailProduct extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],//this.props.auctions.data[this.props.rowID],
+      data: [],
       openModalBid: false,
       productSelected: null,
     };
@@ -29,10 +29,10 @@ class DetailProduct extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose, myAuctionsHanding } = nextProps.auctions;
+    const { fetching, listData, bidSuccess, error, myListAuction, myListAuctionClose, myAuctionsHanding, searchAuctions } = nextProps.auctions;
     const { language } = this.props;
 
-    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
+    if(this.props.screen == 'HOME') {
       this.setState({
         data: listData[this.props.rowID],
       });
@@ -44,6 +44,10 @@ class DetailProduct extends React.Component {
     } else if (this.props.screen == 'MYAUCTION_TAB2_1') {
       this.setState({
         data: myAuctionsHanding[this.props.rowID],
+      });
+    } else if (this.props.screen == 'SEARCH_SCREEN') {
+      this.setState({
+        data: searchAuctions[this.props.rowID],
       });
     }
 

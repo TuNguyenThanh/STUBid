@@ -11,7 +11,7 @@ import ModalCategory from '../Components/ModalCategory'
 import ModalLoading from '../Components/ModalLoading'
 import ModalBid from '../Components/ModalBid'
 import ImageLoad from 'react-native-image-placeholder'
-import IO from 'socket.io-client/dist/socket.io'
+import { homeHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -27,7 +27,6 @@ import I18n from 'react-native-i18n'
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.socket = IO(ApiConfig.baseSocketIOURL);
     this.state = {
       openModalCategory: false,
       openModalBid: false,
@@ -46,7 +45,6 @@ class Home extends React.Component {
     this.isHandleBid = false;
     this.isLoginToken = false;
     this.isLoaingFirst = true;
-
   }
 
   componentWillMount() {
@@ -61,12 +59,9 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: -1 });
-    this.socket.emit('CLIENT-SEND-PAGE', { page: this.state.page });
-    this.socket.emit('CLIENT-REQUEST-HOME-VIEW');
-    this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
+    homeHandler.setServerSendAuctionsHandler((data) => {
       this.props.setData(data);
-    });
+    }, 1, -1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -332,7 +327,7 @@ class Home extends React.Component {
 
   onEndReached() {
     this.setState({ page: this.state.page + 1 });
-    this.socket.emit('CLIENT-SEND-PAGE', { page: this.state.page + 1 });
+    homeHandler.emitHomePage(this.state.page + 1);
   }
 
   handleBidPress(priceBid) {
@@ -381,8 +376,7 @@ class Home extends React.Component {
 
   handleChooseItem(item) {
     this.setState({ openModalCategory: false, categorySelected: item, page: 1});
-    this.socket.emit('CLIENT-SEND-CATEGORY', { categoryId: item.categoryId });
-    this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
+    homeHandler.emitCategoryAndPage(item.categoryId, 1);
   }
 }
 

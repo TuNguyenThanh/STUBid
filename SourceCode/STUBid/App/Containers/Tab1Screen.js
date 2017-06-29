@@ -18,13 +18,15 @@ class Tab1 extends React.Component {
   constructor(props) {
     super(props);
     let data = [];
-    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
+    if(this.props.screen == 'HOME') {
       data = this.props.auctions.listData[this.props.rowID];
     } else if(this.props.screen == 'MYAUCTIONS') {
       const temp = this.props.auctions.myListAuction.concat(this.props.auctions.myListAuctionClose);
       data = temp[this.props.rowID];
     } else if (this.props.screen == 'MYAUCTION_TAB2_1') {
       data = this.props.auctions.myAuctionsHanding[this.props.rowID];
+    } else if (this.props.screen == 'SEARCH_SCREEN') {
+      data = this.props.auctions.searchAuctions[this.props.rowID];
     }
 
     this.state = {
@@ -47,9 +49,9 @@ class Tab1 extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { listData, myListAuction, myListAuctionClose, myAuctionsHanding } = nextProps.auctions;
+    const { listData, myListAuction, myListAuctionClose, myAuctionsHanding, searchAuctions } = nextProps.auctions;
 
-    if(this.props.screen == 'HOME' || this.props.screen == 'SEARCH') {
+    if(this.props.screen == 'HOME') {
       this.setState({
         data: listData[this.props.rowID],
       });
@@ -61,6 +63,10 @@ class Tab1 extends React.Component {
     } else if (this.props.screen == 'MYAUCTION_TAB2_1') {
       this.setState({
         data: myAuctionsHanding[this.props.rowID],
+      });
+    } else if (this.props.screen == 'SEARCH_SCREEN') {
+      this.setState({
+        data: searchAuctions[this.props.rowID],
       });
     }
   }

@@ -2,11 +2,12 @@ import React from 'react'
 import { View, Text, Animated, TouchableOpacity, Image, TextInput, ListView, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import SearchActions from '../Redux/SearchRedux'
+import AuctionsActions from '../Redux/AuctionsRedux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import ModalCategory from '../Components/ModalCategory'
 import ImageLoad from 'react-native-image-placeholder'
-import IO from 'socket.io-client/dist/socket.io'
+import { searchAuctions } from '../Helper/SocketIO'
 
 // Styles
 import styles from './Styles/SearchScreenStyle'
@@ -22,6 +23,7 @@ class Search extends React.Component {
       openModalCategory: false,
       categorySelected: { categoryId: -1, name: 'all' },
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      keySearch: '',
     };
     this.loadCategory = true;
   }
@@ -38,14 +40,18 @@ class Search extends React.Component {
       });
       this.loadCategory = false;
     }
+
+    searchAuctions.setServerSendSearchHandler((data) => {
+      this.props.searchAuctions(data);
+    }, this.state.categorySelected.categoryId, '');
   }
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, listData } = nextProps.auctions;
-    if(!fetching && listData) {
+    const { fetching, error, searchAuctions } = nextProps.auctions;
+    if(!fetching && searchAuctions) {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(listData),
+        dataSource: this.state.dataSource.cloneWithRows(searchAuctions),
       });
     }
 
@@ -72,7 +78,7 @@ class Search extends React.Component {
 
   renderItem(item, rowID) {
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'SEARCH' })}>
+      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'SEARCH', screen: 'SEARCH_SCREEN' })}>
         {
           item.product.images ?
           <ImageLoad
@@ -173,6 +179,8 @@ class Search extends React.Component {
             placeholder={I18n.t('search', {locale: language})}
             returnKeyType={'search'}
             onSubmitEditing={() => alert('search')}
+            onChangeText={(keySearch) => this.handleSearch(keySearch)}
+            value={this.state.keySearch}
           />
           <TouchableOpacity>
             <Icon name="search" size={20} color={Colors.primary} />
@@ -206,6 +214,11 @@ class Search extends React.Component {
     )
   }
 
+  handleSearch(keySearch) {
+    searchAuctions.emitKeySearch(keySearch);
+    this.setState({ keySearch });
+  }
+
   renderModalCategory() {
     return(
       <ModalCategory
@@ -213,7 +226,10 @@ class Search extends React.Component {
         open={this.state.openModalCategory}
         modalDidClose={() => this.setState({ openModalCategory: false })}
         data={this.state.data}
-        onPressItem={(item) => this.setState({ openModalCategory: false, categorySelected: item }) }
+        onPressItem={(item) => {
+          searchAuctions.emitCategory(item.categoryId);
+          this.setState({ openModalCategory: false, categorySelected: item });
+        }}
       />
     );
   }
@@ -230,6 +246,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    searchAuctions: (data) => dispatch(AuctionsActions.searchAuctions(data)),
   }
 }
 

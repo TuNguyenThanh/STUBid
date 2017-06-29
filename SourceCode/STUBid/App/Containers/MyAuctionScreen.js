@@ -8,7 +8,7 @@ import Header from '../Components/Header'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import MyAuctionTab1 from './MyAuctionTab1Screen'
 import MyAuctionTab2 from './MyAuctionTab2Screen'
-import IO from 'socket.io-client/dist/socket.io'
+import { attendedHandler, attendedCloseHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -31,17 +31,11 @@ class MyAuction extends React.Component {
 
   componentDidMount() {
     if(this.props.login.user) {
-      this.socket = IO(ApiConfig.baseSocketIOURL);
-
-      //my auctions
-      this.socket.emit('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', { accountId: this.props.login.user.profile.accountId});
-      this.socket.emit('CLIENT-SEND-PAGE', { page: 1 });
-      this.socket.on('SERVER-SEND-AUCTIONS', (data) => {
+      attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
         this.props.myAuctions(data);
-      });
+      }, this.props.login.user.profile.accountId, 1);
 
-      //
-      this.socket.on('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', (data) => {
+      attendedCloseHandler.setServerSendCloseAttendedAuctionsHandler((data) => {
         this.props.myAuctionsClose(data);
       });
     }
