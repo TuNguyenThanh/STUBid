@@ -420,10 +420,16 @@ exports.buyNow = (accountId, auctionId) => {
 
 exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
     if (page == undefined) return [];
+    let results = [...auctions];
+    if (categoryId && categoryId > 0) results = results.filter(e => e.product.category.categoryId == categoryId);
+    results = results.slice(0, page*10 + 9);
+    return results;
+};
+
+exports.selectAttendedAuctions = (page, attendedIds) => {
+    if (page == undefined) return [];
     let result = { auctions, closedAuctions }
     if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
-    else if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId === accountId);
-    if (categoryId && categoryId > 0) result.auctions = result.auctions.filter(e => e.product.category.categoryId == categoryId);
     result.auctions = result.auctions.slice(0, page*10 + 9);
     return result;
 };
@@ -436,29 +442,30 @@ exports.selectMyAuctions = (page, accountId) => {
     return result;
 };
 
-exports.selectSearchAuctions = (page, searchKey) => {
-    let result = auctions;
+exports.selectSearchAuctions = (page, categoryId, searchKey) => {
+    let results = [...auctions];
+    if (categoryId && categoryId > 0) results = results.filter(e => e.product.category.categoryId == categoryId);
     if (searchKey) {
-        let searchArray = searchKey.split(' ');
-        result = result.filter(e => {
-            e = e.product.name + e.product.category.name + e.highestBidder.price + '.000' + e.startPrice + '.000' + e.seller.firstName + e.seller.lastName;
+        let searchArray = searchKey.toLowerCase().split(' ');
+        results = results.filter(e => {
+            e = (e.product.name + e.product.category.name + e.seller.firstName + e.seller.lastName).toLowerCase();
             for (var i = 0; i < searchArray.length; i++) {
                 var element = searchArray[i];
-                if (e.toLowerCase().indexOf(element) > 0) return true;
+                if (e.indexOf(element) >= 0) return true;
             }
         }, this)
-        result = result.sort((a,b) => {
+        results = results.sort((a,b) => {
             let aResult = 0, bResult = 0, aIndex, bIndex;
-            a = a.product.name + a.product.category.name + a.highestBidder.price + '.000' + a.startPrice + '.000' + a.seller.firstName + a.seller.lastName;
-            b = b.product.name + b.product.category.name + b.highestBidder.price + '.000' + b.startPrice + '.000' + b.seller.firstName + b.seller.lastName;
+            a = a.product.name + a.product.category.name + a.seller.firstName + a.seller.lastName.toLowerCase();
+            b = b.product.name + b.product.category.name + b.seller.firstName + b.seller.lastName.toLowerCase();
             searchArray.forEach(e => {
-                aResult += 1 + a.toLowerCase().indexOf(e);
-                bResult += 1 + b.toLowerCase().indexOf(e);
+                aResult += 1 - a.indexOf(e);
+                bResult += 1 - b.indexOf(e);
             })
             return bResult < aResult;
         });
     }
-    return result.slice(0, page*10 + 9);
+    return results.slice(0, page*10 + 9);
 }
 
 // var sql = `UPDATE "Auction" SET "activatedDate" = now()`;

@@ -1,13 +1,30 @@
-const { selectAuctions, getMyAuctions, getAtendedAuctions, selectMyAuctions, selectSearchAuctions } = require('../models/auction')
+const { selectAuctions, getMyAuctions, getAtendedAuctions, selectAttendedAuctions, selectMyAuctions, selectSearchAuctions } = require('../models/auction')
 const config = require('../config')
 
 module.exports = function (socket) {
+    var homeViewCategoryId = -1;
+    var homeViewPage = 1;
+    var homeViewInterval;
+
+    var searchKey = '';
+    var searchViewPage = 1;
+    var searchViewCategoryId = -1;
+    var searchViewInterval;
+
+    var accountId;
+    var attendedIds;
+    var attendedViewPage = 1;
+    var attendedViewInterval;
+    var myAuctionsViewPage = 1;
+    var myAuctionsViewInterval;
+
     if (socket.handshake.query.appName === 'sbid'
         || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true) {
         // console.log('connect');
-        socket.page = 1;
-        socket.categoryId = -1;
+        homeViewPage = 1;
+        homeViewCategoryId = -1;
         setHomeView();
+        console.log('CONNECTION ' + new Date().getSeconds());
     }
     else {
         socket.disconnect();
@@ -15,44 +32,37 @@ module.exports = function (socket) {
     }
 
     function setHomeView() {
-        clearInterval(socket.interval);
-        clearInterval(socket.intervalMyAuctionsView);
-        delete socket.intervalMyAuctionsView;
-        delete socket.attendedIds;
-        delete socket.accountId;
         setTimeout(function () {
-            socket.interval = setInterval(() => {
-                let { auctions, closedAuctions } = selectAuctions(socket.page - 1, socket.categoryId, socket.accountId, socket.attendedIds);
+            homeViewInterval = setInterval(() => {
+                let auctions = selectAuctions(homeViewPage- 1, homeViewCategoryId, accountId, attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
-                if (closedAuctions && closedAuctions.length > 0) {
-                    if (socket.attendedIds && socket.attendedIds.length > 0)
-                        sendMyClosedAuctions();
-                }
             }, 1000);
         }, 1000 - Date.now() % 1000);
     }
 
-    socket.emit('SERVER-SEND-INFO', { page: socket.page, categoryId: socket.categoryId })
+    socket.on('CLIENT-SEND-PAGE', data => {
+        console.log(data);
+        homeViewPage= data.page;
+    });
 
-    socket.on('CLIENT-REQUEST-HOME-VIEW', data => {
-        socket.page = 1;
-        socket.categoryId = -1;
-        setHomeView();
-    })
+    socket.on('CLIENT-SEND-CATEGORY', data => {
+        console.log(data);
+        homeViewPage= 1;
+        homeViewCategoryId = data.categoryId;
+    });
 
     // ATTENDED AUCTIONS
     function sendClosedAttendedAuctions() {
-        socket.attendedIds = [];
+        attendedIds = [];
         let closedAttenedAuctions = [];
-        clearInterval(socket.interval);
-        getAtendedAuctions(socket.accountId)
+        getAtendedAuctions(accountId)
             .then(value => {
                 value.forEach(function (auction) {
                     if (auction.state === 1)
-                        socket.attendedIds.push(auction.auctionId);
+                        attendedIds.push(auction.auctionId);
                     else closedAttenedAuctions.push(auction);
                 });
-                console.log(socket.attendedIds);
+                console.log(attendedIds);
                 socket.emit('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', closedAttenedAuctions)
             })
             .catch(reason => console.log(reason))
@@ -60,23 +70,34 @@ module.exports = function (socket) {
 
     socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
         console.log(data);
-        socket.page = 1;
-        socket.categoryId = -1;
-        socket.accountId = data.accountId;
+        attendedViewPage = 1;
+        accountId = data.accountId;
         sendClosedAttendedAuctions();
+        setTimeout(function () {
+            attendedViewInterval = setInterval(() => {
+                let { auctions, closedAuctions } = selectAttendedAuctions(attendedViewPage - 1, attendedIds);
+                socket.emit('SERVER-SEND-ATTENDED-AUCTIONS', auctions);
+                if (closedAuctions && closedAuctions.length > 0) {
+                    sendClosedAttendedAuctions();
+                }
+            }, 1000);
+        }, 1000 - Date.now() % 1000);
     })
+
+    socket.on('CLIENT-SEND-ATTENDED-AUCTIONS-PAGE', data => {
+        console.log(data);
+        attendedViewPage = data.page;
+    });
 
     // MY AUCTIONS
     socket.on('CLIENT-REQUEST-MY-AUCTIONS-VIEW', data => {
         console.log(data);
-        socket.pageMyAuctionsView = 1;
-        socket.categoryId = -1;
-        socket.accountId = data.accountId;
-        clearInterval(socket.intervalMyAuctionsView);
+        myAuctionsViewPage = 1;
+        accountId = data.accountId;
         sendMyClosedAuctions();
         setTimeout(function () {
-            socket.intervalMyAuctionsView = setInterval(() => {
-                let { auctions, closedAuctions } = selectMyAuctions(socket.pageMyAuctionsView - 1, socket.accountId);
+            myAuctionsViewInterval = setInterval(() => {
+                let { auctions, closedAuctions } = selectMyAuctions(myAuctionsViewPage - 1, accountId);
                 socket.emit('SERVER-SEND-MY-AUCTIONS', auctions);
                 if (closedAuctions && closedAuctions.length > 0)
                     sendMyClosedAuctions();
@@ -85,50 +106,45 @@ module.exports = function (socket) {
     })
 
     function sendMyClosedAuctions() {
-        getMyAuctions(socket.accountId, [2])
+        getMyAuctions(accountId, [2])
             .then(value => socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', value))
             .catch(reason => console.log(reason))
     }
 
     socket.on('CLIENT-SEND-MY-AUCTIONS-PAGE', data => {
         console.log(data);
-        socket.pageMyAuctionsView = data.page;
+        socmyAuctionsViewPage = data.page;
     });
 
-    // SEARCH
+    // SEARCH -- begin --
     socket.on('CLIENT-REQUEST-SEARCH-VIEW', () => {
-        socket.page = 1;
-        socket.searchKey = '';
-        clearInterval(socket.interval);
-        clearInterval(socket.intervalMyAuctionsView);
+        searchViewPage = 1;
+        searchKey = '';
         setTimeout(function () {
-            socket.interval = setInterval(() => {
-                let auctions = selectSearchAuctions(socket.page - 1, socket.searchKey);
-                socket.emit('SERVER-SEND-AUCTIONS', auctions);
+            searchViewInterval = setInterval(() => {
+                let auctions = selectSearchAuctions(searchViewPage - 1, searchViewCategoryId, searchKey);
+                socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
             }, 1000);
         }, 1000 - Date.now() % 1000);
     });
 
+    socket.on('CLIENT-SEND-SEARCH-VIEW-PAGE', data => {
+        console.log(data);
+        searchViewPage = data.page;
+    });
+
+    socket.on('CLIENT-SEND-SEARCH-CATEGORY', data => {
+        console.log(data);
+        searchViewCategoryId = data.categoryId;
+    });
+
     socket.on('CLIENT-SEND-SEARCH-KEY', data => {
         console.log(data);
-        if (data.searchKey)
-            socket.searchKey = data.searchKey;
+        searchKey = data.searchKey;
     })
-
-    socket.on('CLIENT-SEND-PAGE', data => {
-        console.log(data);
-        socket.page = data.page;
-    });
-
-    socket.on('CLIENT-SEND-CATEGORY', data => {
-        console.log(data);
-        socket.page = 1;
-        socket.categoryId = data.categoryId;
-    });
+    // SEARCH -- end --
 
     socket.on('disconnect', () => {
-        clearInterval(socket.interval);
-        clearInterval(socket.intervalMyAuctionsView);
         console.log('disconnect');
     });
 }
