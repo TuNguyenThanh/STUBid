@@ -224,7 +224,7 @@ class Search extends React.Component {
   }
 
   handleSearch(keySearch) {
-    searchAuctions.emitKeySearch(keySearch);
+    searchAuctions.emitKeySearch(latinize(keySearch));
     this.setState({ keySearch });
   }
 
