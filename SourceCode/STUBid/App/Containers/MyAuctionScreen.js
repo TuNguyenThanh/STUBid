@@ -33,6 +33,7 @@ class MyAuction extends React.Component {
     if(this.props.login.user) {
       attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
         this.props.myAuctions(data);
+        console.log(data);
       }, this.props.login.user.profile.accountId, 1);
 
       attendedCloseHandler.setServerSendCloseAttendedAuctionsHandler((data) => {
@@ -46,14 +47,9 @@ class MyAuction extends React.Component {
     const { myListAuction, myListAuctionClose } = nextProps.auctions;
 
     if(myListAuction) {
+      const temp = myListAuction.concat(myListAuctionClose);
       this.setState({
-        data: this.state.data.concat(myListAuction)
-      });
-    }
-
-    if(myListAuctionClose) {
-      this.setState({
-        data: this.state.data.concat(myListAuctionClose)
+        data: this.state.data.concat(temp)
       });
     }
   }

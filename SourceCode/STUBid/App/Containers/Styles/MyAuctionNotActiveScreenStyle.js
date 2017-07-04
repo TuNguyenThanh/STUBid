@@ -53,8 +53,8 @@ export default StyleSheet.create({
     backgroundColor: Colors.lightgray
   },
   imgLogoStyle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20
+    width: 22,
+    height: 22,
+    borderRadius: 11
   }
 })

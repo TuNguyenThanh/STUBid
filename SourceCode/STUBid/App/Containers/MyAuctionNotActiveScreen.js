@@ -70,7 +70,7 @@ class MyAuctionNotActive extends React.Component {
           <View style={styles.viewQRCodeStyle}>
             <QRCode
               value={this.state.text}
-              size={200}
+              size={180}
               bgColor={Colors.primary}
               fgColor={Colors.lightgray}
             />
