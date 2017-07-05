@@ -1,19 +1,32 @@
-const formidable = require('formidable'),
-      fs = require('fs'),
-      ERROR = require('../../error'),
-      { DIRNAME } = require('../../config'),
-      { verify, refreshToken } = require('../../helpers/jwt'),
-      { insertAuction } = require('../../models/auction');
+const formidable = require('formidable');
+const fs = require('fs');
+const { DIRNAME, DOMAIN_NAME, AWS_AUTH } = require('../../config');
+const { verify, refreshToken } = require('../../helpers/jwt');
+const { insertAuction } = require('../../models/auction');
+const ERROR = require('../../error.json');
+const s3Uploader = require('../../helpers/s3');
 
 module.exports = (req,res) => {
     var productImages = [], token = '', auctionInfo;
     var form = new formidable.IncomingForm({ uploadDir: DIRNAME + '/public/images/product/' });
     form.on('fileBegin', function(name, file) {
-        productImages.push(file.name);
+        productImages.push('product_' + file.name);
         file.path = form.uploadDir + file.name;
     });
     form.on('file', function (name, file) {
         console.log('Uploaded ' + file.name);
+        let fileStream = fs.createReadStream(DIRNAME + file.name);
+        s3Uploader.upload('product_' + file.name, fileStream)
+            .then(params => {
+                console.log(params);
+                fs.unlink(DIRNAME + file.name, error => {
+                    if (error) console.log(error);
+                    else console.log('deleted local image : ' + imageName);
+                });
+            })
+            .catch(reason => {
+                console.log(reason);
+            })
     });
     form.on('error', function(err) {
         console.log(err);
@@ -66,7 +79,7 @@ module.exports = (req,res) => {
         res.send({
             success: true,
             token
-        })
+        });
     })
     .catch(function(reason){
         console.log(reason);

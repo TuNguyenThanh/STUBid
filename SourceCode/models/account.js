@@ -1,5 +1,5 @@
 var { query } = require('../helpers/db'),
-    { DOMAIN_NAME } = require('../config'),
+    { BUCKET } = require('../config'),
     ERROR = require('../error.json'),
     md5 = require('blueimp-md5'),
     registerQueue = [];
@@ -49,7 +49,7 @@ exports.login = (accountId, username, password) => {
                 && (Date.now() - new Date(account.bannedDate).getTime()) < (3*24*60*60*1000)
             )
                 return reject({ status: 400, error: ERROR[400][21] });
-            account.avatar = account.avatar?`${DOMAIN_NAME}/images/avatar/${account.avatar}`:null;
+            account.avatar = account.avatar?`${BUCKET.PUBLIC_URL}/${account.avatar}`:null;
             if (!account.bankRef === true) account.bankRef = null;
             resolve(account)
         })
@@ -331,7 +331,7 @@ exports.updateAvatar = (accountId, avatar) => {
                     status: 500,
                     error: ERROR[500][1]
                 });
-            else resolve(result.rows[0].avatar);
+            else resolve({ old: result.rows[0].avatar, new: `${BUCKET.PUBLIC_URL}/${avatar}` });
         })
         .catch(error => {
             reject(error);

@@ -1,8 +1,8 @@
-const { timeLeftFormat } = require('../helpers/time'),
-      { query } = require('../helpers/db'),
-      { DOMAIN_NAME } = require('../config'),
-      ERROR = require('../error.json'),
-      latinize = require('latinize');
+const { timeLeftFormat } = require('../helpers/time');
+const { query } = require('../helpers/db');
+const { DOMAIN_NAME, BUCKET } = require('../config');
+const ERROR = require('../error.json');
+const latinize = require('latinize');
 
 var auctions = [],
     auctionsTimeLeft = {},
@@ -24,7 +24,7 @@ function countDown() {
             closedAuctions.push(element);
             let auctionId = element.auctionId;
             delete auctionsTimeLeft[auctionId];
-            delete auctions[i];
+            auctions.splice(i,1);
             let sql = `UPDATE "Auction" SET state=2 WHERE "auctionId"=$1`;
             let params = [auctionId];
             query(sql,params)
@@ -56,7 +56,7 @@ function loadAuctions () {
             (
                 SELECT array_to_json(array_agg(row_to_json(image)))
                 FROM (
-                    SELECT "imageId", name, CONCAT ('${DOMAIN_NAME}/images/product/',name) AS url
+                    SELECT "imageId", name, CONCAT ('${BUCKET.PUBLIC_URL}/',name) AS url
                     FROM "Image" AS image
                     WHERE image."productId" = "Product"."productId"
                 ) AS image
@@ -121,7 +121,7 @@ exports.getMyAuctions = (accountId, states) => {
                 (
                     SELECT array_to_json(array_agg(row_to_json(image)))
                     FROM (
-                        SELECT "imageId", name, CONCAT ('${DOMAIN_NAME}/images/product/',name) AS url
+                        SELECT "imageId", name, CONCAT ('${BUCKET.PUBLIC_URL}/',name) AS url
                         FROM "Image" AS image
                         WHERE image."productId" = "Product"."productId"
                     ) AS image
@@ -191,7 +191,7 @@ exports.getAtendedAuctions = (accountId) => {
                         (
                             SELECT array_to_json(array_agg(row_to_json(image)))
                             FROM (
-                                SELECT "imageId", name, CONCAT ('${DOMAIN_NAME}/images/product/',name) AS url
+                                SELECT "imageId", name, CONCAT ('${BUCKET.PUBLIC_URL}/',name) AS url
                                 FROM "Image" AS image
                                 WHERE image."productId" = "Product"."productId"
                             ) AS image

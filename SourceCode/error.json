@@ -23,6 +23,10 @@
         "20": {
             "code": 2020,
             "message": "Form parsing failed"
+        },
+        "21": {
+            "code": 2021,
+            "message": "File upload failed"
         }
     },
     "400": {
