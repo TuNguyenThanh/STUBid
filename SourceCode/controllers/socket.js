@@ -75,6 +75,7 @@ module.exports = function (socket) {
         attendedViewPage = 1;
         accountId = data.accountId;
         sendClosedAttendedAuctions();
+        clearInterval(attendedViewInterval);
         setTimeout(function () {
             attendedViewInterval = setInterval(() => {
                 let { auctions, closedAuctions } = selectAttendedAuctions(attendedViewPage - 1, attendedIds);
@@ -97,6 +98,7 @@ module.exports = function (socket) {
         myAuctionsViewPage = 1;
         accountId = data.accountId;
         sendMyClosedAuctions();
+        clearInterval(myAuctionsViewInterval);
         setTimeout(function () {
             myAuctionsViewInterval = setInterval(() => {
                 let { auctions, closedAuctions } = selectMyAuctions(myAuctionsViewPage - 1, accountId);

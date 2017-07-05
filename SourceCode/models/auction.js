@@ -13,8 +13,8 @@ setInterval(() => countDown(), 1000);
 function countDown() {
     closedAuctions = [];
     for (var i = auctions.length - 1; i >= 0; i--) {
-        var element = auctions[i],
-            timeLeft = auctionsTimeLeft[auctions[i].auctionId];
+        let element = auctions[i];
+        let timeLeft = auctionsTimeLeft[element.auctionId];
         if (timeLeft > 0) {
             timeLeft--;
             auctionsTimeLeft[element.auctionId] = timeLeft;
