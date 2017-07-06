@@ -2,11 +2,13 @@ import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
 import LoginActions from '../Redux/LoginRedux'
 import { Error } from '../Helper/'
+import { StatusBar } from 'react-native'
 
 // attempts to login
 export function * login (api, action) {
   const { username, password } = action;
   try {
+    StatusBar.setNetworkActivityIndicatorVisible(true);
     const response = yield call(api.login, username, password);
     if(response.ok) {
       const data = response.data;
@@ -18,6 +20,7 @@ export function * login (api, action) {
     } else {
       yield put(LoginActions.loginFailure(response.problem));
     }
+    StatusBar.setNetworkActivityIndicatorVisible(false);
   } catch(e) {
     console.log(e);
   }
@@ -26,6 +29,7 @@ export function * login (api, action) {
 export function * loginToken (api, action) {
   const { token } = action;
   try {
+    StatusBar.setNetworkActivityIndicatorVisible(true);
     const response = yield call(api.loginToken, token);
     if(response.ok) {
       const data = response.data;
@@ -37,6 +41,7 @@ export function * loginToken (api, action) {
     } else {
       yield put(LoginActions.loginTokenFailure(response.problem));
     }
+    StatusBar.setNetworkActivityIndicatorVisible(false);
   } catch(e) {
     console.log(e);
   }

@@ -24,8 +24,8 @@ class LoginScreen extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      username: 'thanhtu',
-      password: '123456',
+      username: '',
+      password: '',
       isLoading: false,
     };
     this.buttonAnimated = new Animated.Value(0);

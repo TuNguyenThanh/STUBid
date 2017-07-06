@@ -18,13 +18,13 @@ class CreactAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: 'Tu',
-      lastName: 'Nguyen',
-      email: 'thanhtu.dev@gmail.com',
-      phoneNumber: '0903016975',
-      username: 'thanhtu',
-      password: '123456',
-      rePassword: '123456',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      username: '',
+      password: '',
+      rePassword: '',
     };
     this.isRegister = false;
     this.isDisable = false;

@@ -6,7 +6,7 @@ import AuctionsActions from '../Redux/AuctionsRedux'
 import ImageLoad from 'react-native-image-placeholder'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
-import { myAuctionsHandler } from '../Helper/SocketIO'
+//import { myAuctionsHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -27,16 +27,16 @@ class MyAuctionTab2 extends React.Component {
       dataSourceHandling: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
       dataSourceProcessed: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
-    this.isGetProductUnActivity = false;
+    //this.isGetProductUnActivity = false;
   }
 
   componentDidMount() {
-    myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
-      this.props.myAuctionsHanding(data);
-    }, this.props.login.user.profile.accountId, 1);
-
-    this.props.getProductUnActivity(this.props.login.user.token);
-    this.isGetProductUnActivity = true;
+    // myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
+    //   this.props.myAuctionsHanding(data);
+    // }, this.props.login.user.profile.accountId, 1);
+    //
+    // this.props.getProductUnActivity(this.props.login.user.token);
+    // this.isGetProductUnActivity = true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -44,17 +44,17 @@ class MyAuctionTab2 extends React.Component {
     const { fetching, error, data } = nextProps.product;
     const { myAuctionsHanding } = nextProps.auctions;
 
-    if(!fetching && this.isGetProductUnActivity && data) {
+    //if(!fetching && this.isGetProductUnActivity && data) {
       this.setState({
         dataSourceProcessed: this.state.dataSourceProcessed.cloneWithRows(data),
       });
-    }
+    //}
 
-    if(myAuctionsHanding) {
+    //if(myAuctionsHanding) {
       this.setState({
         dataSourceHandling: this.state.dataSourceHandling.cloneWithRows(myAuctionsHanding),
       });
-    }
+    //}
 
   }
 
@@ -215,8 +215,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getProductUnActivity: (token) => dispatch(ProductActions.getProductUnActivityRequest(token)),
-    myAuctionsHanding: (data) => dispatch(AuctionsActions.myAuctionsHanding(data)),
+    // getProductUnActivity: (token) => dispatch(ProductActions.getProductUnActivityRequest(token)),
+    // myAuctionsHanding: (data) => dispatch(AuctionsActions.myAuctionsHanding(data)),
   }
 }
 

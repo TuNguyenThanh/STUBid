@@ -1,5 +1,6 @@
 import { call, put, take } from 'redux-saga/effects'
 import { path } from 'ramda'
+import { StatusBar } from 'react-native'
 import ProductActions from '../Redux/ProductRedux'
 import LoginActions from '../Redux/LoginRedux'
 import IO from 'socket.io-client/dist/socket.io'
@@ -62,12 +63,14 @@ export function * uploadProduct(ProductApi, UserApi, action) {
 
 export function * getInfoUploadProduct(ProductApi, action) {
   try {
+    StatusBar.setNetworkActivityIndicatorVisible(true);
     const response = yield call(ProductApi.getInfoUploadProduct);
     if(response.ok) {
       yield put(ProductActions.getInfoUploadSuccess(response.data.html));
     } else {
       yield put(ProductActions.getInfoUploadFailure(response.problem));
     }
+    StatusBar.setNetworkActivityIndicatorVisible(false);
   } catch (e) {
     console.log(e);
   }

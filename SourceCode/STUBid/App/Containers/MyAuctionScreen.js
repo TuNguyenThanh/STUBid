@@ -2,13 +2,14 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import AuctionsActions from '../Redux/AuctionsRedux'
+import ProductActions from '../Redux/ProductRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Components/Header'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import MyAuctionTab1 from './MyAuctionTab1Screen'
 import MyAuctionTab2 from './MyAuctionTab2Screen'
-import { attendedHandler, attendedCloseHandler } from '../Helper/SocketIO'
+import { attendedHandler, attendedCloseHandler, myAuctionsHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -39,6 +40,12 @@ class MyAuction extends React.Component {
       attendedCloseHandler.setServerSendCloseAttendedAuctionsHandler((data) => {
         this.props.myAuctionsClose(data);
       });
+
+      myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
+        this.props.myAuctionsHanding(data);
+      }, this.props.login.user.profile.accountId, 1);
+
+      this.props.getProductUnActivity(this.props.login.user.token);
     }
   }
 
@@ -123,6 +130,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     myAuctions: (data) => dispatch(AuctionsActions.myAuctions(data)),
     myAuctionsClose: (data) => dispatch(AuctionsActions.myAuctionsClose(data)),
+    getProductUnActivity: (token) => dispatch(ProductActions.getProductUnActivityRequest(token)),
+    myAuctionsHanding: (data) => dispatch(AuctionsActions.myAuctionsHanding(data)),
   }
 }
 
