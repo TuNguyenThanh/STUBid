@@ -273,7 +273,9 @@ class Home extends React.Component {
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
           <Animated.View style={[styles.iconStyle, menuStyle, {flexDirection: 'row'}]}>
+            <TouchableOpacity onPress={() => this.handleNotificationScreen()}>
             <Icon name="bell" size={20} color={Colors.primary} />
+            </TouchableOpacity>
             {
               this.state.badge != 0 &&
               <View style={{paddingLeft: 5, paddingRight: 5, backgroundColor: Colors.primary, borderRadius: 10}}>
@@ -323,6 +325,19 @@ class Home extends React.Component {
         { this.renderModalLoading(fetching) }
       </View>
     )
+  }
+
+  handleNotificationScreen() {
+    const { language } = this.state;
+    //Check login
+    if(this.props.login.user) {
+      NavigationActions.notificationScreen({ title: I18n.t('notification', {locale: language}) }); 
+      //NavigationActions.uploadProductNextScreen({ title: I18n.t('step', {locale: language}) + ' 1' })
+    } else {
+      //not login - not profile
+      NavigationActions.loginScreen();
+    }
+
   }
 
   onEndReached() {

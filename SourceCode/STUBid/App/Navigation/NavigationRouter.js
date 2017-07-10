@@ -30,6 +30,7 @@ import ChangePasswordScreen from '../Containers/ChangePasswordScreen'
 import VersionAppScreen from '../Containers/VersionAppScreen'
 import InfoUploadProductScreen from '../Containers/InfoUploadProductScreen'
 import MyAuctionNotActiveScreen from '../Containers/MyAuctionNotActiveScreen'
+import NotificationScreen from '../Containers/NotificationScreen'
 
 //Styles
 import Styles from './Styles/NavigationContainerStyles'
@@ -98,6 +99,7 @@ class NavigationRouter extends Component {
           />
           <Scene key='uploadProductScreen' component={UploadProductScreen} title={'Step 2'} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
           <Scene key='infoUploadProductScreen' component={InfoUploadProductScreen} title={'SBid'} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+          <Scene key='notificationScreen' component={NotificationScreen} title={'SBid'} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
 
         </Scene>
       </Router>
