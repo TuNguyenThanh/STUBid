@@ -12,7 +12,7 @@ import ImageLoad from 'react-native-image-placeholder'
 
 // Styles
 import styles from './Styles/EditProfileScreenStyle'
-import { Images, Colors } from '../Themes'
+import { Images, Colors, Metrics } from '../Themes'
 
 //I18n
 import I18n from 'react-native-i18n'
@@ -144,9 +144,9 @@ class EditProfile extends React.Component {
                   this.state.urlImage ?
                   <ImageLoad
                     style={styles.imgStyle}
-                    placeholderStyle={{ flex: 1, resizeMode: 'center'}}
                     loadingStyle={{ size: 'small', color: 'blue' }}
                     source={{uri: this.state.urlImage}}
+                    borderRadius={Metrics.screenHeight / 10}
                   />
                   :
                   <Image

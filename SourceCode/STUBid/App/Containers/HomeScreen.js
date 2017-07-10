@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert, AsyncStorage } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView, Image, Animated, ListView, ActivityIndicator, Alert, AsyncStorage, NetInfo } from 'react-native'
 import { connect } from 'react-redux'
 import AuctionsActions from '../Redux/AuctionsRedux'
 import CategoryActions from '../Redux/CategoryRedux'
@@ -50,8 +50,10 @@ class Home extends React.Component {
   componentWillMount() {
     this.animated = new Animated.Value(0);
 
-    //get data auctions
-    //this.props.getAuctions(1, 1);
+    NetInfo.isConnected.addEventListener('change', (isConnected) => {
+      console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+    });
+    console.log('-------');
 
     //get data category
     this.props.getProductCategory();
@@ -70,6 +72,7 @@ class Home extends React.Component {
     const { fetching, error, listData, bidSuccess } = nextProps.auctions;
     const { categoryProduct } = nextProps.category;
     const fetchingCategory = nextProps.category.fetching;
+    const errorCategory = nextProps.category.error;
 
     if(!fetching && listData) {
       this.setState({
@@ -97,7 +100,10 @@ class Home extends React.Component {
     }
 
     //error - not internet
-    // if(!fetching && error){
+    // console.log(errorLogin);
+    // console.log(errorCategory);
+    // console.log(this.loadCategory);
+    // if(!fetchingCategory && errorCategory && this.loadCategory){
     //   Alert.alert(
     //     'Error',
     //     error,
@@ -105,7 +111,8 @@ class Home extends React.Component {
     //       {text: I18n.t('ok', {locale: language}), onPress: () => {}},
     //     ],
     //     { cancelable: false }
-    //   )
+    //   );
+    //   this.loadCategory = false;
     // }
   }
 
@@ -165,7 +172,6 @@ class Home extends React.Component {
           item.product.images ?
           <ImageLoad
             style={styles.imageProduct}
-            placeholderStyle={{ flex: 1, resizeMode: 'center'}}
             loadingStyle={{ size: 'small', color: 'blue' }}
             resizeMode="contain"
             source={{uri: item.product.images[0].url}}
@@ -331,13 +337,11 @@ class Home extends React.Component {
     const { language } = this.state;
     //Check login
     if(this.props.login.user) {
-      NavigationActions.notificationScreen({ title: I18n.t('notification', {locale: language}) }); 
-      //NavigationActions.uploadProductNextScreen({ title: I18n.t('step', {locale: language}) + ' 1' })
+      NavigationActions.notificationScreen({ title: I18n.t('notification', {locale: language}) });
     } else {
       //not login - not profile
       NavigationActions.loginScreen();
     }
-
   }
 
   onEndReached() {

@@ -14,7 +14,7 @@ import AppConfig from '../Config/AppConfig'
 
 // Styles
 import styles from './Styles/SettingsScreenStyle'
-import { Colors, Images } from '../Themes/'
+import { Colors, Images, Metrics } from '../Themes/'
 
 //I18n
 import I18n from 'react-native-i18n'
@@ -150,9 +150,9 @@ class Settings extends React.Component {
             profile.avatar ?
             <ImageLoad
               style={styles.imgAvatar}
-              placeholderStyle={{ flex: 1, resizeMode: 'center'}}
               loadingStyle={{ size: 'small', color: 'blue' }}
               source={{uri: profile.avatar}}
+              borderRadius={Metrics.screenHeight / 10}
             />
             :
             <Image

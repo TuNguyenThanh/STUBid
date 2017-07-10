@@ -319,6 +319,13 @@
 			remoteGlobalIDString = 3400A8081CEB54A6008A0BC7;
 			remoteInfo = imageCropPicker;
 		};
+		E2B8729F1F13937A00D3E5DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 51CE334F982640248DE5E716 /* RNSpinkit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 641194871EC9FD4A00D4FC03;
+			remoteInfo = "RNSpinkit-tvOS";
+		};
 		E2F0E4441EE40C9B00661DEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CF356447BB6540C5B3546041 /* RNFetchBlob.xcodeproj */;
@@ -721,6 +728,7 @@
 			isa = PBXGroup;
 			children = (
 				E296E0341EE306D700A44C70 /* libRNSpinkit.a */,
+				E2B872A01F13937A00D3E5DD /* libRNSpinkit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1199,6 +1207,13 @@
 			remoteRef = E2A2A0971ECD42A1003710F2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		E2B872A01F13937A00D3E5DD /* libRNSpinkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSpinkit.a;
+			remoteRef = E2B8729F1F13937A00D3E5DD /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		E2F0E4451EE40C9B00661DEB /* libRNFetchBlob.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1468,7 +1483,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tunguyenthanh.STUBid;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tunguyenthanh.SBid;
 				PRODUCT_NAME = STUBid;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1500,7 +1515,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tunguyenthanh.STUBid;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tunguyenthanh.SBid;
 				PRODUCT_NAME = STUBid;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -79,7 +79,6 @@ class MyAuctionTab2 extends React.Component {
           item.product.images ?
           <ImageLoad
             style={styles.imgStyle}
-            placeholderStyle={{ flex: 1, resizeMode: 'center'}}
             loadingStyle={{ size: 'small', color: 'blue' }}
             resizeMode="contain"
             source={{uri: item.product.images[0].url}}
