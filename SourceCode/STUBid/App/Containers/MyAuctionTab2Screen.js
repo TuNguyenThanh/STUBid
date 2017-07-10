@@ -25,9 +25,7 @@ class MyAuctionTab2 extends React.Component {
 
     this.state = {
       dataSourceHandling: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      dataSourceProcessed: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
-    //this.isGetProductUnActivity = false;
   }
 
   componentDidMount() {
@@ -44,18 +42,10 @@ class MyAuctionTab2 extends React.Component {
     const { fetching, error, data } = nextProps.product;
     const { myAuctionsHanding } = nextProps.auctions;
 
-    //if(!fetching && this.isGetProductUnActivity && data) {
-      this.setState({
-        dataSourceProcessed: this.state.dataSourceProcessed.cloneWithRows(data),
-      });
-    //}
-
-    //if(myAuctionsHanding) {
-      this.setState({
-        dataSourceHandling: this.state.dataSourceHandling.cloneWithRows(myAuctionsHanding),
-      });
-    //}
-
+    const temp = myAuctionsHanding.concat(data);
+    this.setState({
+      dataSourceHandling: this.state.dataSourceHandling.cloneWithRows(temp)
+    });
   }
 
   render () {
@@ -65,31 +55,13 @@ class MyAuctionTab2 extends React.Component {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <View style={styles.viewWrap}>
-          <View style={styles.viewHeaderTitleStyle}>
-            <Text style={styles.titleHeaderStyle}>Đã xử lý</Text>
-          </View>
-          <ListView
-            style={styles.listviewStyle}
-            enableEmptySections
-            dataSource={this.state.dataSourceHandling}
-            renderRow={(rowData, sectionID, rowID) => this.renderItemHandling(rowData, rowID)}
-            scrollEventThrottle={16}
-          />
-        </View>
-
-        <View style={styles.viewWrap}>
-          <View style={styles.viewHeaderTitleStyle}>
-            <Text style={styles.titleHeaderStyle}>Đang xử lý</Text>
-          </View>
-          <ListView
-            style={styles.listviewStyle}
-            enableEmptySections
-            dataSource={this.state.dataSourceProcessed}
-            renderRow={(rowData, sectionID, rowID) => this.renderItemProcessed(rowData, rowID)}
-            scrollEventThrottle={16}
-          />
-        </View>
+        <ListView
+          style={styles.listviewStyle}
+          enableEmptySections
+          dataSource={this.state.dataSourceHandling}
+          renderRow={(rowData, sectionID, rowID) => this.renderItemHandling(rowData, rowID)}
+          scrollEventThrottle={16}
+        />
       </ScrollView>
     )
   }
@@ -97,7 +69,12 @@ class MyAuctionTab2 extends React.Component {
   renderItemHandling(item, rowID) {
     const { language } = this.props;
     return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTION_TAB2_1' })}>
+      <TouchableOpacity style={styles.row} onPress={() => {
+        item.timeLeft ?
+        NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTION_TAB2_1' })
+        :
+         NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })
+      }}>
         {
           item.product.images ?
           <ImageLoad
@@ -131,7 +108,7 @@ class MyAuctionTab2 extends React.Component {
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>{item.timeLeft}</Text>
+            <Text style={styles.titleTime}>{item.timeLeft ? item.timeLeft : I18n.t('notActive', {locale: language})}</Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
@@ -140,9 +117,14 @@ class MyAuctionTab2 extends React.Component {
             <View style={styles.viewPriceBid}>
               <Text style={styles.titlePriceNext}>
               {
-                item.highestBidder ?
-                (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
-                (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+                item.timeLeft ?
+                (
+                  item.highestBidder ?
+                  (item.highestBidder.price + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') :
+                  (item.startPrice + item.bidIncreasement).toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')
+                )
+                :
+                I18n.t('notActive', {locale: language})
               }
               </Text>
             </View>
@@ -151,57 +133,6 @@ class MyAuctionTab2 extends React.Component {
       </TouchableOpacity>
     );
   }
-
-  renderItemProcessed(item, rowID) {
-    const { language } = this.props;
-    return(
-      <TouchableOpacity style={styles.row} onPress={() => NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })}>
-        {
-          item.product.images ?
-          <ImageLoad
-            style={styles.imgStyle}
-            placeholderStyle={{ flex: 1, resizeMode: 'center'}}
-            loadingStyle={{ size: 'small', color: 'blue' }}
-            resizeMode="contain"
-            source={{uri: item.product.images[0].url}}
-          />
-          :
-          <Image
-            style={styles.imgStyle2}
-            source={Images.sbidIcon}
-          />
-        }
-        <View style={styles.viewDetail}>
-          <Text style={styles.titleProduct} numberOfLines={2}>{item.product.name}</Text>
-          <View style={styles.viewTemp}>
-            <View style={styles.iconStyle}>
-              <Icon name="dollar" size={15} color={Colors.primary} />
-            </View>
-            <Text style={styles.titlePriceNow}>
-              {item.startPrice.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.')}
-            </Text>
-          </View>
-          <View style={styles.viewTemp}>
-            <View style={styles.iconStyle}>
-              <Icon name="hourglass-half" size={15} color={Colors.primary} />
-            </View>
-            <Text style={styles.titleTime}>{I18n.t('notActive', {locale: language})}</Text>
-          </View>
-          <View style={styles.viewTemp}>
-            <View style={styles.iconStyle}>
-              <Icon name="legal" size={15} color={Colors.primary} />
-            </View>
-            <View style={styles.viewPriceBid}>
-              <Text style={styles.titlePriceNext}>
-              {I18n.t('notActive', {locale: language})}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
 }
 
 const mapStateToProps = (state) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Text, TouchableOpacity, Alert, Modal } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, Alert, Modal, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import ProductActions from '../Redux/ProductRedux'
 import { Actions as NavigationActions } from 'react-native-router-flux'
@@ -8,7 +8,7 @@ import Input from '../Components/Input'
 import ModalList from '../Components/ModalList'
 import ModalUpload from '../Components/ModalUpload'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
 // Styles
 import styles from './Styles/UploadProductScreenStyle'
 import { Colors } from '../Themes/'
@@ -40,6 +40,9 @@ class UploadProduct extends React.Component {
       openModalMembership: false,
       membershipSeleted: {id: 1, name: I18n.t('all', {locale: language})},
       dataMembership: [{id: 1, name: I18n.t('all', {locale: language})}, {id: 2, name: 'Premium'}],
+
+      isOpenChooseAddress: false,
+      isOpenChooseConsignmentAddress: false,
     };
     this.isUploadProduct = false;
   }
@@ -118,6 +121,8 @@ class UploadProduct extends React.Component {
           {
             this.state.paymentMethodSeleted.id == '3' &&
             <Input
+              type={'onPress'}
+              onPress={() => this.handleChooseReceivingAddress()}
               title={I18n.t('moneyReceivingAddress', {locale: language}) + ' *'}
               placeholder={I18n.t('moneyReceivingAddress', {locale: language})}
               value={this.state.moneyReceivingAddress}
@@ -135,6 +140,8 @@ class UploadProduct extends React.Component {
           {
             this.state.depositMethodSeleted.id != '1' &&
             <Input
+              type={'onPress'}
+              onPress={() => this.handleChooseConsignmentAddress()}
               title={I18n.t('consignmentAddress', {locale: language}) + ' *'}
               placeholder={I18n.t('consignmentAddress', {locale: language})}
               value={this.state.productReturningAddress}
@@ -168,9 +175,133 @@ class UploadProduct extends React.Component {
         { this.renderModalPaymentMethod() }
         { this.renderModalDepositMethod() }
         { this.renderModalMembership() }
+        { this.renderChooseMoneyReceiving() }
+        { this.renderChooseConsignment() }
         { fetching && <ModalUpload /> }
       </View>
     )
+  }
+
+  handleChooseConsignmentAddress() {
+    this.setState({
+      isOpenChooseConsignmentAddress: true
+    });
+  }
+
+  handleChooseReceivingAddress() {
+    this.setState({
+      isOpenChooseAddress: true
+    });
+  }
+
+  renderChooseConsignment() {
+    const { language } = this.props;
+    if(this.state.isOpenChooseConsignmentAddress) {
+      return (
+        <TouchableWithoutFeedback onPress={() => this.setState({ isOpenChooseConsignmentAddress: false })}>
+          <View style={styles.modalAddress}>
+            <GooglePlacesAutocomplete
+              placeholder={I18n.t('enterAddress', {locale: language})}
+              minLength={2}
+              autoFocus
+              returnKeyType={'default'}
+              fetchDetails={true}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: 'rgba(0,0,0,0)',
+                  borderTopWidth: 0,
+                  borderBottomWidth:0,
+                },
+                textInput: {
+                  marginLeft: 10,
+                  marginRight: 10,
+                  height: 38,
+                  color: '#5d5d5d',
+                  fontSize: 16
+                },
+                description: {
+                  color: '#FFF'
+                },
+                predefinedPlacesDescription: {
+                  color: '#1faadb'
+                },
+              }}
+              //currentLocation={true}
+              //currentLocationLabel={I18n.t('locationAround', {locale: language})}
+              query={{
+                //available options: https://developers.google.com/places/web-service/autocomplete
+                key: 'AIzaSyC_1pZ7TY6wPQhhih430NpNZeqtAfREf1g',
+                language: 'vi', // language of the results
+                types: 'geocode', // default: 'geocode'
+              }}
+              debounce={200}
+              filterReverseGeocodingByTypes={['locality', 'administrative_area_level_1', 'administrative_area_level_3']}
+              onPress={(data, details = null) => {
+                this.setState({
+                  productReturningAddress: data.description,
+                  isOpenChooseConsignmentAddress: false
+                });
+              }}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    }
+  }
+
+  renderChooseMoneyReceiving() {
+    const { language } = this.props;
+    if(this.state.isOpenChooseAddress) {
+      return (
+        <TouchableWithoutFeedback onPress={() => this.setState({ isOpenChooseAddress: false })}>
+          <View style={styles.modalAddress}>
+            <GooglePlacesAutocomplete
+              placeholder={I18n.t('enterAddress', {locale: language})}
+              minLength={2}
+              autoFocus
+              returnKeyType={'default'}
+              fetchDetails={true}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: 'rgba(0,0,0,0)',
+                  borderTopWidth: 0,
+                  borderBottomWidth:0,
+                },
+                textInput: {
+                  marginLeft: 10,
+                  marginRight: 10,
+                  height: 38,
+                  color: '#5d5d5d',
+                  fontSize: 16
+                },
+                description: {
+                  color: '#FFF'
+                },
+                predefinedPlacesDescription: {
+                  color: '#1faadb'
+                },
+              }}
+              //currentLocation={true}
+              //currentLocationLabel={I18n.t('locationAround', {locale: language})}
+              query={{
+                //available options: https://developers.google.com/places/web-service/autocomplete
+                key: 'AIzaSyC_1pZ7TY6wPQhhih430NpNZeqtAfREf1g',
+                language: 'vi', // language of the results
+                types: 'geocode', // default: 'geocode'
+              }}
+              debounce={200}
+              filterReverseGeocodingByTypes={['locality', 'administrative_area_level_1', 'administrative_area_level_3']}
+              onPress={(data, details = null) => {
+                this.setState({
+                  moneyReceivingAddress: data.description,
+                  isOpenChooseAddress: false
+                });
+              }}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    }
   }
 
   renderModalTime() {

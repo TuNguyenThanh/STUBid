@@ -37,5 +37,13 @@ export default StyleSheet.create({
   },
   textFontStyle: {
     fontFamily: Fonts.type.quicksand,
+  },
+  modalAddress: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.7)'
   }
 })

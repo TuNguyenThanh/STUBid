@@ -93,7 +93,7 @@ class CheckCode extends React.Component {
     //error
     if(!fetching && error) {
       Alert.alert(
-        I18n.t('Error', {locale: language}),
+        I18n.t('error', {locale: language}),
         I18n.t(error, {locale: language}),
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {}},

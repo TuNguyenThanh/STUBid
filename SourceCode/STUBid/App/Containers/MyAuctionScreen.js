@@ -34,7 +34,7 @@ class MyAuction extends React.Component {
     if(this.props.login.user) {
       attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
         this.props.myAuctions(data);
-        console.log(data);
+        //console.log(data);
       }, this.props.login.user.profile.accountId, 1);
 
       attendedCloseHandler.setServerSendCloseAttendedAuctionsHandler((data) => {
@@ -43,6 +43,7 @@ class MyAuction extends React.Component {
 
       myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
         this.props.myAuctionsHanding(data);
+        console.log(data.length);
       }, this.props.login.user.profile.accountId, 1);
 
       this.props.getProductUnActivity(this.props.login.user.token);
@@ -80,14 +81,14 @@ class MyAuction extends React.Component {
   renderView() {
     const { language } = this.props;
     if(this.props.login.user) {
-      if(this.state.data.length == 0) {
-        return(
-          <View style={styles.contentEmpty}>
-            <Icon name="legal" size={70} color={Colors.primary} />
-            <Text>{I18n.t('emptyAuctions', {locale: language})}</Text>
-          </View>
-        );
-      } else {
+      // if(this.state.data.length == 0) {
+      //   return(
+      //     <View style={styles.contentEmpty}>
+      //       <Icon name="legal" size={70} color={Colors.primary} />
+      //       <Text>{I18n.t('emptyAuctions', {locale: language})}</Text>
+      //     </View>
+      //   );
+      // } else {
         return(
           <ScrollableTabView
             style={{ flex: 1 }}
@@ -101,7 +102,7 @@ class MyAuction extends React.Component {
             <MyAuctionTab2 tabLabel={'Danh sách đăng'}/>
           </ScrollableTabView>
         );
-      }
+      //}
     } else {
       return (
         <View style={styles.viewWrap}>

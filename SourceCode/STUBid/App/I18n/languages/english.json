@@ -169,4 +169,7 @@
   "createDate": "Create date",
   "scanIt": "Scan it",
   "notActive": "Not active",
+  "enterAddress": "Enter address",
+  "locationAround": "Location around",
+  "SERVER_ERROR": "Server error",
 }

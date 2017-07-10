@@ -21,6 +21,7 @@ export default StyleSheet.create({
     borderBottomColor: Colors.primary
   },
   listviewStyle: {
+    flex: 1,
     paddingTop: 8,
     paddingLeft: 15,
     paddingRight: 15,

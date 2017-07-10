@@ -35,5 +35,13 @@ export default StyleSheet.create({
     fontFamily: Fonts.type.quicksand,
     color: Colors.primary,
     fontSize: 18
+  },
+  viewStyle: {
+    justifyContent: 'center',
+    height: 40
+  },
+  titlePlaceholderStyle: {
+    fontFamily: Fonts.type.quicksand,
+    color: '#989899'
   }
 })

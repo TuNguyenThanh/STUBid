@@ -169,4 +169,7 @@
   "createDate": "Ngày đăng",
   "scanIt": "Quét mã",
   "notActive": "Chưa kích hoạt",
+  "enterAddress": "Nhập địa chỉ",
+  "locationAround": "Địa điểm xung quanh",
+  "SERVER_ERROR": "Lỗi máy chủ",
 }
