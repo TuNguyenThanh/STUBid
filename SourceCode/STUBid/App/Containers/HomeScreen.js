@@ -51,9 +51,8 @@ class Home extends React.Component {
     this.animated = new Animated.Value(0);
 
     NetInfo.isConnected.addEventListener('change', (isConnected) => {
-      console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
+      //console.log('Then, is ' + (isConnected ? 'online' : 'offline'));
     });
-    console.log('-------');
 
     //get data category
     this.props.getProductCategory();
@@ -80,7 +79,7 @@ class Home extends React.Component {
       });
     }
 
-    if(!fetchingCategory && categoryProduct && this.loadCategory) {
+    if(!fetchingCategory && categoryProduct && this.loadCategory && errorCategory == null) {
       this.setState({
         data: categoryProduct,
       });
@@ -100,18 +99,16 @@ class Home extends React.Component {
     }
 
     //error - not internet
-    // console.log(errorLogin);
-    // console.log(errorCategory);
-    // console.log(this.loadCategory);
-    // if(!fetchingCategory && errorCategory && this.loadCategory){
-    //   Alert.alert(
-    //     'Error',
-    //     error,
-    //     [
-    //       {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-    //     ],
-    //     { cancelable: false }
-    //   );
+    // if(this.loadCategory && errorCategory) {
+    //   console.log(errorCategory);
+    //   // Alert.alert(
+    //   //   'Error',
+    //   //   errorCategory,
+    //   //   [
+    //   //     {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+    //   //   ],
+    //   //   { cancelable: false }
+    //   // );
     //   this.loadCategory = false;
     // }
   }
@@ -275,6 +272,7 @@ class Home extends React.Component {
     }
 
     const fetching = this.props.login.fetchingLoginToken;
+    const error = this.props.category.error;
     return (
       <View style={styles.mainContainer}>
         <View style={styles.headerStyle}>
@@ -310,21 +308,27 @@ class Home extends React.Component {
           <Icon name="list-alt" size={20} color={Colors.primary} />
         </TouchableOpacity>
 
-        <ListView
-          style={styles.content}
-          scrollEventThrottle={16}
-          onScroll={
-            Animated.event([
-              { nativeEvent: { contentOffset: { y: this.animated }}}
-            ])
-          }
-          enableEmptySections
-          contentContainerStyle={styles.listView}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
-          onEndReached={this.onEndReached.bind(this)}
-          onEndReachedThreshold ={10}
-        />
+        { error ?
+          <View style={styles.viewWrapStyle}>
+            <Text style={styles.messErrorStyle}>{I18n.t(error, {locale: language})}</Text>
+          </View>
+          :
+          <ListView
+            style={styles.content}
+            scrollEventThrottle={16}
+            onScroll={
+              Animated.event([
+                { nativeEvent: { contentOffset: { y: this.animated }}}
+              ])
+            }
+            enableEmptySections
+            contentContainerStyle={styles.listView}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData, sectionID, rowID) => this.renderItem(rowData, rowID)}
+            onEndReached={this.onEndReached.bind(this)}
+            onEndReachedThreshold ={10}
+          />
+        }
 
         { this.renderModalCategory() }
         { this.renderModalBid() }

@@ -173,4 +173,5 @@
   "locationAround": "Location around",
   "SERVER_ERROR": "Server error",
   "notification": "Notification",
+  "NETWORK_ERROR": "Network Error",
 }

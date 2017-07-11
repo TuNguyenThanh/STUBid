@@ -163,4 +163,14 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  viewWrapStyle: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  messErrorStyle: {
+    color: Colors.primary,
+    fontFamily: Fonts.type.quicksand,
+    fontSize: 18,
+  },
 })
