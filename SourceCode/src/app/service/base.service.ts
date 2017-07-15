@@ -11,47 +11,54 @@ export class BaseService {
     public http: Http
   ) { }
 
-  getSth(url, optionsHeader?: any): Observable<any> {
+  getSth(url: string, optionsHeader?: any): Observable<any> {
     let headers = new Headers(optionsHeader);
-    let options = new RequestOptions({headers: headers});
+    let options = new RequestOptions({ headers: headers });
     return this.http.get(url, options)
-    .map(res => res.json())
-    .catch(this.handleError);
+      .map(res => res.json())
+      .catch(this.handleError);
   }
 
-  postSth(url, bodyReq, optionsHeader?: any): Observable<any> {
-    let body    = JSON.stringify(bodyReq);
+  postSth(url: string, bodyReq, optionsHeader?: any): Observable<any> {
+    let body = JSON.stringify(bodyReq);
     let headers = new Headers(optionsHeader);
-    let options = new RequestOptions({headers: headers});
+    let options = new RequestOptions({ headers: headers });
     return this.http.post(url, body, options)
-    .map(res => res.json())
-    .catch(this.handleError);
+      .map(res => res.json())
+      .catch(this.handleError);
   }
 
-  putSth(url, bodyReq, optionsHeader?: any): Observable<any> {
-    let body    = JSON.stringify(bodyReq);
+  putSth(url: string, bodyReq, optionsHeader?: any): Observable<any> {
+    let body = JSON.stringify(bodyReq);
     let headers = new Headers(optionsHeader);
-    let options = new RequestOptions({headers: headers});
+    let options = new RequestOptions({ headers: headers });
     return this.http.put(url, body, options)
-    .map(res => res.json())
-    .catch(this.handleError);
+      .map(res => res.json())
+      .catch(this.handleError);
   }
 
-  patchSth(url, bodyReq, optionsHeader?: any): Observable<any> {
-    let body    = JSON.stringify(bodyReq);
+  patchSth(url: string, bodyReq, optionsHeader?: any): Observable<any> {
+    let body = JSON.stringify(bodyReq);
     let headers = new Headers(optionsHeader);
-    let options = new RequestOptions({headers: headers});
+    let options = new RequestOptions({ headers: headers });
     return this.http.patch(url, body, options)
-    .map(res => res.json())
-    .catch(this.handleError);
+      .map(res => res.json())
+      .catch(this.handleError);
   }
 
-  deleteSth(url, optionsHeader?: any): Observable<any> {
+  deleteSth(url: string, optionsHeader?: any): Observable<any> {
     let headers = new Headers(optionsHeader);
-    let options = new RequestOptions({headers: headers});
+    let options = new RequestOptions({ headers: headers });
     return this.http.delete(url, options)
-    .map(res => res.json())
-    .catch(this.handleError);
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+
+  getRaw(url: string, optionsHeader?: any) {
+    let headers = new Headers(optionsHeader);
+    let options = new RequestOptions({ headers: headers });
+    return this.http.get(url, options)
+      .catch(this.handleError);
   }
 
   handleError(error: Response | any) {
