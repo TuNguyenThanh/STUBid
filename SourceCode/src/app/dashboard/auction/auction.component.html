@@ -1,66 +1,68 @@
-<div class="text-center images">
-  <img *ngIf="auction" [src]="auction.product.images[0].url">
-</div>
-
-<div *ngIf="auction" class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
-        <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
-      </div>
-    </div>
+<div *ngIf="auction">
+  <div class="text-center images">
+    <img [hidden]="!imageLoaded" [class.appear-fadein]="imageLoaded" [src]="auction.product.images[0].url" (load)="imageComplete()">
   </div>
 
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
-        <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
+  <div *ngIf="imageLoaded" class="container appear-top-down">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
+          <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
+        </div>
       </div>
     </div>
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="category" readonly type="text" [value]="auction.product.category.name">
-        <label class="mdl-textfield__label" for="category">Loại sản phẩm</label>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
+          <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="category" readonly type="text" [value]="auction.product.category.name">
+          <label class="mdl-textfield__label" for="category">Loại sản phẩm</label>
+        </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="startPrice" readonly type="text" [value]="auction.startPrice">
+          <label class="mdl-textfield__label" for="startPrice">Giá khởi điểm</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="ceilingPrice" readonly type="text" [value]="auction.ceilingPrice || '-'">
+          <label class="mdl-textfield__label" for="ceilingPrice">Giá mua ngay</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="bidIncreasement" readonly type="text" [value]="auction.bidIncreasement">
+          <label class="mdl-textfield__label" for="bidIncreasement">Bước giá</label>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <input class="mdl-textfield__input" id="duration" readonly type="text" [value]="auction.duration">
+          <label class="mdl-textfield__label" for="duration">Thời gian đấu giá</label>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="startPrice" readonly type="text" [value]="auction.startPrice">
-        <label class="mdl-textfield__label" for="startPrice">Giá khởi điểm</label>
-      </div>
-    </div>
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="ceilingPrice" readonly type="text" [value]="auction.ceilingPrice || '-'">
-        <label class="mdl-textfield__label" for="ceilingPrice">Giá mua ngay</label>
-      </div>
-    </div>
+  <div *ngIf="imageLoaded" class="row text-center">
+    <button (click)="activeAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+      Kích hoạt đấu giá
+    </button>
   </div>
-
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="bidIncreasement" readonly type="text" [value]="auction.bidIncreasement">
-        <label class="mdl-textfield__label" for="bidIncreasement">Bước giá</label>
-      </div>
-    </div>
-    <div class="col-xs-12 col-sm-6">
-      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-        <input class="mdl-textfield__input" id="duration" readonly type="text" [value]="auction.duration">
-        <label class="mdl-textfield__label" for="duration">Thời gian đấu giá</label>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<div class="row text-center">
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-    Kích hoạt đấu giá
-  </button>
 </div>

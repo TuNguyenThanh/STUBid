@@ -4,6 +4,9 @@ import { RouterModule } from '@angular/router';
 
 import { routes } from './dashboard.routes';
 
+import { SharedModule } from '../shared/shared.module';
+import { LoadingBar } from '../shared/loading-bar/loading-bar';
+
 import { DashboardComponent } from './dashboard.component';
 import { AuctionComponent } from './auction/auction.component';
 
@@ -13,13 +16,15 @@ import { AuthService } from '../service/auth.service';
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    SharedModule,
   ],
   declarations: [
     DashboardComponent,
     AuctionComponent,
   ],
   providers: [
-    AuthService
+    LoadingBar,
+    AuthService,
   ]
 })
 export class DashboardModule { }

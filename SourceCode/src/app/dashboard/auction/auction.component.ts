@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { LoadingBar } from '../../shared/loading-bar/loading-bar';
 import { AuctionService } from '../../service/auction.service';
 
 @Component({
@@ -11,19 +12,22 @@ import { AuctionService } from '../../service/auction.service';
 })
 export class AuctionComponent implements OnInit {
   auction: any;
+  imageLoaded: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private auctionService: AuctionService,
+    private loadingBar: LoadingBar,
   ) { }
 
   ngOnInit() {
+    this.loadingBar.show();
     this.getAuctionId()
       .then((auctionId: string) => {
         return this.getAuction(auctionId);
       })
       .then(() => { })
-      .catch(() => { })
+      .catch(() => { this.loadingBar.hide() })
   }
 
   getAuctionId() {
@@ -59,4 +63,15 @@ export class AuctionComponent implements OnInit {
     });
   }
 
+  activeAuction() {
+    this.loadingBar.show();
+    setTimeout(() => {
+      this.loadingBar.hide();
+    }, 2000);
+  }
+
+  imageComplete() {
+    this.loadingBar.hide();
+    this.imageLoaded = true;
+  }
 }

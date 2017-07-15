@@ -11,3 +11,31 @@ a {
 .text-right { text-align: right }
 .high-light-red { color: red }
 .note { font-size: 0.7em; font-style: italic }
+
+.appear-top-down {
+    animation: slide-top-down 0.5s;
+}
+
+@-webkit-keyframes slide-top-down {
+    0% { margin-top: -10px }
+    100% { margin-top: 0 }
+}
+
+@keyframes slide-top-down {
+    0% { margin-top: -10px }
+    100% { margin-top: 0 }
+}
+
+.appear-fadein {
+    animation: fadein 1s;
+}
+
+@-webkit-keyframes fadein {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+@keyframes fadein {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
+}
