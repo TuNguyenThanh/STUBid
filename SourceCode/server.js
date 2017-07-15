@@ -25,11 +25,13 @@ server.listen(config.PORT, () => {
   console.log('Server is running');
 });
 
+app.get('/api/Auction/:auctionId', require('./controllers/auction/getAuction'));
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
 app.patch('/api/Auctions/bid', (req, res) => require('./controllers/auction/bid')(req, res));
 app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
+app.patch('/api/Auction/active/:auctionId', (req, res) => require('./controllers/auction/active')(req, res));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
@@ -45,8 +47,7 @@ app.get('/api/BankBrands', require('./controllers/bank/getBankBrands'));
 app.get('/api/Categorys', require('./controllers/category/getCategory'));
 app.get('/api/guide/:usage', require('./controllers/webview/getGuide'));
 app.get('/api/guide', require('./controllers/webview/getGuide'));
-
-// app.get('/api', (req, res) => { res.sendFile(__dirname + '/public/index.html') });
+app.get('/api/files/:fileName', (req, res) => { res.sendFile(__dirname + '/public/files/' + req.params.fileName) });
 
 app.get('*', (req, res) => { res.sendFile(__dirname + '/public/index.html') });
 

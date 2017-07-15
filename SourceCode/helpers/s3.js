@@ -6,7 +6,7 @@ const s3 = new AWS.S3(CONFIG.AWS_AUTH);
 upload = (key, bufferData) => {
   return new Promise((resolve, reject) => {
     let params = {
-      Key: key,
+      Key: 'public/' + key,
       Bucket: CONFIG.BUCKET.BUCKET_NAME,
       Body: bufferData,
     };

@@ -24,21 +24,21 @@ function countDown() {
             closedAuctions.push(element);
             let auctionId = element.auctionId;
             delete auctionsTimeLeft[auctionId];
-            auctions.splice(i,1);
+            auctions.splice(i, 1);
             let sql = `UPDATE "Auction" SET state=2 WHERE "auctionId"=$1`;
             let params = [auctionId];
-            query(sql,params)
-            .then(value => {
-                console.log(`close auction : ${auctionId}`);
-            })
-            .catch(reason => {
-                console.log(`fail to close auction : ${auctionId}`);
-            })
+            query(sql, params)
+                .then(value => {
+                    console.log(`close auction : ${auctionId}`);
+                })
+                .catch(reason => {
+                    console.log(`fail to close auction : ${auctionId}`);
+                })
         }
     }
 }
 
-function loadAuctions () {
+function loadAuctions() {
     let sql = `SELECT "Auction"."auctionId", "Auction"."createdDate", "Auction"."activatedDate",
     "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice", "Auction"."bidIncreasement",
     (
@@ -91,23 +91,113 @@ function loadAuctions () {
     FROM "Auction"
     WHERE "Auction".state = 1`;
     let params = [];
-    query(sql,params)
-    .then(result => {
-        delete auctions;
-        auctions = [];
-        let now = Date.now();
-        result.rows.forEach((element, index) => {
-            let auction = element;
-            auctionsTimeLeft[auction.auctionId] = auction.duration*60*60 - Math.floor((now - new Date(auction.activatedDate).getTime())/1000);
-            auctions.push(auction);
-        }, this);
-        auctions.sort((a,b) => auctionsTimeLeft[a.auctionId] > auctionsTimeLeft[b.auctionId])
-        console.log('loaded ' + result.rowCount + ' auctions');
-    })
-    .catch(error => {
-        console.log(error);
-    })
+    query(sql, params)
+        .then(result => {
+            delete auctions;
+            auctions = [];
+            let now = Date.now();
+            result.rows.forEach((element, index) => {
+                let auction = element;
+                auctionsTimeLeft[auction.auctionId] = auction.duration * 60 * 60 - Math.floor((now - new Date(auction.activatedDate).getTime()) / 1000);
+                auctions.push(auction);
+            }, this);
+            auctions.sort((a, b) => auctionsTimeLeft[a.auctionId] > auctionsTimeLeft[b.auctionId])
+            console.log('loaded ' + result.rowCount + ' auctions');
+        })
+        .catch(error => {
+            console.log(error);
+        })
 };
+
+exports.getAuction = (auctionId) => {
+    return new Promise((resolve, reject) => {
+        let auction = auctions.find(e => e.auctionId === auctionId);
+        if (auction) {
+            resolve(auction);
+        } else {
+            let sql = `SELECT "Auction"."auctionId", "Auction"."createdDate", "Auction"."activatedDate",
+                "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice",
+                "Auction"."bidIncreasement", "Auction".state,
+                (
+                    SELECT row_to_json(product)
+                    FROM (
+                        SELECT "Product"."productId", "Product"."name", "Product"."description",
+                        (
+                            SELECT array_to_json(array_agg(row_to_json(image)))
+                            FROM (
+                                SELECT "imageId", name, CONCAT ('${BUCKET.PUBLIC_URL}/',name) AS url
+                                FROM "Image" AS image
+                                WHERE image."productId" = "Product"."productId"
+                            ) AS image
+                        ) AS images,
+                        (
+                            SELECT row_to_json(category)
+                            FROM "Category" AS category
+                            WHERE category."categoryId" = "Product"."categoryId"
+                        ) AS category
+                        FROM "Product"
+                        WHERE "Product"."productId" = "Auction"."productId"
+                    ) AS product
+                ) AS product,
+                (
+                    SELECT row_to_json(bid)
+                    FROM (
+                        SELECT "Account"."accountId", "Profile"."firstName", "Profile"."lastName",
+                        "Profile"."phoneNumber", "BidHistory".price, "BidHistory".timestamp
+                        FROM "BidHistory"
+                        INNER JOIN "Account" ON "Account"."accountId" = "BidHistory"."bidderAccountId"
+                        INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
+                        WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
+                        ORDER BY price DESC
+                        LIMIT 1
+                    ) AS bid
+                ) AS "highestBidder",
+                (
+                    SELECT count("BidHistory"."bidHistoryId")
+                    FROM "BidHistory"
+                    WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
+                ) AS "bids"
+                FROM "Auction"
+                WHERE "Auction"."auctionId" = $1
+                ORDER BY "createdDate" DESC`;
+            let params = [auctionId];
+            query(sql, params)
+                .then(results => {
+                    if (results.rowCount > 0) {
+                        resolve(results.rows[0]);
+                    } else {
+                        reject({
+                            status: 500,
+                            error: ERROR[500][1]
+                        });
+                    }
+                })
+                .catch(error => reject(error));
+        }
+    });
+}
+
+exports.active = (auctionId) => {
+    return new Promise((resolve, reject) => {
+        let sql = `UPDATE "Auction"
+                SET state = 1
+                WHERE "Auction"."auctionId" = $1`;
+        let params = [auctionId];
+        query(sql, params)
+            .then(results => {
+                if (results.rowCount > 0) {
+                    resolve();
+                    loadAuctions();
+                } else {
+                    reject({
+                        status: 500,
+                        error: ERROR[500][1]
+                    });
+                }
+            })
+            .catch(error => reject(error));
+    });
+}
 
 exports.getMyAuctions = (accountId, states) => {
     return new Promise((resolve, reject) => {
@@ -157,11 +247,11 @@ exports.getMyAuctions = (accountId, states) => {
         WHERE "Auction"."sellerAccountId" = $1 AND "Auction".state = ANY($2::smallint[])
         ORDER BY "createdDate" DESC`;
         let params = [accountId, states];
-        query(sql,params)
-        .then(result => {
-            resolve(result.rows)
-        })
-        .catch(error => reject(error) )
+        query(sql, params)
+            .then(result => {
+                resolve(result.rows)
+            })
+            .catch(error => reject(error))
     });
 };
 
@@ -228,9 +318,9 @@ exports.getAtendedAuctions = (accountId) => {
             )
         SELECT * FROM auctions`;
         let params = [accountId];
-        query(sql,params)
-        .then(value => resolve(value.rows))
-        .catch(reason => reject(reason));
+        query(sql, params)
+            .then(value => resolve(value.rows))
+            .catch(reason => reject(reason));
     });
 }
 
@@ -242,7 +332,7 @@ exports.insertAuction = (
     productReturningAddress, accountId,
     moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
 ) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         let sql = `WITH
         "insertProductResult" AS (
             INSERT INTO "Product"(name,description,"searchKey","categoryId")
@@ -273,31 +363,31 @@ exports.insertAuction = (
             duration, startPrice, ceilingPrice,
             bidIncreasement, comment,
             accountId,
-            productReturningAddress?productReturningAddress:null, productReturningAddress?1:null,
+            productReturningAddress ? productReturningAddress : null, productReturningAddress ? 1 : null,
             moneyReceivingBankRefId, moneyReceivingAddress, allowedUserLevel
         ];
-        query(sql,params)
-        .then(value => {
-            if (value.rowCount > 0) {
-                resolve();
-                loadAuctions();
-            }
-            else
-                reject({
-                    status: 500,
-                    error: ERROR[500][1]
-                });
-        })
-        .catch(reason => {
-            reject(reason);
-        })
+        query(sql, params)
+            .then(value => {
+                if (value.rowCount > 0) {
+                    resolve();
+                    loadAuctions();
+                }
+                else
+                    reject({
+                        status: 500,
+                        error: ERROR[500][1]
+                    });
+            })
+            .catch(reason => {
+                reject(reason);
+            })
     })
 }
 
 exports.bid = (auctionId, accountId, price, buyNow) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         var index, auction;
-        auction = auctions.find((e,i) => {
+        auction = auctions.find((e, i) => {
             if (e.auctionId == auctionId) {
                 index = i;
                 return true;
@@ -316,11 +406,11 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
             INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
             VALUES (now(),$1,$2,$3)
             RETURNING "bidderAccountId", price, timestamp
-        )${buyNow?`, auction AS (
+        )${buyNow ? `, auction AS (
             UPDATE "Auction" SET state = 3
             WHERE "auctionId"=$1
             RETURNING "auctionId"
-        )`:''}
+        )`: ''}
         SELECT row_to_json(bid) AS "highestBidder"
         FROM (
             SELECT
@@ -334,42 +424,42 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
             INNER JOIN "Account" ON "Account"."accountId" = "latestBid"."bidderAccountId"
             INNER JOIN "Profile" ON "Profile"."profileId" = "Account"."profileId"
         ) AS bid`,
-        params = [price,auctionId,accountId];
-        query(sql,params)
-        .then(result => {
-            if (result.rowCount > 0) {
-                if (buyNow) {
-                    let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
-                    delete auctionsTimeLeft[auctionId];
-                    auctions.splice(auctionIndex,1);
-                    console.log(`close auction : ${auctionId}`);
-                    resolve();
+            params = [price, auctionId, accountId];
+        query(sql, params)
+            .then(result => {
+                if (result.rowCount > 0) {
+                    if (buyNow) {
+                        let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
+                        delete auctionsTimeLeft[auctionId];
+                        auctions.splice(auctionIndex, 1);
+                        console.log(`close auction : ${auctionId}`);
+                        resolve();
+                    }
+                    else {
+                        auction.highestBidder = result.rows[0].highestBidder;
+                        let page = Math.floor(index / 10) + 1;
+                        categoryId = auction.product.category.categoryId;
+                        pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction) / 10) + 1;
+                        resolve({ auction, page, categoryId, pageInCategory });
+                    }
                 }
                 else {
-                    auction.highestBidder = result.rows[0].highestBidder;
-                    let page = Math.floor(index/10) + 1;
-                        categoryId = auction.product.category.categoryId;
-                        pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction)/10) + 1;
-                    resolve({ auction, page, categoryId, pageInCategory });
+                    reject({
+                        status: 500,
+                        error: ERROR[500][1]
+                    });
                 }
-            }
-            else {
-                reject({
-                    status: 500,
-                    error: ERROR[500][1]
-                });
-            }
-        })
-        .catch(error => {
-            reject(error);
-        })
+            })
+            .catch(error => {
+                reject(error);
+            })
     })
 }
 
 exports.buyNow = (accountId, auctionId) => {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         var index, auction;
-        auction = auctions.find((e,i) => {
+        auction = auctions.find((e, i) => {
             if (e.auctionId == auctionId) {
                 index = i;
                 return true;
@@ -396,26 +486,26 @@ exports.buyNow = (accountId, auctionId) => {
             )
             SELECT * FROM "latestBid"
         `,
-        params = [auctionId,accountId];
-        query(sql,params)
-        .then(result => {
-            if (result.rowCount > 0) {
-                let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
-                delete auctionsTimeLeft[auctionId];
-                auctions.splice(auctionIndex,1);
-                console.log(`close auction : ${auctionId}`);
-                resolve();
-            }
-            else {
-                reject({
-                    status: 500,
-                    error: ERROR[500][1]
-                });
-            }
-        })
-        .catch(error => {
-            reject(error);
-        })
+            params = [auctionId, accountId];
+        query(sql, params)
+            .then(result => {
+                if (result.rowCount > 0) {
+                    let auctionIndex = auctions.findIndex(e => e.auctionId === auctionId);
+                    delete auctionsTimeLeft[auctionId];
+                    auctions.splice(auctionIndex, 1);
+                    console.log(`close auction : ${auctionId}`);
+                    resolve();
+                }
+                else {
+                    reject({
+                        status: 500,
+                        error: ERROR[500][1]
+                    });
+                }
+            })
+            .catch(error => {
+                reject(error);
+            })
     })
 }
 
@@ -423,7 +513,7 @@ exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
     if (page == undefined) return [];
     let results = [...auctions];
     if (categoryId && categoryId > 0) results = results.filter(e => e.product.category.categoryId == categoryId);
-    results = results.slice(0, page*10 + 9);
+    results = results.slice(0, page * 10 + 9);
     return results;
 };
 
@@ -431,7 +521,7 @@ exports.selectAttendedAuctions = (page, attendedIds) => {
     if (page == undefined) return [];
     let result = { auctions, closedAuctions }
     if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
-    result.auctions = result.auctions.slice(0, page*10 + 9);
+    result.auctions = result.auctions.slice(0, page * 10 + 9);
     return result;
 };
 
@@ -439,7 +529,7 @@ exports.selectMyAuctions = (page, accountId) => {
     if (page == undefined) return [];
     let result = { auctions, closedAuctions }
     if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId == accountId);
-    result.auctions = result.auctions.slice(0, page*10 + 9);
+    result.auctions = result.auctions.slice(0, page * 10 + 9);
     return result;
 };
 
@@ -456,7 +546,7 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
                 if (e.indexOf(element) >= 0) return true;
             }
         }, this)
-        results = results.sort((a,b) => {
+        results = results.sort((a, b) => {
             let aResult = 0, bResult = 0, aIndex, bIndex;
             a = a.product.name + a.product.category.name + a.seller.firstName + a.seller.lastName.toLowerCase();
             b = b.product.name + b.product.category.name + b.seller.firstName + b.seller.lastName.toLowerCase();
@@ -467,7 +557,7 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
             return bResult < aResult;
         });
     }
-    return results.slice(0, page*10 + 9);
+    return results.slice(0, page * 10 + 9);
 }
 
 // var sql = `UPDATE "Auction" SET "activatedDate" = now()`;

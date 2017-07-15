@@ -8,18 +8,18 @@ const s3Uploader = require('../../helpers/s3');
 
 module.exports = (req, res) => {
     var imageName = '', token = '';
-    var form = new formidable.IncomingForm({ uploadDir: DIRNAME + '/public/images/avatar/' });
+    var form = new formidable.IncomingForm({ uploadDir: DIRNAME + '/public/' });
     form.on('fileBegin', function (name, file) {
         imageName = 'avatar_' + file.name;
-        file.path = DIRNAME + file.name;
+        file.path = form.uploadDir + file.name;
     });
     form.on('file', function (name, file) {
         console.log('Uploaded ' + file.name);
-        let fileStream = fs.createReadStream(DIRNAME + file.name);
+        let fileStream = fs.createReadStream(form.uploadDir + file.name);
         s3Uploader.upload('avatar_' + file.name, fileStream)
             .then(params => {
                 console.log(params);
-                fs.unlink(DIRNAME + file.name, error => {
+                fs.unlink(form.uploadDir + file.name, error => {
                     if (error) console.log(error);
                     else console.log('deleted local image : ' + imageName);
                 });
@@ -71,7 +71,7 @@ module.exports = (req, res) => {
                 success: false,
                 error: reason.error
             })
-            fs.unlink(DIRNAME + imageName, error => {
+            fs.unlink(form.uploadDir + imageName, error => {
                 if (error) console.log(error);
                 else console.log('deleted local image : ' + imageName);
             });
