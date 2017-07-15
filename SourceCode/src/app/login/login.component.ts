@@ -20,12 +20,11 @@ export class LoginComponent implements OnInit {
   radius = false;
 
   constructor(
-    public authService: AuthService,
-    public formBuilder: FormBuilder,
-    public router: Router
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private router: Router,
   ) {
-    let token = this.authService.token;
-    if (token) {
+    if (authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
     }
     else {
@@ -42,7 +41,10 @@ export class LoginComponent implements OnInit {
   submit() {
     let md5 = new Md5();
     let { username, password } = this.formLogin.value;
-    this.loading = !this.loading;
+    this.radius = true;
+    setTimeout(() => {
+      this.loading = true;
+    }, 400);
     this.authService.login(username, md5.appendStr(password).end())
     .then(() => {
       let that = this;

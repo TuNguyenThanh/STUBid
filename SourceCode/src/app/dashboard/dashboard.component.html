@@ -1,3 +1,24 @@
-<p>
-  dashboard works!
-</p>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">Dashboard</span>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <div class="menu-header">
+      <img [src]="currentUser.avatar">
+      <h4>Chào, {{currentUser.firstName}}</h4>
+    </div>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link">User</a>
+      <a class="mdl-navigation__link">Đấu giá</a>
+      <a class="mdl-navigation__link">Lịch sử gọi giá</a>
+      <a class="mdl-navigation__link">Thanh toán</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

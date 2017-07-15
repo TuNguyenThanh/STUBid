@@ -1,12 +1,20 @@
-<form [formGroup]="formLogin">
-  <input formControlName="username"
-  type="text" name="username" placeholder="Username">
-  <input formControlName="password"
-  type="password" name="password" placeholder="Password">
-  <button [ngClass]="{ 'loading': loading, 'radius': radius }"
-  type="submit" (click)="submit()">
-    <span *ngIf="!loading">Đăng nhập</span>
-    <div *ngIf="loading"
-    class="loader"></div>
-  </button>
+<form [formGroup]="formLogin" class="container text-center">
+  <div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input formControlName="username" name="username" class="mdl-textfield__input" type="text" id="username" spellcheck="false">
+      <label class="mdl-textfield__label" for="username">Tên đăng nhập</label>
+    </div>
+  </div>
+  <div>
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input formControlName="password" name="password" class="mdl-textfield__input" type="password" id="password">
+      <label class="mdl-textfield__label" for="password">Mật khẩu</label>
+    </div>
+  </div>
+  <div>
+    <button [ngClass]="{ 'loading': loading, 'radius': radius }" type="submit" (click)="submit()">
+      <span *ngIf="!loading">Đăng nhập</span> 
+      <div *ngIf="loading" class="loader"></div>
+    </button>
+  </div>
 </form>

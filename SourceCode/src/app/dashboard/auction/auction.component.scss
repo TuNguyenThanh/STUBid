@@ -1,0 +1,11 @@
+:host {
+  padding: 0 1em;
+  width: 100%;
+}
+
+.images {
+  height: 200px;
+  img {
+    max-height: 100%;
+  }
+}

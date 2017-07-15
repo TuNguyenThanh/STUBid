@@ -1,21 +1,21 @@
-@import '../../styles.scss';
+@import '../../style.scss';
+
+:host {
+    display: flex;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: center;
+}
 
 form {
-    @media screen and (min-width: 960px) { padding-top: 4em }
-    >* {
-        display: block;
-        margin: 0.8em auto;
-        padding: 0.5em;
-        font-size: 1.4em;
-        @media screen and (max-width: 319px) { width: 100% }
-        @media screen and (min-width: 320px) and (max-width: 479px) { width: 95% }
-        @media screen and (min-width: 480px) and (max-width: 719px) { width: 85% }
-        @media screen and (min-width: 720px) and (max-width: 959px) { width: 70% }
-        @media screen and (min-width: 960px) and (max-width: 1199px) { width: 50% }
-        @media screen and (min-width: 1200px) { width: 30% }
-    }
     button {
-        line-height: 1.4em;
+        line-height: 2.8em;
+        height: 2.8em;
+        width: 300px;
         overflow-x: hidden;
         white-space: nowrap;
         border: none;
@@ -23,14 +23,15 @@ form {
         background: $color-primary;
         color: white;
         cursor: pointer;
-        transition: all 0.7s ease;
-        &:hover { opacity: 0.9 }
-        &.loading { width: 2.4em; border-radius: 50% }
+        transition: all 0.4s ease;
+        &:hover { opacity: 0.55 }
+        &.loading { width: 2.8em }
+        &.radius { border-radius: 1.4em }
     }
     .loader {
         margin: 0 auto;
-        width: 1em;
-        height: 1em;
+        width: 2em;
+        height: 2em;
         border: 0.2em solid #f3f3f3;
         border-top-color: #3498db;
         border-radius: 50%;

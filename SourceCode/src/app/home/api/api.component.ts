@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuctionService } from "../service/auction.service";
 
 declare var routes: any;
 declare var socketEvents: any;
@@ -9,7 +8,6 @@ declare var errors: any;
   selector: 'app-api',
   templateUrl: './api.component.html',
   styleUrls: ['./api.component.scss'],
-  providers: [AuctionService]
 })
 export class ApiComponent implements OnInit {
   routes: any;

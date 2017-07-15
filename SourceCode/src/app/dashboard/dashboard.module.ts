@@ -5,14 +5,21 @@ import { RouterModule } from '@angular/router';
 import { routes } from './dashboard.routes';
 
 import { DashboardComponent } from './dashboard.component';
+import { AuctionComponent } from './auction/auction.component';
+
+import { AuthService } from '../service/auth.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    AuctionComponent,
+  ],
+  providers: [
+    AuthService
   ]
 })
 export class DashboardModule { }

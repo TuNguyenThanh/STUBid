@@ -9,19 +9,14 @@ import { BaseService } from './service/base.service';
 import { routes } from './app.routes';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { ApiComponent } from './api/api.component';
-import { GuideComponent } from './guide/guide.component';
 import { LoginComponent } from './login/login.component';
 
 import { DashboardModule } from './dashboard/dashboard.module';
+import { HomeModule } from './home/home.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    ApiComponent,
-    GuideComponent,
     LoginComponent
   ],
   imports: [
@@ -30,7 +25,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     HttpModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    DashboardModule
+    DashboardModule,
+    HomeModule,
   ],
   providers: [BaseService],
   bootstrap: [AppComponent]

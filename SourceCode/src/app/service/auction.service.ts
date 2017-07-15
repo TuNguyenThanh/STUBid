@@ -36,4 +36,9 @@ export class AuctionService {
     }
     return this.baseService.getSth(url);
   }
+
+  getAuction(auctionId: string) {
+    let url = `${Constants.baseUrl}/Auction/${auctionId}`;
+    return this.baseService.getSth(url);
+  }
 }

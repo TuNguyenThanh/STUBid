@@ -1,0 +1,24 @@
+<div class="text-center images">
+  <img *ngIf="auction" [src]="auction.product.images[0].url">
+</div>
+
+<div *ngIf="auction" class="container">
+
+  <div class="row">
+    <div class="col-xs-12 col-md-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
+      <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
+    </div>
+    <div class="col-xs-12 col-md-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+      <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
+      <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
+    </div>
+  </div>
+  
+</div>
+
+<div class="row text-center">
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+    Kích hoạt đấu giá
+  </button>
+</div>
