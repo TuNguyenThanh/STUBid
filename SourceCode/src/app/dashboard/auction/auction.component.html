@@ -3,18 +3,60 @@
 </div>
 
 <div *ngIf="auction" class="container">
-
   <div class="row">
-    <div class="col-xs-12 col-md-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
-      <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
-    </div>
-    <div class="col-xs-12 col-md-6 mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-      <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
-      <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
+    <div class="col-xs-12">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
+        <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
+      </div>
     </div>
   </div>
-  
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
+        <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="category" readonly type="text" [value]="auction.product.category.name">
+        <label class="mdl-textfield__label" for="category">Loại sản phẩm</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="startPrice" readonly type="text" [value]="auction.startPrice">
+        <label class="mdl-textfield__label" for="startPrice">Giá khởi điểm</label>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="ceilingPrice" readonly type="text" [value]="auction.ceilingPrice || '-'">
+        <label class="mdl-textfield__label" for="ceilingPrice">Giá mua ngay</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="bidIncreasement" readonly type="text" [value]="auction.bidIncreasement">
+        <label class="mdl-textfield__label" for="bidIncreasement">Bước giá</label>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+        <input class="mdl-textfield__input" id="duration" readonly type="text" [value]="auction.duration">
+        <label class="mdl-textfield__label" for="duration">Thời gian đấu giá</label>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="row text-center">
