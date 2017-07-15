@@ -71,9 +71,7 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    var result = this.currentUser;
-    result = (result !== null && typeof result !== 'undefined') ? result : null;
-    return (result === null ? false : true);
+    return this.currentUser && true;
   }
 
 }
