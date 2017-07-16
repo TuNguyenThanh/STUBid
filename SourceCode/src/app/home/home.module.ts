@@ -9,6 +9,7 @@ import { ApiComponent } from './api/api.component';
 import { GuideComponent } from './guide/guide.component';
 
 import { AuthService } from '../service/auth.service';
+import { AppInfoComponent } from './app-info/app-info.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { AuthService } from '../service/auth.service';
     HomeComponent,
     ApiComponent,
     GuideComponent,
+    AppInfoComponent,
   ],
   providers: [AuthService]
 })

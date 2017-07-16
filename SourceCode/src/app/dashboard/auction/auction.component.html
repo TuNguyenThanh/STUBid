@@ -58,6 +58,15 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+          <textarea class="mdl-textfield__input" readonly type="text" rows="3" id="auctionDescription" [value]="auction.product.description"></textarea>
+          <label class="mdl-textfield__label" for="auctionDescription">Mô tả sản phẩm</label>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div *ngIf="imageLoaded" class="row text-center">
