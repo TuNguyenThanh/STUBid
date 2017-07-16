@@ -26,6 +26,9 @@ export class DashboardComponent implements OnInit, AfterViewChecked {
     else {
       this.currentUser = this.authService.getCurrentUser();
       console.log(this.currentUser);
+      this.authService.relogin()
+        .then(() => { })
+        .catch((error: any) => { console.log(error) })
     }
   }
 

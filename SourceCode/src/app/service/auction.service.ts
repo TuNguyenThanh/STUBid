@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseService } from "./base.service";
 import { Constants } from "./constant";
 
-// declare var io: any
+declare var io: any
 
 @Injectable()
 export class AuctionService {
@@ -14,7 +14,7 @@ export class AuctionService {
   constructor(
     public baseService: BaseService
   ) {
-    // this.socket = io(Constants.baseUrl);
+    this.socket = io(Constants.baseUrl, { query: "appName=sbid" });
     // this.socket.on('disconnect', () => console.log('disconnect'))
     // this.socket.on('SERVER-SEND-INFO', result => {
     //   this.page = result.page;
@@ -40,5 +40,14 @@ export class AuctionService {
   getAuction(auctionId: string) {
     let url = `${Constants.baseUrl}/Auction/${auctionId}`;
     return this.baseService.getSth(url);
+  }
+
+  active(auctionId: string, token: string) {
+    let url = `${Constants.baseUrl}/Auction/active/${auctionId}`;
+    let body = {
+      token
+    }
+    console.log(body);
+    return this.baseService.patchSth(url, body, Constants.commonHeader);
   }
 }

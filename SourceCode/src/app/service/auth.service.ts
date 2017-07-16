@@ -20,10 +20,9 @@ export class AuthService {
 
   login(username, password) {
     return new Promise((resolve, reject) => {
-      let body = { username, password };
       let url = `${Constants.baseUrl}/Accounts/login`
-      return this.baseService.postSth(url, body, Constants.commonHeader)
-        .subscribe(
+      let body = { username, password };
+      return this.baseService.postSth(url, body, Constants.commonHeader).subscribe(
         value => {
           if (value.success === true) {
             resolve();
@@ -37,7 +36,28 @@ export class AuthService {
           }
         },
         error => { reject(error) }
-        )
+      )
+    });
+  }
+
+  relogin() {
+    return new Promise((resolve, reject) => {
+      let url = `${Constants.baseUrl}/Accounts/login`;
+      let body = {
+        token: this.getLocalToken()
+      }
+      this.baseService.postSth(url, body, Constants.commonHeader).subscribe(
+        value => {
+          if (value.success === true) {
+            resolve();
+            this.updateLocalToken(value.token);
+          }
+          else {
+            reject(value.error)
+          }
+        },
+        error => { reject(error) }
+      )
     });
   }
 
@@ -67,7 +87,7 @@ export class AuthService {
 
   getLocalToken() {
     var result = localStorage.getItem('currentToken');
-    return (result !== null && typeof result !== 'undefined') ? result : null;
+    return result;
   }
 
   isLoggedIn() {

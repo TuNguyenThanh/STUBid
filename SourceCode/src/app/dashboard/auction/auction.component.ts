@@ -1,8 +1,9 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoadingBar } from '../../shared/loading-bar/loading-bar';
 import { AuctionService } from '../../service/auction.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-auction',
@@ -16,19 +17,25 @@ export class AuctionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private authService: AuthService,
     private auctionService: AuctionService,
     private loadingBar: LoadingBar,
-  ) { }
-
-  ngOnInit() {
-    this.loadingBar.show();
-    this.getAuctionId()
-      .then((auctionId: string) => {
-        return this.getAuction(auctionId);
-      })
-      .then(() => { })
-      .catch(() => { this.loadingBar.hide() })
+    private router: Router,
+  ) {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    } else {
+      this.loadingBar.show();
+      this.getAuctionId()
+        .then((auctionId: string) => {
+          return this.getAuction(auctionId);
+        })
+        .then(() => { })
+        .catch(() => { this.loadingBar.hide() })
+    }
   }
+
+  ngOnInit() { }
 
   getAuctionId() {
     return new Promise((resolve, reject) => {
@@ -65,9 +72,18 @@ export class AuctionComponent implements OnInit {
 
   activeAuction() {
     this.loadingBar.show();
-    setTimeout(() => {
-      this.loadingBar.hide();
-    }, 2000);
+    let token = this.authService.getLocalToken();
+    this.auctionService.active(this.auction.auctionId, token)
+      .subscribe(
+      (value: any) => {
+        console.log(value);
+        this.loadingBar.hide();
+      },
+      (error: any) => {
+        console.log(error);
+        this.loadingBar.hide();
+      }
+      )
   }
 
   imageComplete() {

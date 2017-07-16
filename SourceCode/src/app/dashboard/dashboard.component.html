@@ -1,10 +1,10 @@
-<div *ngIf="currentUser" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-  <header class="mdl-layout__header">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header *ngIf="currentUser" class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <span class="mdl-layout-title">Dashboard</span>
     </div>
   </header>
-  <div class="mdl-layout__drawer">
+  <div *ngIf="currentUser" class="mdl-layout__drawer">
     <div class="menu-header">
       <img [src]="currentUser.avatar">
       <h4>Chào, {{currentUser.firstName}}</h4>
