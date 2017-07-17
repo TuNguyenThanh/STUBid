@@ -121,7 +121,7 @@ class UploadProduct extends React.Component {
           {
             this.state.paymentMethodSeleted.id == '3' &&
             <Input
-              type={'onPress'}
+              action={'onPress'}
               onPress={() => this.handleChooseReceivingAddress()}
               title={I18n.t('moneyReceivingAddress', {locale: language}) + ' *'}
               placeholder={I18n.t('moneyReceivingAddress', {locale: language})}
@@ -140,7 +140,7 @@ class UploadProduct extends React.Component {
           {
             this.state.depositMethodSeleted.id != '1' &&
             <Input
-              type={'onPress'}
+              action={'onPress'}
               onPress={() => this.handleChooseConsignmentAddress()}
               title={I18n.t('consignmentAddress', {locale: language}) + ' *'}
               placeholder={I18n.t('consignmentAddress', {locale: language})}

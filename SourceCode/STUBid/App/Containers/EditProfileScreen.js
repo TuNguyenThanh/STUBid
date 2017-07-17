@@ -95,16 +95,16 @@ class EditProfile extends React.Component {
     }
 
     //error
-    if(!fetching && error && this.isLoadBankBrands) {
-      Alert.alert(
-        I18n.t('error', {locale: this.props.language}),
-        I18n.t(error, {locale: this.props.language}),
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-        ],
-        { cancelable: false }
-      );
-    }
+    // if(!fetching && error && this.isLoadBankBrands) {
+    //   Alert.alert(
+    //     I18n.t('error', {locale: this.props.language}),
+    //     I18n.t(error, {locale: this.props.language}),
+    //     [
+    //       {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+    //     ],
+    //     { cancelable: false }
+    //   );
+    // }
   }
 
   handleChangeAvatar() {
