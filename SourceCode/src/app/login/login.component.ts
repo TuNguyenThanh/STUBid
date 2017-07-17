@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 
 import { AuthService } from '../service/auth.service';
@@ -15,6 +15,7 @@ import { AuthService } from '../service/auth.service';
   ]
 })
 export class LoginComponent implements OnInit {
+  returnUrl: string;
   formLogin: FormGroup;
   loading = false;
   radius = false;
@@ -23,16 +24,18 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
   ) {
     if (authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
     }
-    else {
-      this.formLogin = this.formBuilder.group({
-        username: ['testadmin', Validators.minLength(8)],
-        password: ['123456', Validators.minLength(8)]
-      });
-    }
+    this.formLogin = this.formBuilder.group({
+      username: ['testadmin', Validators.minLength(8)],
+      password: ['123456', Validators.minLength(8)]
+    });
+    route.queryParams.subscribe((params: any) => {
+      this.returnUrl = params.returnUrl
+    })
   }
 
   ngOnInit() {
@@ -49,7 +52,7 @@ export class LoginComponent implements OnInit {
     .then(() => {
       let that = this;
       that.loading = !that.loading;
-      this.router.navigate(['/dashboard']);
+      this.router.navigate([this.returnUrl || '/dashboard']);
     })
     .catch(error => {
       this.loading = !this.loading;

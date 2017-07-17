@@ -23,7 +23,7 @@ export class AuctionComponent implements OnInit {
     private router: Router,
   ) {
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname }});
     } else {
       this.loadingBar.show();
       this.getAuctionId()
