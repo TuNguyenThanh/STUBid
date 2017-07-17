@@ -174,4 +174,9 @@
   "SERVER_ERROR": "Server error",
   "notification": "Notification",
   "NETWORK_ERROR": "Network Error",
+  "youHaveNotBankAccounts": "You have not have bank accounts",
+  "updateNow": "Update now",
+  "failureUploadProduct": "Failure Upload Product",
+  "tryAgain": "Try again",
+  "youHaveNoNotificationsAtAll": "You have no notifications at all",
 }

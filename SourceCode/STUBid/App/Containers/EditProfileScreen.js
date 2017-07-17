@@ -220,6 +220,7 @@ class EditProfile extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='next'
+                keyboardType={'numeric'}
                 onSubmitEditing={() => this.email.focus()}
                 value={this.state.phoneNumber}
                 onChangeText={(phoneNumber) => this.setState({ phoneNumber })}
@@ -241,6 +242,7 @@ class EditProfile extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='next'
+                keyboardType={'email-address'}
                 onSubmitEditing={() => this.atmCard.focus()}
                 value={this.state.email}
                 onChangeText={(email) => this.setState({ email })}
@@ -265,6 +267,7 @@ class EditProfile extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='done'
+                keyboardType={'numeric'}
                 onSubmitEditing={() => this.handleSaveProfile()}
                 value={this.state.accountBanking}
                 onChangeText={(accountBanking) => this.setState({ accountBanking })}

@@ -174,4 +174,9 @@
   "SERVER_ERROR": "Lỗi máy chủ",
   "notification": "Thông báo",
   "NETWORK_ERROR": "Lỗi mạng",
+  "youHaveNotBankAccounts": "Bạn chưa có tài khoản ngân hàng",
+  "updateNow": "Cập nhật ngay",
+  "failureUploadProduct": "Sản phẩm tải lên không thành công",
+  "tryAgain": "Thử lại",
+  "youHaveNoNotificationsAtAll": "Bạn không có thông báo nào cả",
 }

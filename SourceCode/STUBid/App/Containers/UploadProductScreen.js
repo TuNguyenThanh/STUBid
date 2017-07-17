@@ -8,7 +8,8 @@ import Input from '../Components/Input'
 import ModalList from '../Components/ModalList'
 import ModalUpload from '../Components/ModalUpload'
 import Icon from 'react-native-vector-icons/FontAwesome'
-var {GooglePlacesAutocomplete} = require('react-native-google-places-autocomplete');
+const { GooglePlacesAutocomplete } = require('react-native-google-places-autocomplete')
+
 // Styles
 import styles from './Styles/UploadProductScreenStyle'
 import { Colors } from '../Themes/'
@@ -51,6 +52,19 @@ class UploadProduct extends React.Component {
     const { language } = this.props;
     const { fetching, error, uploadSuccess } = nextProps.productState;
 
+    //error
+    if(!fetching && error && this.isUploadProduct) {
+      Alert.alert(
+        I18n.t('error', {locale: this.props.language}),
+        I18n.t(error, {locale: this.props.language}),
+        [
+          {text: I18n.t('tryAgain', {locale: language}), onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+      this.isUploadProduct = false;
+    }
+
     if(!fetching && this.isUploadProduct && uploadSuccess) {
       Alert.alert(
         I18n.t('upload', {locale: language}),
@@ -63,18 +77,6 @@ class UploadProduct extends React.Component {
         { cancelable: false }
       );
       this.isUploadProduct = false;
-    }
-
-    //error
-    if(!fetching && error) {
-      Alert.alert(
-        I18n.t('error', {locale: this.props.language}),
-        error,
-        [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
-        ],
-        { cancelable: false }
-      );
     }
   }
 
@@ -328,7 +330,23 @@ class UploadProduct extends React.Component {
         open={this.state.openModalPayment}
         modalDidClose={() => this.setState({ openModalPayment: false })}
         data={this.state.dataPayment}
-        onPressItem={(item) => this.setState({ openModalPayment: false, paymentMethodSeleted: item }) }
+        onPressItem={(item) => {
+          if(item.id == '2' && this.props.login.user.profile.bankRef == null) {
+            Alert.alert(
+              I18n.t('banking', {locale: language}),
+              I18n.t('youHaveNotBankAccounts', {locale: language}),
+              [
+                {text: I18n.t('later', {locale: language}), onPress: () => {}, style: 'cancel'},
+                {text: I18n.t('updateNow', {locale: language}), onPress: () => {
+                  NavigationActions.editProfileScreen({title: I18n.t('editUser', { locale: language }), user: this.props.login.user.profile });
+                }},
+              ],
+              { cancelable: false }
+            )
+          } else {
+            this.setState({ openModalPayment: false, paymentMethodSeleted: item })
+          }
+        }}
       />
     );
   }

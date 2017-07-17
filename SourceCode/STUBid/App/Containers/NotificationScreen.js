@@ -5,28 +5,43 @@ import { connect } from 'react-redux'
 // Styles
 import styles from './Styles/NotificationScreenStyle'
 
+//I18n
+import I18n from 'react-native-i18n'
+
 class Notification extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      dataNotifi: [],
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     };
   }
 
   componentDidMount() {
     this.setState({
-      dataSource: this.state.dataSource.cloneWithRows([1,2,3,4,5])
+      dataSource: this.state.dataSource.cloneWithRows(this.state.dataNotifi)
     })
   }
 
   render () {
+    const { language } = this.props;
     return (
       <View style={styles.container}>
-        <ListView
-          style={styles.listViewStyle}
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => this.renderRow(rowData)}
-        />
+        {
+          this.state.dataNotifi.length == 0 ?
+          <View style={styles.centerViewStyle}>
+            <Text style={styles.titleStyle}>
+              {I18n.t('youHaveNoNotificationsAtAll', {locale: language})}
+            </Text>
+          </View>
+          :
+          <ListView
+            enableEmptySections
+            style={styles.listViewStyle}
+            dataSource={this.state.dataSource}
+            renderRow={(rowData) => this.renderRow(rowData)}
+          />
+        }
       </View>
     )
   }
@@ -44,6 +59,7 @@ class Notification extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    language: state.settings.language,
   }
 }
 

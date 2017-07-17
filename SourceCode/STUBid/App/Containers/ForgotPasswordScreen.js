@@ -100,6 +100,7 @@ class ForgotPassword extends React.Component {
                 autoCorrect={false}
                 underlineColorAndroid={'transparent'}
                 returnKeyType='go'
+                keyboardType={'email-address'}
                 value={this.state.email}
                 onChangeText={(email) => this.setState({ email })}
                 onSubmitEditing={() => this.handleSendForgotPassword(this.state.email)}

@@ -7,6 +7,11 @@ export default StyleSheet.create({
     marginTop: Metrics.navBarHeight,
     backgroundColor: Colors.lightgray
   },
+  centerViewStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   listViewStyle: {
     flex: 1,
     marginTop: 15

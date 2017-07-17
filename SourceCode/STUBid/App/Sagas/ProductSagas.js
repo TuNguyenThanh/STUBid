@@ -57,7 +57,7 @@ export function * uploadProduct(ProductApi, UserApi, action) {
     }
   } catch(e) {
     console.log(e);
-    yield put(ProductActions.uploadProductFailure('Failure Upload Product'));
+    yield put(ProductActions.uploadProductFailure('failureUploadProduct'));
   }
 }
 
