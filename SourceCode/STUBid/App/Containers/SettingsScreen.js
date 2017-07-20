@@ -25,7 +25,7 @@ class Settings extends React.Component {
     this.state = {
       switchIsOn: true,
       openLanguage: false,
-      user: this.props.login.user
+      user: this.props.login.user ? this.props.login.user : null
     };
   }
 
