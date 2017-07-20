@@ -21,7 +21,7 @@ module.exports = (req,res) => {
                 console.log(params);
                 fs.unlink(form.uploadDir + file.name, error => {
                     if (error) console.log(error);
-                    else console.log('deleted local image : ' + imageName);
+                    else console.log('deleted local image : ' + file.name);
                 });
             })
             .catch(reason => {
@@ -90,7 +90,7 @@ module.exports = (req,res) => {
         productImages.forEach(e => {
             fs.unlink(form.uploadDir + e, error => {
                 if (error) console.log(error);
-                else console.log('deleted product image : ' + imageName);
+                else console.log('deleted product image : ' + e);
             });
         })
     });
