@@ -408,7 +408,7 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
             RETURNING "bidderAccountId", price, timestamp
         )${buyNow ? `, auction AS (
             UPDATE "Auction" SET state = 3
-            WHERE "auctionId"=$1
+            WHERE "auctionId"=$2
             RETURNING "auctionId"
         )`: ''}
         SELECT row_to_json(bid) AS "highestBidder"
