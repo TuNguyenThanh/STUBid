@@ -9,7 +9,7 @@ var mailOptions = {
 exports.sendResetPasswordEmail = (receiver, firstName, verifyToken) => {
     mailOptions.to = receiver;
     mailOptions.subject = 'Làm mới mật khẩu tài khoản sBid';
-    mailOptions.html =  `<div style="width:80%;border:1px solid #444;">
+    mailOptions.html = `<div style="width:80%;border:1px solid #444;">
         <div style="height:50px;background:#0e5aa8;font-size:200%;text-align:center;color:#fff;line-height:50px;">
             sBid
         </div>
@@ -31,12 +31,15 @@ exports.sendResetPasswordEmail = (receiver, firstName, verifyToken) => {
             </div>
         </div>
     </div>`;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         transporter.sendMail(mailOptions, (err, info) => {
-            if (err) return reject({
-                status: 500,
-                error: ERROR[500][11]
-            })
+            if (err) {
+                console.log(err);
+                return reject({
+                    status: 500,
+                    error: ERROR[500][11]
+                })
+            }
             else {
                 console.log('Message %s sent: %s', info.messageId, info.response);
                 return resolve();

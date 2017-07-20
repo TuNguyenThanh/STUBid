@@ -7,13 +7,14 @@ var app = express();
 app.use(express.static('public'));
 app.use(function (req, res, next) {
   console.log(req.header('origin'));
-  let url_parts = url.parse(req.url),
-    pathname = url_parts.pathname;
+  let url_parts = url.parse(req.url);
+  let pathname = url_parts.pathname;
   if ((new RegExp(/^\/api\/\w+/).test(pathname)
     && req.header('App-Name') && req.header('App-Name') !== 'sbid'))
     return res.status(404).send();
 
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
@@ -26,12 +27,12 @@ server.listen(config.PORT, () => {
 });
 
 app.get('/api/Auction/:auctionId', require('./controllers/auction/getAuction'));
+app.patch('/api/Auction/active/:auctionId', require('./controllers/auction/active'));
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
 app.patch('/api/Auctions/bid', (req, res) => require('./controllers/auction/bid')(req, res));
 app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
-app.patch('/api/Auction/active/:auctionId', (req, res) => require('./controllers/auction/active')(req, res));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
@@ -41,6 +42,8 @@ app.get('/Accounts/resetPassword', require('./controllers/account/resetPassword'
 app.patch('/api/Accounts/changePassword', require('./controllers/account/changePassword'));
 app.patch('/api/Accounts/updateProfile', require('./controllers/account/updateProfile'));
 app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAvatar'));
+
+app.get('/api/BidHistorys/auctionId/:auctionId', require('./controllers/bidHistory/getByAuction'));
 
 app.get('/api/BankBrands', require('./controllers/bank/getBankBrands'));
 

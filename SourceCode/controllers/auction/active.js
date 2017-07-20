@@ -21,9 +21,6 @@ module.exports = (req, res) => {
       return active(auctionId)
     })
     .then(result => {
-      // sockets.forEach(socket => {
-      //     socket.emit('SERVER-SEND-AUCTIONS', selectAuctions(socket.page - 1, socket.categoryId));
-      // })
       res.send({ success: true, token })
     })
     .catch(reason => {

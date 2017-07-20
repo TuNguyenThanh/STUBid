@@ -180,7 +180,7 @@ exports.getAuction = (auctionId) => {
 exports.active = (auctionId) => {
     return new Promise((resolve, reject) => {
         let sql = `UPDATE "Auction"
-                SET state = 1
+                SET state = 1, "activatedDate" = now()
                 WHERE "Auction"."auctionId" = $1`;
         let params = [auctionId];
         query(sql, params)
