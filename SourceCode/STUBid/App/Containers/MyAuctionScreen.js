@@ -43,7 +43,6 @@ class MyAuction extends React.Component {
 
       myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
         this.props.myAuctionsHanding(data);
-        console.log(data.length);
       }, this.props.login.user.profile.accountId, 1);
 
       this.props.getProductUnActivity(this.props.login.user.token);

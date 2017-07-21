@@ -7,6 +7,9 @@ import QRCode from 'react-native-qrcode'
 import moment from 'moment'
 import 'moment/locale/vi'
 
+//Key ApiConfig
+import ApiConfig from '../Config/ApiConfig'
+
 // Styles
 import styles from './Styles/MyAuctionNotActiveScreenStyle'
 import { Colors, Metrics, Images } from '../Themes'
@@ -20,7 +23,7 @@ class MyAuctionNotActive extends React.Component {
     this.state = {
       arrImage: [],
       data: this.props.data,
-      text: 'https://github.com/tunguyenthanh',
+      text: `${ApiConfig.baseSocketIOURL}dashboard/auction/${this.props.data.auctionId}`,
     };
   }
 
