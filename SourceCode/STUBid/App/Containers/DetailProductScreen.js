@@ -56,7 +56,9 @@ class DetailProduct extends React.Component {
         listData[this.props.rowID].product.name,
         I18n.t('bidSuccess', {locale: language}) + ' ' + bidSuccess.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND',
         [
-          {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
+            NavigationActions.pop();
+          }},
         ],
         { cancelable: false }
       );
@@ -192,7 +194,6 @@ class DetailProduct extends React.Component {
   }
 
   handleBuyNow(data) {
-    console.log(data);
     const { language } = this.props;
     const price = data.highestBidder ? data.highestBidder.price : data.startPrice ;
     //Check login
