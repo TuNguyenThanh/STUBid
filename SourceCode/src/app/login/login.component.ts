@@ -26,6 +26,13 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
   ) {
+    try {
+      localStorage.setItem('test', '1');
+      localStorage.getItem('test');
+    } catch (e) {
+      alert('Đăng nhập không được hỗ trợ trên trình duyệt hiện tại!');
+      this.router.navigate(['']);
+    }
     if (authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
     }
