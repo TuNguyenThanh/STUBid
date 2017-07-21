@@ -31,10 +31,28 @@ module.exports = function (socket) {
         console.log('disconnect due to handshake failed');
     }
 
+    function init() {
+        homeViewCategoryId = -1;
+        homeViewPage = 1;
+        homeViewInterval;
+
+        searchKey = '';
+        searchViewPage = 1;
+        searchViewCategoryId = -1;
+        searchViewInterval;
+
+        accountId;
+        attendedIds;
+        attendedViewPage = 1;
+        attendedViewInterval;
+        myAuctionsViewPage = 1;
+        myAuctionsViewInterval;
+    }
+
     function setHomeView() {
         setTimeout(function () {
             homeViewInterval = setInterval(() => {
-                let auctions = selectAuctions(homeViewPage- 1, homeViewCategoryId, accountId, attendedIds);
+                let auctions = selectAuctions(homeViewPage - 1, homeViewCategoryId, accountId, attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
             }, 1000);
         }, 1000 - Date.now() % 1000);
@@ -42,14 +60,14 @@ module.exports = function (socket) {
 
     socket.on('CLIENT-SEND-PAGE', data => {
         console.log(data);
-        homeViewPage= data.page;
+        homeViewPage = data.page;
     });
 
     socket.on('CLIENT-SEND-CATEGORY', data => {
         console.log(data);
-        homeViewPage= 1;
+        homeViewPage = 1;
         homeViewCategoryId = data.categoryId;
-        let auctions = selectAuctions(homeViewPage- 1, homeViewCategoryId, accountId, attendedIds);
+        let auctions = selectAuctions(homeViewPage - 1, homeViewCategoryId, accountId, attendedIds);
         socket.emit('SERVER-SEND-AUCTIONS', auctions);
     });
 
@@ -153,5 +171,9 @@ module.exports = function (socket) {
 
     socket.on('disconnect', () => {
         console.log('disconnect');
+        clearInterval(homeViewInterval);
+        clearInterval(searchViewInterval);
+        clearInterval(myAuctionsViewInterval);
+        clearInterval(attendedViewInterval);
     });
 }

@@ -537,30 +537,21 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
     let results = [...auctions];
     if (categoryId && categoryId > 0) results = results.filter(e => e.product.category.categoryId == categoryId);
     if (searchKey) {
-        let searchArray = searchKey.toLowerCase().split(' ');
+        searchKey = latinize(searchKey).toLowerCase();
         results = results.filter(e => {
-            //e = (e.product.name + e.product.category.name + e.seller.firstName + e.seller.lastName).toLowerCase();
             e = latinize(e.product.name).toLowerCase();
-            for (var i = 0; i < searchArray.length; i++) {
-                var element = searchArray[i];
-                if (e.indexOf(element) >= 0) return true;
-            }
-        }, this)
+            return e.indexOf(searchKey) >= 0;
+        });
         results = results.sort((a, b) => {
-            let aResult = 0, bResult = 0, aIndex, bIndex;
-            a = a.product.name + a.product.category.name + a.seller.firstName + a.seller.lastName.toLowerCase();
-            b = b.product.name + b.product.category.name + b.seller.firstName + b.seller.lastName.toLowerCase();
-            searchArray.forEach(e => {
-                aResult += 1 - a.indexOf(e);
-                bResult += 1 - b.indexOf(e);
-            })
+            let aResult = 1 - a.product.name.toLowerCase().indexOf(searchKey);
+            let bResult = 1 - b.product.name.toLowerCase().indexOf(searchKey);
             return bResult < aResult;
         });
     }
     return results.slice(0, page * 10 + 9);
 }
 
-// var sql = `UPDATE "Auction" SET "activatedDate" = now()`;
+// var sql = `UPDATE "Auction" SET state = 1, "activatedDate" = now()`;
 // var params = []
 // query(sql,params)
 // .then(result => {
