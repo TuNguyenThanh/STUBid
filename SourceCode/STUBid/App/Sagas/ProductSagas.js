@@ -7,13 +7,13 @@ import IO from 'socket.io-client/dist/socket.io'
 import RNFetchBlob from 'react-native-fetch-blob'
 
 export function * uploadProduct(ProductApi, UserApi, action) {
-  const { token, product } = action;
+  const { token, product, accountId } = action;
 
   try {
     const arrImagePush = [];
     var dataResp, isDone = false;
     for(let i = 0; i < product.image.length ; i++) {
-      const nameImage = `image${Math.floor(Date.now() / 1000)}${i}`;
+      const nameImage = `image${accountId}${Math.floor(Date.now() / 1000)}${i}`;
       const newObject = { name: nameImage, filename: nameImage + '.png', type: 'image/png', data: RNFetchBlob.wrap(product.image[i]) }
       arrImagePush.push(newObject);
     }

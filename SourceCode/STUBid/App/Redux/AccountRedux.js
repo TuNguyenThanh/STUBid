@@ -28,7 +28,7 @@ const { Types, Creators } = createActions({
   editProfileSuccess: [],
   editProfileFailure: ['error'],
 
-  uploadAvatarRequest: ['image', 'token'],
+  uploadAvatarRequest: ['image', 'token', 'accountId'],
   uploadAvatarSuccess: [],
   uploadAvatarFailure: ['error'],
 })

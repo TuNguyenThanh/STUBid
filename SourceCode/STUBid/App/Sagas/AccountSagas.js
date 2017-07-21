@@ -180,10 +180,10 @@ export function * editProfile(AccountApi, UserApi, action) {
 }
 
 export function * uploadAvatar(AccountApi, UserApi, action) {
-  const { image, token } = action;
+  const { image, token, accountId } = action;
   try {
     StatusBar.setNetworkActivityIndicatorVisible(true);
-    const res = yield call(AccountApi.uploadAvatar, image, token);
+    const res = yield call(AccountApi.uploadAvatar, image, token, accountId);
     const response = JSON.parse(res.data);
 
     if(response.success) {

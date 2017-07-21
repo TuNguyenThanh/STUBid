@@ -40,10 +40,10 @@ const create = (baseURL = ApiConfig.baseURL) => {
     });
   }
 
-  const uploadAvatar = (image, token) => {
+  const uploadAvatar = (image, token, accountId) => {
 
     return new Promise(resolve => {
-      const nameImage = `image${Math.floor(Date.now() / 1000)}`;
+      const nameImage = `image${accountId}${Math.floor(Date.now() / 1000)}`;
       let dataResp, dataError,isDone = false;
       RNFetchBlob.fetch('PATCH', `${ApiConfig.baseURL}Accounts/updateAvatar`, {
         'Authorization': 'SBID',

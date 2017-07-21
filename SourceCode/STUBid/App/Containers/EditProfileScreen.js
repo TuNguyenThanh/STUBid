@@ -431,14 +431,15 @@ class EditProfile extends React.Component {
         {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
         {text: I18n.t('ok', {locale: language}), onPress: () => {
           const { token } = this.props.login.user;
+          const { accountId } = this.props.login.user.profile;
           if(Platform.OS === 'ios') {
-            this.props.uploadAvatar(image.path, token);
+            this.props.uploadAvatar(image.path, token, accountId);
             this.setState({
               urlImage: image.path
             });
           }
           if(Platform.OS === 'android') {
-            this.props.uploadAvatar(image[0].path, token);
+            this.props.uploadAvatar(image[0].path, token, accountId);
             this.setState({
               urlImage: image[0].path
             });
@@ -463,7 +464,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     editProfile: (info) => dispatch(AccountActions.editProfileRequest(info)),
-    uploadAvatar: (image, token) => dispatch(AccountActions.uploadAvatarRequest(image, token)),
+    uploadAvatar: (image, token, accountId) => dispatch(AccountActions.uploadAvatarRequest(image, token, accountId)),
     getBankBrands: () => dispatch(CategoryActions.bankBrandsRequest()),
   }
 }

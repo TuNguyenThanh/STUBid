@@ -423,8 +423,8 @@ class UploadProduct extends React.Component {
             return;
           }
         }
-
-        this.props.uploadProduct(token, product);
+        const { accountId } = this.props.login.user.profile;
+        this.props.uploadProduct(token, product, accountId);
         this.isUploadProduct = true;
       }
     }
@@ -453,7 +453,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    uploadProduct: (token, product) => dispatch(ProductActions.uploadProductRequest(token, product)),
+    uploadProduct: (token, product, accountId) => dispatch(ProductActions.uploadProductRequest(token, product, accountId)),
   }
 }
 
