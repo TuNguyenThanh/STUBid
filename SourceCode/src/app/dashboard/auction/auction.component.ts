@@ -14,6 +14,7 @@ import { AuthService } from '../../service/auth.service';
 export class AuctionComponent implements OnInit {
   auction: any;
   imageLoaded: boolean;
+  loading: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,7 +24,7 @@ export class AuctionComponent implements OnInit {
     private router: Router,
   ) {
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname }});
+      this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname } });
     } else {
       this.loadingBar.show();
       this.getAuctionId()
@@ -72,18 +73,24 @@ export class AuctionComponent implements OnInit {
 
   activeAuction() {
     this.loadingBar.show();
+    this.loading = true;
     let token = this.authService.getLocalToken();
     this.auctionService.active(this.auction.auctionId, token)
       .subscribe(
       (value: any) => {
         console.log(value);
-        this.loadingBar.hide();
+        if (value.success) {
+          this.auction.state = 1;
+          this.loadingBar.hide();
+          this.loading = false;
+        }
       },
       (error: any) => {
         console.log(error);
         this.loadingBar.hide();
+        this.loading = false;
       }
-      )
+      );
   }
 
   imageComplete() {

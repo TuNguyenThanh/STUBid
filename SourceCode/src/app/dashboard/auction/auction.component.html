@@ -70,7 +70,7 @@
   </div>
 
   <div *ngIf="imageLoaded" class="row text-center">
-    <button [disabled]="auction.state !== 0" (click)="activeAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+    <button [disabled]="(auction.state !== 0) || loading" (click)="activeAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
       Kích hoạt đấu giá
     </button>
   </div>

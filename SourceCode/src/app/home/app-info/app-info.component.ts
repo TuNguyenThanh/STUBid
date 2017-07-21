@@ -14,9 +14,6 @@ export class AppInfoComponent implements OnInit {
   constructor() {
     this.images = Array(this.imagesCount);
     this.active = 0;
-    setInterval(() => {
-      this.active = (this.active + 1) % this.imagesCount;
-    }, 1500);
   }
 
   ngOnInit() {
