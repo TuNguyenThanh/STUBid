@@ -545,7 +545,7 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
         results = results.sort((a, b) => {
             let aResult = 1 - a.product.name.toLowerCase().indexOf(searchKey);
             let bResult = 1 - b.product.name.toLowerCase().indexOf(searchKey);
-            return bResult < aResult;
+            return bResult > aResult;
         });
     }
     return results.slice(0, page * 10 + 9);
