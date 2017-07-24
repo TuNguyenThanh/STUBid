@@ -509,6 +509,60 @@ exports.buyNow = (accountId, auctionId) => {
     })
 }
 
+exports.closeAuction = (auctionId, sellerAccountId) => {
+    return new Promise((resolve, reject) => {
+        let element = auctions.find(e => e.auctionId === auctionId);
+        if (element) {
+            let sql = `UPDATE "Auction" SET state=3 WHERE "auctionId"=$1 AND "sellerAccountId"=$2`;
+            let params = [auctionId, sellerAccountId];
+            query(sql, params)
+                .then(value => {
+                    if (value.rowCount > 0) {
+                        closedAuctions.push(element);
+                        let auctionId = element.auctionId;
+                        delete auctionsTimeLeft[auctionId];
+                        auctions.splice(i, 1);
+                        console.log(`close auction : ${auctionId}`);
+                        resolve();
+                    } else {
+                        reject({
+                            status: 500,
+                            error: ERROR[500][1]
+                        });
+                    }
+                })
+                .catch(reject)
+        } else {
+            let sql = `WITH deleteAuctionResult AS (
+                DELETE FROM "Auction"
+                WHERE state=0 AND "auctionId"=$1 AND "sellerAccountId"=$2
+                RETURNING "auctionId", "productId"
+            ), deleteProductResult AS (
+                DELETE FROM "Product"
+                WHERE "productId" = (SELECT "productId" FROM deleteAuctionResult)
+            ), deleteImageResult AS (
+                DELETE FROM "Image"
+                WHERE "productId" = (SELECT "productId" FROM deleteAuctionResult)
+            )
+            SELECT * FROM deleteAuctionResult`;
+            let params = [auctionId, sellerAccountId];
+            query(sql, params)
+                .then(value => {
+                    if (value.rowCount > 0) {
+                        console.log(`delete auction : ${auctionId}`);
+                        resolve();
+                    } else {
+                        reject({
+                            status: 500,
+                            error: ERROR[500][1]
+                        });
+                    }
+                })
+                .catch(reject)
+        }
+    });
+}
+
 exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
     if (page == undefined) return [];
     let results = [...auctions];

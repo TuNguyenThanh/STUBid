@@ -33,6 +33,7 @@ app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
 app.patch('/api/Auctions/bid', (req, res) => require('./controllers/auction/bid')(req, res));
 app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
+app.post('/api/Auctions/closeOrDelete', require('./controllers/auction/closeOrDelete'));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
