@@ -24,6 +24,8 @@ import { Images, Colors } from '../Themes'
 //I18n
 import I18n from 'react-native-i18n'
 
+console.disableYellowBox = true;
+
 class Home extends React.Component {
   constructor(props) {
     super(props);

@@ -165,8 +165,9 @@ class UploadProduct extends React.Component {
 
   handleUploadProductNext() {
     const { language } = this.props;
-    const { productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose } = this.state;
-
+    let { productName, productStartPrice, productCeilPrice, productDescription, categorySelected, arrImageChoose } = this.state;
+    productStartPrice = productStartPrice.replace(/\./g, '');
+    productCeilPrice = productCeilPrice.replace(/\./g, '');
     //check
     if(productName == '') {
       this.message(I18n.t('pleaseEnterProductName', {locale: language}))
@@ -177,8 +178,6 @@ class UploadProduct extends React.Component {
         if(productStartPrice == '') {
           this.message(I18n.t('pleaseEnterStartPrice', {locale: language}))
         } else {
-
-
           if(productDescription == '') {
             this.message(I18n.t('pleaseEnterDescription', {locale: language}))
           } else {
@@ -284,6 +283,7 @@ class UploadProduct extends React.Component {
     if(arrImage.length !=0 ) {
       for(let i = 0; i< arrImage.length; i++) {
         arrImageTemp.push(arrImage[i].path);
+        // console.log(arrImage[i].size);
       }
       Alert.alert(
         I18n.t('youHaveSelected', {locale: language}) +' '+arrImageTemp.length+' '+ I18n.t('photos', {locale: language}),

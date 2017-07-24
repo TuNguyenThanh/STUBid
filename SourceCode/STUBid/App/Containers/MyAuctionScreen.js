@@ -26,7 +26,7 @@ class MyAuction extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      data: [],
+      //data: [],
     };
   }
 
@@ -51,14 +51,14 @@ class MyAuction extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { myListAuction, myListAuctionClose } = nextProps.auctions;
-
-    if(myListAuction) {
-      const temp = myListAuction.concat(myListAuctionClose);
-      this.setState({
-        data: this.state.data.concat(temp)
-      });
-    }
+    // const { myListAuction, myListAuctionClose } = nextProps.auctions;
+    //
+    // if(myListAuction) {
+    //   const temp = myListAuction.concat(myListAuctionClose);
+    //   this.setState({
+    //     data: this.state.data.concat(temp)
+    //   });
+    // }
   }
 
   render() {
