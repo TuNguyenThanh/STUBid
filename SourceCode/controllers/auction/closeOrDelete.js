@@ -17,7 +17,7 @@ module.exports = (req, res) => {
                 error: ERROR[400][1]
             });
         token = refreshToken(obj);
-        return closeAuction(auctionId, obj.accountId)
+        return closeAuction(auctionId, obj.accountId, obj.isAdmin)
     })
     .then(result => {
         res.send({ success: true, token })

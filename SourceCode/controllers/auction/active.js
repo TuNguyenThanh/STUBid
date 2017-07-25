@@ -18,7 +18,7 @@ module.exports = (req, res) => {
           error: ERROR[400][1]
         });
       token = refreshToken(obj);
-      return active(auctionId)
+      return active(auctionId, obj.accountId);
     })
     .then(result => {
       res.send({ success: true, token })

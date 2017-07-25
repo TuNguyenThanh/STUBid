@@ -147,14 +147,6 @@ module.exports = function (socket) {
         console.log(data);
         myAuctionsViewPage = data.page;
     });
-
-    socket.on('CLIENT-SEND-ACCOUNT-ID', (data) => {
-        console.log(data);
-        accountId = data.accountId;
-        attendedViewPage = 1;
-        myAuctionsViewPage = 1;
-        setMyAuctionsView();
-    })
     // MY AUCTIONS -- end --
 
     // SEARCH -- begin --

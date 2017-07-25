@@ -3,14 +3,14 @@ exports.DIRNAME = __dirname;
 exports.DOMAIN_NAME = 'https://sbid.herokuapp.com';
 exports.ALLOW_ORIGIN = 'https://sbid.herokuapp.com';
 exports.PG = {
-    user: 'user',
-    database: 'database',
-    password: 'password',
-    host: 'host',
+    user: 'postgres',
+    database: 'sbid',
+    password: '1',
+    host: '127.0.0.1',
     port: 5432,
     max: 10,
     idleTimeoutMillis: 30000,
-    ssl: true
+    ssl: false
 };
 exports.eSMS = {
     API_KEY: 'API_KEY',
