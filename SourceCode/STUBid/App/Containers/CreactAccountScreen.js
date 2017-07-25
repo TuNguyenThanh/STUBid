@@ -75,40 +75,40 @@ class CreactAccount extends React.Component {
             if (!phoneNumber) {
               this.message(I18n.t('notEnterPhoneNumber', {locale: language}));
             } else {
-              if(phoneNumber.length < 10 || phoneNumber.length >= 12){
-                this.message(I18n.t('invalidPhoneNumber', {locale: language}));
-              } else {
-                if (!username) {
-                  this.message(I18n.t('notEnterUsername', {locale: language}));
-                } else {
-                  if(!this.check(username)) {
-                    this.message(I18n.t('usernameIsOnlyUsed', {locale: language}) + ' a-z 0-9');
+              if((phoneNumber.length == 10 && (phoneNumber[1] == 9 || (phoneNumber[1] == 8 && phoneNumber[2] == 8))) ||
+                (phoneNumber.length == 11 && phoneNumber[1] == 1 && phoneNumber[2] == 2)) {
+                  if (!username) {
+                    this.message(I18n.t('notEnterUsername', {locale: language}));
                   } else {
-                    if(username.length < 6) {
-                      this.message(I18n.t('usernameIsAtLeast6characters', {locale: language}));
+                    if(!this.check(username)) {
+                      this.message(I18n.t('usernameIsOnlyUsed', {locale: language}) + ' a-z 0-9');
                     } else {
-                      if(username.length >= 18) {
-                        this.message(I18n.t('usernameOfUpTo18Characters', {locale: language}));
+                      if(username.length < 6) {
+                        this.message(I18n.t('usernameIsAtLeast6characters', {locale: language}));
                       } else {
-                        if (!password) {
-                          this.message(I18n.t('notEnterPassword', {locale: language}));
+                        if(username.length >= 18) {
+                          this.message(I18n.t('usernameOfUpTo18Characters', {locale: language}));
                         } else {
-                          if (password.length < 6) {
-                            this.message(I18n.t('passwordIsAtLeast6characters', {locale: language}));
+                          if (!password) {
+                            this.message(I18n.t('notEnterPassword', {locale: language}));
                           } else {
-                            if(password.length >= 18) {
-                              this.message(I18n.t('passwordOfUpTo18Characters', {locale: language}));
+                            if (password.length < 6) {
+                              this.message(I18n.t('passwordIsAtLeast6characters', {locale: language}));
                             } else {
-                              if (!rePassword) {
-                                this.message(I18n.t('youHaveNotReEnteredYourPassword', {locale: language}));
+                              if(password.length >= 18) {
+                                this.message(I18n.t('passwordOfUpTo18Characters', {locale: language}));
                               } else {
-                                if (password !== rePassword) {
-                                  this.message(I18n.t('passwordAndRepeatPasswordMustBeTheSame', {locale: language}));
+                                if (!rePassword) {
+                                  this.message(I18n.t('youHaveNotReEnteredYourPassword', {locale: language}));
                                 } else {
-                                  //oke - register
-                                  const info = { firstName, lastName, email, phoneNumber, username, password: md5(password) };
-                                  this.props.accountRegister(info);
-                                  this.isRegister = true;
+                                  if (password !== rePassword) {
+                                    this.message(I18n.t('passwordAndRepeatPasswordMustBeTheSame', {locale: language}));
+                                  } else {
+                                    //oke - register
+                                    const info = { firstName, lastName, email, phoneNumber, username, password: md5(password) };
+                                    this.props.accountRegister(info);
+                                    this.isRegister = true;
+                                  }
                                 }
                               }
                             }
@@ -117,7 +117,9 @@ class CreactAccount extends React.Component {
                       }
                     }
                   }
-                }
+              } else {
+                this.message(I18n.t('invalidPhoneNumber', {locale: language}));
+                return;
               }
             }
           }

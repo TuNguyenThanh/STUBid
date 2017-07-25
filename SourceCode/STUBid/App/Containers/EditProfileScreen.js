@@ -107,6 +107,11 @@ class EditProfile extends React.Component {
     // }
   }
 
+  validateEmail(email) {
+    const check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return check.test(email);
+  }
+
   handleChangeAvatar() {
     this.setState({ openModalChooseImage: true });
   }
@@ -114,6 +119,7 @@ class EditProfile extends React.Component {
   handleSaveProfile() {
     const { firstName, lastName, phoneNumber, email, idBankBrandSelected, accountBanking } = this.state;
     const { token } = this.props.login.user;
+    const { language } = this.props;
     if(idBankBrandSelected) {
       const bankRef = {
         bankAccountNumber: accountBanking,
@@ -121,9 +127,32 @@ class EditProfile extends React.Component {
       };
       const info = { token, firstName, lastName, phoneNumber, email, bankRef };
 
-      this.props.editProfile(info);
-      this.isChange = true;
+      if(!this.validateEmail(email)) {
+        this.message(I18n.t('emailAddressNotValid', {locale: language}));
+        return;
+      }
+
+      if((phoneNumber.length == 10 && (phoneNumber[1] == 9 || (phoneNumber[1] == 8 && phoneNumber[2] == 8))) ||
+        (phoneNumber.length == 11 && phoneNumber[1] == 1 && phoneNumber[2] == 2)) {
+          this.props.editProfile(info);
+          this.isChange = true;
+      } else {
+        this.message(I18n.t('invalidPhoneNumber', {locale: language}));
+        return;
+      }
     }
+  }
+
+  message(mess) {
+    const { language } = this.props;
+    Alert.alert(
+      I18n.t('error', {locale: language}),
+      mess,
+      [
+        {text: I18n.t('ok', {locale: language}), onPress: () => {}},
+      ],
+      { cancelable: false }
+    );
   }
 
   render () {

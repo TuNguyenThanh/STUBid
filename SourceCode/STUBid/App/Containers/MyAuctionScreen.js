@@ -32,18 +32,17 @@ class MyAuction extends React.Component {
 
   componentDidMount() {
     if(this.props.login.user) {
+      myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
+        this.props.myAuctionsHanding(data);
+      }, this.props.login.user.profile.accountId, 1);
+
       attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
         this.props.myAuctions(data);
-        //console.log(data);
       }, this.props.login.user.profile.accountId, 1);
 
       attendedCloseHandler.setServerSendCloseAttendedAuctionsHandler((data) => {
         this.props.myAuctionsClose(data);
       });
-
-      myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
-        this.props.myAuctionsHanding(data);
-      }, this.props.login.user.profile.accountId, 1);
 
       this.props.getProductUnActivity(this.props.login.user.token);
     }

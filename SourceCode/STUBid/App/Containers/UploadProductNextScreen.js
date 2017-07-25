@@ -172,7 +172,7 @@ class UploadProduct extends React.Component {
     if(productName == '') {
       this.message(I18n.t('pleaseEnterProductName', {locale: language}))
     } else {
-      if(productName.length < 10) {
+      if(productName.length <= 10) {
         this.message(I18n.t('pleaseEnterProductNameLonger', {locale: language}))
       } else {
         if(productStartPrice == '') {
@@ -181,7 +181,7 @@ class UploadProduct extends React.Component {
           if(productDescription == '') {
             this.message(I18n.t('pleaseEnterDescription', {locale: language}))
           } else {
-            if(productDescription.length < 10) {
+            if(productDescription.length <= 10) {
               this.message(I18n.t('pleaseEnterDescriptionLonger', {locale: language}))
             } else {
               if(arrImageChoose.length == 0) {

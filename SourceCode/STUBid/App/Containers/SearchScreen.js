@@ -45,7 +45,7 @@ class Search extends React.Component {
 
     searchAuctions.setServerSendSearchHandler((data) => {
       this.props.searchAuctions(data);
-    }, this.state.categorySelected.categoryId, '');
+    }, this.state.categorySelected.categoryId, this.state.keySearch);
   }
 
   componentWillReceiveProps(nextProps) {
