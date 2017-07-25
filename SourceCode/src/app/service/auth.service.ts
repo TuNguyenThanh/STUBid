@@ -95,4 +95,10 @@ export class AuthService {
     return this.currentUser && true;
   }
 
+  resetPassword(token) {
+    let url = `${Constants.baseUrl}/Accounts/resetPassword`;
+    let body = { token };
+    return this.baseService.patchSth(url, body, Constants.commonHeader);
+  }
+
 }

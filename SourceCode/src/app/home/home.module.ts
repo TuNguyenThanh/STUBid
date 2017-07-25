@@ -10,6 +10,7 @@ import { GuideComponent } from './guide/guide.component';
 
 import { AuthService } from '../service/auth.service';
 import { AppInfoComponent } from './app-info/app-info.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { AppInfoComponent } from './app-info/app-info.component';
     ApiComponent,
     GuideComponent,
     AppInfoComponent,
+    ResetPasswordComponent,
   ],
   providers: [AuthService]
 })
