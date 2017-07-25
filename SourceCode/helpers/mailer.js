@@ -20,7 +20,7 @@ exports.sendResetPasswordEmail = (receiver, firstName, verifyToken) => {
                 <br/>Đơn giản chỉ cần nhấn vào nút bên dưới để nhận mật khẩu mới:
             </div>
             <a
-                href="${DOMAIN_NAME}/resetPassword?verifyToken=${verifyToken}"
+                href="${DOMAIN_NAME}/resetPassword/${verifyToken}"
                 style="display:block;text-decoration:none;text-align:center;font-weight:bold;font-size:200%;color:#f1f1f4;background:#0e5aa8;width:250px;padding:15px;box-shadow:4px 4px 8px #444"
                 >
                 Reset password
