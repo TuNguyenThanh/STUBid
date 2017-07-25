@@ -511,17 +511,17 @@ exports.buyNow = (accountId, auctionId) => {
 
 exports.closeAuction = (auctionId, accountId, isAdmin) => {
     return new Promise((resolve, reject) => {
-        let element = auctions.find(e => e.auctionId === auctionId);
+        let element = auctions.find(e => e.auctionId == auctionId);
         if (element) {
-            let sql = `UPDATE "Auction" SET state=3 WHERE "auctionId"=$1 AND ("sellerAccountId"=$2 OR $3)`;
-            let params = [auctionId, sellerAccountId, isAdmin];
+            let sql = `UPDATE "Auction" SET state=3, "manualClosedUserId"=$2 WHERE "auctionId"=$1 AND ("sellerAccountId"=$2 OR $3)`;
+            let params = [auctionId, accountId, isAdmin];
             query(sql, params)
                 .then(value => {
                     if (value.rowCount > 0) {
                         closedAuctions.push(element);
                         let auctionId = element.auctionId;
                         delete auctionsTimeLeft[auctionId];
-                        auctions.splice(i, 1);
+                        auctions.splice(auctions.indexOf(element), 1);
                         console.log(`close auction : ${auctionId}`);
                         resolve();
                     } else {
@@ -545,7 +545,7 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
                 WHERE "productId" = (SELECT "productId" FROM deleteAuctionResult)
             )
             SELECT * FROM deleteAuctionResult`;
-            let params = [auctionId, sellerAccountId, isAdmin];
+            let params = [auctionId, accountId, isAdmin];
             query(sql, params)
                 .then(value => {
                     if (value.rowCount > 0) {
