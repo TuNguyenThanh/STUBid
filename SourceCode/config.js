@@ -1,7 +1,6 @@
 exports.PORT = process.env.PORT || 3000;
 exports.DIRNAME = __dirname;
-exports.DOMAIN_NAME = 'https://sbid.herokuapp.com';
-exports.ALLOW_ORIGIN = 'https://sbid.herokuapp.com';
+exports.DOMAIN_NAME = 'http://localhost:3000';
 exports.PG = {
     user: 'postgres',
     database: 'sbid',

@@ -3,14 +3,14 @@ const { verify } = require('../../helpers/jwt'),
       ERROR = require('../../error.json');
 
 module.exports = (req,res) => {
-    var { verifyToken } = req.query;
-    if (!verifyToken) {
+    var { token } = req.body;
+    if (!token) {
         return res.send({
             success: false,
             error: ERROR[400][0]
         })
     }
-    verify(verifyToken)
+    verify(token)
     .then(object => {
         if (!object.accountId)
             return Promise.reject({
@@ -19,8 +19,10 @@ module.exports = (req,res) => {
             })
         return resetPassword(object.accountId)
     })
-    .then(newPassword => {
-        res.send({newPassword});
+    .then(result => {
+        res.send(Object.assign({
+            success: true,  
+        }, result));
     })
     .catch(reason => {
         console.log(reason);

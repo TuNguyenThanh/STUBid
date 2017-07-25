@@ -197,14 +197,20 @@ exports.resetPassword = (accountId) => {
     let newPassword = content.substr(content.length - 6, content.length - 1).toUpperCase();
     console.log('new password: ' + newPassword);
     return new Promise((resolve,reject) => {
-        let sql = `UPDATE "Account"
+        let sql = `WITH account AS (
+            UPDATE "Account"
             SET password=$1
-            WHERE "accountId"=$2`;
+            WHERE "accountId"=$2
+            RETURNING username
+        ) SELECT * FROM account`;
         let params = [md5(newPassword), accountId];
         query(sql,params)
         .then(result => {
             if (result.rowCount === 1) {
-                resolve(newPassword);
+                resolve({
+                    username: result.rows[0].username,
+                    newPassword
+                });
             }
             else {
                 reject({
