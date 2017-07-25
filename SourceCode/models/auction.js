@@ -563,6 +563,30 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
     });
 }
 
+exports.updateAuction = (auctionId, body, accountId, isAdmin) => {
+    if (body.state) delete body.state;
+    let keys = Object.keys(body);
+    let keysExp = keys.map(e => `"${e}"`).join(',');
+    let valuesExp = keys.map((v, i) => `$${i + 1}`).join(',');
+    let sql = `UPDATE "Auction" SET (${keysExp})=(${valuesExp}) WHERE "auctionId" = ${auctionId} AND ("sellerAccountId"=${accountId} OR ${isAdmin})`;
+    let params = keys.map(e => body[e]);
+    return new Promise((resolve, reject) => {
+        query(sql, params)
+            .then((value) => {
+                if (value.rowCount > 0) {
+                    console.log(`update auction : ${auctionId}`);
+                    resolve();
+                } else {
+                    reject({
+                        status: 500,
+                        error: ERROR[500][1]
+                    });
+                }
+            })
+            .catch(reject)
+    });
+}
+
 exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
     if (page == undefined) return [];
     let results = [...auctions];

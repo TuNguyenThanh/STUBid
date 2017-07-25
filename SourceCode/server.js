@@ -34,6 +34,7 @@ app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAucti
 app.patch('/api/Auctions/bid', (req, res) => require('./controllers/auction/bid')(req, res));
 app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
 app.post('/api/Auctions/closeOrDelete', require('./controllers/auction/closeOrDelete'));
+app.patch('/api/Auctions/:auctionId', require('./controllers/auction/update'));
 
 app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
@@ -43,6 +44,8 @@ app.get('/Accounts/resetPassword', require('./controllers/account/resetPassword'
 app.patch('/api/Accounts/changePassword', require('./controllers/account/changePassword'));
 app.patch('/api/Accounts/updateProfile', require('./controllers/account/updateProfile'));
 app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAvatar'));
+
+app.patch('/api/Products/:productId', require('./controllers/product/update'));
 
 app.get('/api/BidHistorys/auctionId/:auctionId', require('./controllers/bidHistory/getByAuction'));
 
