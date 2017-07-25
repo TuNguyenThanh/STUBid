@@ -40,7 +40,7 @@ app.post('/api/Accounts/register', require('./controllers/account/register'));
 app.post('/api/Accounts/resendVerifyCode', require('./controllers/account/resendVerifyCode'));
 app.post('/api/Accounts/login', require('./controllers/account/login'));
 app.post('/api/Accounts/forgotPassword', require('./controllers/account/forgotPassword'));
-app.get('/Accounts/resetPassword', require('./controllers/account/resetPassword'));
+app.get('/api/Accounts/resetPassword', require('./controllers/account/resetPassword'));
 app.patch('/api/Accounts/changePassword', require('./controllers/account/changePassword'));
 app.patch('/api/Accounts/updateProfile', require('./controllers/account/updateProfile'));
 app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAvatar'));

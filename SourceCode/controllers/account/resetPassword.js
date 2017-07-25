@@ -20,7 +20,7 @@ module.exports = (req,res) => {
         return resetPassword(object.accountId)
     })
     .then(newPassword => {
-        res.send('your new password is: ' + newPassword);
+        res.send({newPassword});
     })
     .catch(reason => {
         console.log(reason);
