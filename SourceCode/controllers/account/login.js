@@ -8,7 +8,7 @@ module.exports = (req,res) => {
             resolve(login(undefined, req.body.username, req.body.password));
         else if (req.body.token) {
             verify(req.body.token, true)
-            .then(object => {
+            .then(({object, sessionId}) => {
                 if (object.accountId) {
                     resolve(login(object.accountId));
                 }
