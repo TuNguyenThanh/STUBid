@@ -1,4 +1,4 @@
-const { verify, refreshToken } = require('../../helpers/jwt');
+const { verify } = require('../../helpers/jwt');
 const { getMyAuctions } = require('../../models/auction');
 
 module.exports = (req,res) => {

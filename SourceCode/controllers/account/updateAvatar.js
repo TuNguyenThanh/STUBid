@@ -49,13 +49,13 @@ module.exports = (req, res) => {
                 })
             return verify(fields.token);
         })
-        .then(obj => {
+        .then(({obj, sessionId}) => {
             if (!obj.accountId)
                 return Promise.reject({
                     status: 400,
                     error: ERROR[400][1]
                 });
-            token = refreshToken(obj);
+            token = refreshToken(obj, sessionId);
             return updateAvatar(obj.accountId, imageName)
         })
         .then(avatar => {

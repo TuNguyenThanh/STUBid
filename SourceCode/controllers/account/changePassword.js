@@ -11,17 +11,20 @@ module.exports = (req,res) => {
         })
     }
     verify(token)
-    .then(obj => {
-        if (!obj.accountId)
+    .then(({object, sessionId}) => {
+        if (!object.accountId)
             return Promise.reject({
                 status: 400,
                 error: ERROR[400][1]
             });
-        token = refreshToken(obj);
-        return changePassword(obj.accountId, currentPassword, newPassword);
+        token = refreshToken(object, sessionId);
+        return changePassword(object.accountId, currentPassword, newPassword);
     })
     .then(() => {
-        res.send({ success: true });
+        res.send({
+            success: true,
+            token
+        });
     })
     .catch(reason => {
         console.log(reason);
