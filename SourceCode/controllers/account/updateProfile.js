@@ -11,14 +11,14 @@ module.exports = (req,res) => {
             error: ERROR[400][0]
         })
     verify(token)
-    .then(({obj, sessionId}) => {
-        if (!obj.accountId)
+    .then(({object, sessionId}) => {
+        if (!object.accountId)
             return Promise.reject({
                 status: 400,
                 error: ERROR[400][0]
             });
-        token = refreshToken(obj, sessionId);
-        return updateProfile(obj.accountId, firstName, lastName, phoneNumber, email, bankRef)
+        token = refreshToken(object, sessionId);
+        return updateProfile(object.accountId, firstName, lastName, phoneNumber, email, bankRef)
     })
     .then(() => {
         res.send({ success: true, token });

@@ -12,14 +12,14 @@ module.exports = (req, res) => {
     });
   }
   verify(token)
-    .then((obj) => {
-      if (!obj.accountId) {
+    .then(({object, sessionId}) => {
+      if (!object.accountId) {
         return Promise.reject({
           status: 400,
           error: ERROR[400][1]
         });
       }
-      token = refreshToken(obj);
+      token = refreshToken(object);
       return updateProduct(productId, product);
     })
     .then(() => {

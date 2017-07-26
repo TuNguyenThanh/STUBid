@@ -52,13 +52,13 @@ module.exports = (req, res) => {
             auctionInfo = fields;
             return verify(fields.token);
         })
-        .then(({obj, sessionId}) => {
-            if (!obj.accountId)
+        .then(({object, sessionId}) => {
+            if (!object.accountId)
                 return Promise.reject({
                     status: 400,
                     error: ERROR[400][1]
                 });
-            token = refreshToken(obj, sessionId);
+            token = refreshToken(object, sessionId);
             let {
             productName, description, searchKey, categoryId,
                 duration, startPrice, ceilingPrice,
@@ -72,7 +72,7 @@ module.exports = (req, res) => {
                 productImages,
                 parseInt(duration), parseInt(startPrice), (ceilingPrice && ceilingPrice !== NaN) ? ceilingPrice : null,
                 parseInt(bidIncreasement), comment,
-                productReturningAddress ? productReturningAddress : null, obj.accountId,
+                productReturningAddress ? productReturningAddress : null, object.accountId,
                 moneyReceivingBankRefId ? parseInt(moneyReceivingBankRefId) : null, moneyReceivingAddress ? moneyReceivingAddress : null, allowedUserLevel ? parseInt(allowedUserLevel) : null
             )
         })

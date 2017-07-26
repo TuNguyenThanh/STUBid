@@ -11,14 +11,14 @@ module.exports = (req, res) => {
       error: ERROR[400][0]
     })
   verify(token)
-    .then(({obj, sessionId}) => {
-      if (!obj.accountId || !obj.isAdmin)
+    .then(({object, sessionId}) => {
+      if (!object.accountId || !object.isAdmin)
         return Promise.reject({
           status: 400,
           error: ERROR[400][1]
         });
-      token = refreshToken(obj, sessionId);
-      return active(auctionId, obj.accountId);
+      token = refreshToken(object, sessionId);
+      return active(auctionId, object.accountId);
     })
     .then(result => {
       res.send({ success: true, token })

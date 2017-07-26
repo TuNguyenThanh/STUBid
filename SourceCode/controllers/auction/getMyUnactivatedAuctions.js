@@ -10,12 +10,12 @@ module.exports = (req,res) => {
         })
     verify(token)
     .then(({object, sessionId}) => {
-        if (!obj.accountId)
+        if (!object.accountId)
             return Promise.reject({
                 status: 400,
                 error: ERROR[400][1]
             });
-        return getMyAuctions(obj.accountId, [0])
+        return getMyAuctions(object.accountId, [0])
     })
     .then(unactivatedAuctions => {
         res.send({

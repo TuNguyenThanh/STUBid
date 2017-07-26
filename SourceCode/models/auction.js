@@ -513,8 +513,8 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
     return new Promise((resolve, reject) => {
         let element = auctions.find(e => e.auctionId == auctionId);
         if (element) {
-            let sql = `UPDATE "Auction" SET state=3, "manualClosedUserId"=$2 WHERE "auctionId"=$1 AND $2)`;
-            let params = [auctionId, isAdmin];
+            let sql = `UPDATE "Auction" SET state=3, "manualClosedUserId"=$2 WHERE "auctionId"=$1 AND $3`;
+            let params = [auctionId, accountId, isAdmin];
             query(sql, params)
                 .then(value => {
                     if (value.rowCount > 0) {
@@ -627,6 +627,10 @@ exports.selectSearchAuctions = (page, categoryId, searchKey) => {
         });
     }
     return results.slice(0, page * 10 + 9);
+}
+
+exports.selectAuctionTimeleft = (auctionId) => {
+    return auctionsTimeLeft[auctionId]
 }
 
 // var sql = `UPDATE "Auction" SET state = 1, "activatedDate" = now()`;

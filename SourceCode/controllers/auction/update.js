@@ -12,15 +12,15 @@ module.exports = (req, res) => {
     });
   }
   verify(token)
-    .then((obj) => {
-      if (!obj.accountId) {
+    .then(({object, sessionId}) => {
+      if (!object.accountId) {
         return Promise.reject({
           status: 400,
           error: ERROR[400][1]
         });
       }
-      token = refreshToken(obj);
-      return updateAuction(auctionId, auction, obj.accountId, obj.isAdmin);
+      token = refreshToken(object);
+      return updateAuction(auctionId, auction, object.accountId, object.isAdmin);
     })
     .then(() => {
       res.send({

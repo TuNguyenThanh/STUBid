@@ -4,7 +4,8 @@ const {
     getAtendedAuctions,
     selectAttendedAuctions,
     selectMyAuctions,
-    selectSearchAuctions
+    selectSearchAuctions,
+    selectAuctionTimeleft,
 } = require('../models/auction')
 const config = require('../config');
 
@@ -25,6 +26,8 @@ module.exports = function (socket) {
     var myAuctionsViewPage = 1;
     var myAuctionsViewInterval;
 
+    var auctionTimeleftInterval;
+
     if (socket.handshake.query.appName === 'sbid'
         || new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true) {
         homeViewPage = 1;
@@ -36,24 +39,6 @@ module.exports = function (socket) {
     else {
         socket.disconnect();
         console.log('disconnect due to handshake failed');
-    }
-
-    function init() {
-        homeViewCategoryId = -1;
-        homeViewPage = 1;
-        homeViewInterval;
-
-        searchKey = '';
-        searchViewPage = 1;
-        searchViewCategoryId = -1;
-        searchViewInterval;
-
-        accountId;
-        attendedIds;
-        attendedViewPage = 1;
-        attendedViewInterval;
-        myAuctionsViewPage = 1;
-        myAuctionsViewInterval;
     }
 
     function setHomeView() {
@@ -180,11 +165,27 @@ module.exports = function (socket) {
     })
     // SEARCH -- end --
 
+    // AUCTION DETAILS --
+    socket.on('CLIENT-REQUEST-AUCTION-TIMELEFT', (data) => {
+        console.log(data);
+        if (auctionTimeleftInterval) clearInterval(auctionTimeleftInterval);
+        if (data.auctionId) {
+            setTimeout(function () {
+                auctionTimeleftInterval = setInterval(() => {
+                    let auctions = selectAuctionTimeleft(data.auctionId);
+                    socket.emit('SERVER-SEND-AUCTION-TIMELEFT', auctions);
+                }, 1000);
+            }, 1000 - Date.now() % 1000);
+        }
+    });
+    // AUCTION DETAILS -- END
+
     socket.on('disconnect', () => {
         console.log('disconnect');
         clearInterval(homeViewInterval);
         clearInterval(searchViewInterval);
         clearInterval(myAuctionsViewInterval);
         clearInterval(attendedViewInterval);
+        clearInterval(auctionTimeleftInterval);
     });
 }

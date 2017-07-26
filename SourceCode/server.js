@@ -26,8 +26,8 @@ server.listen(config.PORT, () => {
   console.log('Server is running');
 });
 
-app.get('/api/Auction/:auctionId', require('./controllers/auction/getAuction'));
-app.patch('/api/Auction/active/:auctionId', require('./controllers/auction/active'));
+app.get('/api/Auctions/:auctionId', require('./controllers/auction/getAuction'));
+app.patch('/api/Auctions/active/:auctionId', require('./controllers/auction/active'));
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
 app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
