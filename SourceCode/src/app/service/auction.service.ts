@@ -14,16 +14,25 @@ export class AuctionService {
   constructor(
     public baseService: BaseService
   ) {
-    this.socket = io(Constants.baseUrl, { query: "appName=sbid" });
-    // this.socket.on('disconnect', () => console.log('disconnect'))
-    // this.socket.on('SERVER-SEND-INFO', result => {
-    //   this.page = result.page;
-    //   this.categoryId = result.categoryId;
-    // });
+    this.socket = io(Constants.domain, { query: "appName=sbid" });
+    this.socket.on('disconnect', () => console.log('disconnect'))
+    this.socket.on('SERVER-SEND-INFO', result => {
+      this.page = result.page;
+      this.categoryId = result.categoryId;
+    });
   }
 
   setAuctionsListener(cb) {
     // this.socket.on('SERVER-SEND-AUCTIONS', cb);
+  }
+
+  requestAuctionTimeleft(auctionId, cb) {
+    console.log(auctionId);
+    this.socket.emit('CLIENT-REQUEST-AUCTION-TIMELEFT', { auctionId });
+    this.socket.on('SERVER-SEND-AUCTION-TIMELEFT', cb);
+    this.socket.on('reconnect', () => {
+      this.socket.emit('CLIENT-REQUEST-AUCTION-TIMELEFT', { auctionId });
+    })
   }
 
   getAuctions(page: number, categoryId?: number) {
@@ -38,16 +47,25 @@ export class AuctionService {
   }
 
   getAuction(auctionId: string) {
-    let url = `${Constants.baseUrl}/Auction/${auctionId}`;
+    let url = `${Constants.baseUrl}/Auctions/${auctionId}`;
     return this.baseService.getSth(url);
   }
 
   active(auctionId: string, token: string) {
-    let url = `${Constants.baseUrl}/Auction/active/${auctionId}`;
+    let url = `${Constants.baseUrl}/Auctions/active/${auctionId}`;
     let body = {
       token
     }
     console.log(body);
     return this.baseService.patchSth(url, body, Constants.commonHeader);
+  }
+
+  closeOrDelete(auctionId: string, token: string) {
+    let url = `${Constants.baseUrl}/Auctions/closeOrDelete`;
+    let body = {
+      auctionId,
+      token
+    }
+    return this.baseService.postSth(url, body, Constants.commonHeader);
   }
 }

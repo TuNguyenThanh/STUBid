@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 
 import { AuthService } from '../service/auth.service';
+
+declare const componentHandler: any;
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ import { AuthService } from '../service/auth.service';
     AuthService
   ]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   returnUrl: string;
   formLogin: FormGroup;
   loading = false;
@@ -48,6 +50,10 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngAfterViewInit() {
+    componentHandler.upgradeAllRegistered();
+  }
+
   submit() {
     let md5 = new Md5();
     let { username, password } = this.formLogin.value;
@@ -56,14 +62,14 @@ export class LoginComponent implements OnInit {
       this.loading = true;
     }, 400);
     this.authService.login(username, md5.appendStr(password).end())
-    .then(() => {
-      let that = this;
-      that.loading = !that.loading;
-      this.router.navigate([this.returnUrl || '/dashboard']);
-    })
-    .catch(error => {
-      this.loading = !this.loading;
-      console.log(error);
-    })
+      .then(() => {
+        let that = this;
+        that.loading = !that.loading;
+        this.router.navigate([this.returnUrl || '/dashboard']);
+      })
+      .catch(error => {
+        this.loading = !this.loading;
+        console.log(error);
+      })
   }
 }

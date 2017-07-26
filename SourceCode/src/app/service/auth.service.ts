@@ -20,6 +20,8 @@ export class AuthService {
   }
 
   login(username, password) {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentToken');
     return new Promise((resolve, reject) => {
       let url = `${Constants.baseUrl}/Accounts/login`
       let body = { username, password };
@@ -48,16 +50,20 @@ export class AuthService {
         token: this.getLocalToken()
       }
       this.baseService.postSth(url, body, Constants.commonHeader).subscribe(
-        value => {
+        (value) => {
           if (value.success === true) {
             resolve();
             this.updateLocalToken(value.token);
           }
           else {
-            reject(value.error)
+            this.resetUser();
+            reject(value.error);
           }
         },
-        error => { reject(error) }
+        (error) => {
+          this.resetUser();
+          reject(error);
+        }
       )
     });
   }
@@ -79,11 +85,7 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    if (this.currentUser) {
-      return this.currentUser;
-    } else {
-      return null;
-    }
+    return this.currentUser ? this.currentUser : null;
   }
 
   getLocalToken() {

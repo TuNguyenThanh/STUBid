@@ -21,14 +21,17 @@ export class DashboardComponent implements OnInit, AfterViewChecked {
     private authService: AuthService,
   ) {
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname } });
     }
     else {
       this.currentUser = this.authService.getCurrentUser();
       console.log(this.currentUser);
       this.authService.relogin()
         .then(() => { })
-        .catch((error: any) => { console.log(error) })
+        .catch((error: any) => {
+          console.log(error);
+          this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname } });
+        })
     }
   }
 
