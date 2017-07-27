@@ -14,8 +14,8 @@ var sockets = [];
 connect = (socket) => {
     if (socket.handshake.query.appName === 'sbid' ||
         new RegExp(socket.handshake.headers.origin).test(config.ALLOW_ORIGIN) === true) {
-        this.homeViewPage = 1;
-        this.homeViewCategoryId = -1;
+        socket.homeViewPage = 1;
+        socket.homeViewCategoryId = -1;
         sockets.push(socket);
         setHomeView();
     } else {
@@ -24,9 +24,10 @@ connect = (socket) => {
     }
 
     function setHomeView() {
+        console.log(socket.homeViewPage);
         setTimeout(function () {
-            this.homeViewInterval = setInterval(() => {
-                let auctions = selectAuctions(this.homeViewPage - 1, this.homeViewCategoryId, this.accountId, this.attendedIds);
+            socket.homeViewInterval = setInterval(() => {
+                let auctions = selectAuctions(socket.homeViewPage - 1, socket.homeViewCategoryId, socket.accountId, socket.attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
             }, 1000);
         }, 1000 - Date.now() % 1000);
@@ -34,26 +35,26 @@ connect = (socket) => {
 
     socket.on('CLIENT-SEND-PAGE', data => {
         console.log(data);
-        this.homeViewPage = data.page;
+        socket.homeViewPage = data.page;
     });
 
     socket.on('CLIENT-SEND-CATEGORY', data => {
         console.log(data);
-        this.homeViewPage = 1;
-        this.homeViewCategoryId = data.categoryId;
-        let auctions = selectAuctions(this.homeViewPage - 1, this.homeViewCategoryId, this.accountId, this.attendedIds);
+        socket.homeViewPage = 1;
+        socket.homeViewCategoryId = data.categoryId;
+        let auctions = selectAuctions(socket.homeViewPage - 1, socket.homeViewCategoryId, socket.accountId, socket.attendedIds);
         socket.emit('SERVER-SEND-AUCTIONS', auctions);
     });
 
     // MY AUCTIONS -- begin --
     function sendClosedAttendedAuctions() {
-        this.attendedIds = [];
+        socket.attendedIds = [];
         let closedAttenedAuctions = [];
-        getAtendedAuctions(this.accountId)
+        getAtendedAuctions(socket.accountId)
             .then(value => {
                 value.forEach((auction) => {
                     if (auction.state === 1)
-                        this.attendedIds.push(auction.auctionId);
+                        socket.attendedIds.push(auction.auctionId);
                     else closedAttenedAuctions.push(auction);
                 });
                 socket.emit('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', closedAttenedAuctions)
@@ -62,39 +63,39 @@ connect = (socket) => {
     }
 
     function sendMyClosedAuctions() {
-        getMyAuctions(this.accountId, [2])
+        getMyAuctions(socket.accountId, [2])
             .then(value => socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', value))
             .catch(reason => console.log(reason))
     }
 
     function sendMyUnactivatedAuctions() {
-        getMyAuctions(this.accountId, [0])
+        getMyAuctions(socket.accountId, [0])
             .then(value => socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', value))
             .catch(reason => console.log(reason))
     }
 
     function setMyAuctionsView() {
-        if (this.myAuctionsViewInterval) clearInterval(this.myAuctionsViewInterval);
-        if (this.attendedViewInterval) clearInterval(this.attendedViewInterval);
+        if (socket.myAuctionsViewInterval) clearInterval(socket.myAuctionsViewInterval);
+        if (socket.attendedViewInterval) clearInterval(socket.attendedViewInterval);
         sendClosedAttendedAuctions();
         sendMyClosedAuctions();
         sendMyUnactivatedAuctions();
         setTimeout(() => {
-            this.myAuctionsViewInterval = setInterval(() => {
+            socket.myAuctionsViewInterval = setInterval(() => {
                 let {
                     auctions,
                     closedAuctions
-                } = selectMyAuctions(this.myAuctionsViewPage - 1, this.accountId);
+                } = selectMyAuctions(socket.myAuctionsViewPage - 1, socket.accountId);
                 socket.emit('SERVER-SEND-MY-AUCTIONS', auctions);
                 if (closedAuctions && closedAuctions.length > 0)
                     sendMyClosedAuctions();
             }, 1000);
 
-            this.attendedViewInterval = setInterval(() => {
+            socket.attendedViewInterval = setInterval(() => {
                 let {
                     auctions,
                     closedAuctions
-                } = selectAttendedAuctions(this.attendedViewPage - 1, this.attendedIds);
+                } = selectAttendedAuctions(socket.attendedViewPage - 1, socket.attendedIds);
                 socket.emit('SERVER-SEND-ATTENDED-AUCTIONS', auctions);
                 if (closedAuctions && closedAuctions.length > 0) {
                     sendClosedAttendedAuctions();
@@ -105,37 +106,37 @@ connect = (socket) => {
 
     socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
         console.log(data);
-        this.attendedViewPage = 1;
-        this.accountId = data.accountId;
+        socket.attendedViewPage = 1;
+        socket.accountId = data.accountId;
         setMyAuctionsView();
     })
 
     socket.on('CLIENT-SEND-ATTENDED-AUCTIONS-PAGE', data => {
         console.log(data);
-        this.attendedViewPage = data.page;
+        socket.attendedViewPage = data.page;
     });
 
     socket.on('CLIENT-REQUEST-MY-AUCTIONS-VIEW', data => {
         console.log(data);
-        this.myAuctionsViewPage = 1;
-        this.accountId = data.accountId;
+        socket.myAuctionsViewPage = 1;
+        socket.accountId = data.accountId;
         socket.accountId = data.accountId;
         setMyAuctionsView();
     })
 
     socket.on('CLIENT-SEND-MY-AUCTIONS-PAGE', data => {
         console.log(data);
-        this.myAuctionsViewPage = data.page;
+        socket.myAuctionsViewPage = data.page;
     });
     // MY AUCTIONS -- end --
 
     // SEARCH -- begin --
     socket.on('CLIENT-REQUEST-SEARCH-VIEW', () => {
-        this.searchViewPage = 1;
-        this.searchKey = '';
+        socket.searchViewPage = 1;
+        socket.searchKey = '';
         setTimeout(function () {
-            this.searchViewInterval = setInterval(() => {
-                let auctions = selectSearchAuctions(this.searchViewPage - 1, this.searchViewCategoryId, this.searchKey);
+            socket.searchViewInterval = setInterval(() => {
+                let auctions = selectSearchAuctions(socket.searchViewPage - 1, socket.searchViewCategoryId, socket.searchKey);
                 socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
             }, 1000);
         }, 1000 - Date.now() % 1000);
@@ -143,29 +144,29 @@ connect = (socket) => {
 
     socket.on('CLIENT-SEND-SEARCH-VIEW-PAGE', data => {
         console.log(data);
-        this.searchViewPage = data.page;
+        socket.searchViewPage = data.page;
     });
 
     socket.on('CLIENT-SEND-SEARCH-CATEGORY', data => {
         console.log(data);
-        this.searchViewPage = 1;
-        this.searchViewCategoryId = data.categoryId;
-        let auctions = selectSearchAuctions(this.searchViewPage - 1, this.searchViewCategoryId, this.searchKey);
+        socket.searchViewPage = 1;
+        socket.searchViewCategoryId = data.categoryId;
+        let auctions = selectSearchAuctions(socket.searchViewPage - 1, socket.searchViewCategoryId, socket.searchKey);
         socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
     });
 
     socket.on('CLIENT-SEND-SEARCH-KEY', data => {
         console.log(data);
-        this.searchKey = data.searchKey;
+        socket.searchKey = data.searchKey;
     })
     // SEARCH -- end --
 
     // AUCTION DETAILS --
     socket.on('CLIENT-REQUEST-AUCTION-TIMELEFT', (data) => {
-        if (this.auctionTimeleftInterval) clearInterval(this.auctionTimeleftInterval);
+        if (socket.auctionTimeleftInterval) clearInterval(socket.auctionTimeleftInterval);
         if (data.auctionId) {
             setTimeout(function () {
-                this.auctionTimeleftInterval = setInterval(() => {
+                socket.auctionTimeleftInterval = setInterval(() => {
                     let auctions = selectAuctionTimeleft(data.auctionId);
                     socket.emit('SERVER-SEND-AUCTION-TIMELEFT', auctions);
                 }, 1000);
@@ -176,18 +177,18 @@ connect = (socket) => {
 
     socket.on('disconnect', () => {
         console.log('disconnect');
-        clearInterval(this.homeViewInterval);
-        clearInterval(this.searchViewInterval);
-        clearInterval(this.myAuctionsViewInterval);
-        clearInterval(this.attendedViewInterval);
-        clearInterval(this.auctionTimeleftInterval);
+        clearInterval(socket.homeViewInterval);
+        clearInterval(socket.searchViewInterval);
+        clearInterval(socket.myAuctionsViewInterval);
+        clearInterval(socket.attendedViewInterval);
+        clearInterval(socket.auctionTimeleftInterval);
     });
 }
 
 sendUnactivated = (accountId) => {
     sockets.forEach((e) => {
         if (e.accountId === parseInt(accountId)) {
-            getMyAuctions(this.accountId, [0])
+            getMyAuctions(socket.accountId, [0])
                 .then(value => socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', value))
                 .catch(reason => console.log(reason))
         }
