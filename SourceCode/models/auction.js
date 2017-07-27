@@ -1,6 +1,13 @@
-const { timeLeftFormat } = require('../helpers/time');
-const { query } = require('../helpers/db');
-const { DOMAIN_NAME, BUCKET } = require('../config');
+const {
+    timeLeftFormat
+} = require('../helpers/time');
+const {
+    query
+} = require('../helpers/db');
+const {
+    DOMAIN_NAME,
+    BUCKET
+} = require('../config');
 const ERROR = require('../error.json');
 const latinize = require('latinize');
 
@@ -19,8 +26,7 @@ function countDown() {
             timeLeft--;
             auctionsTimeLeft[element.auctionId] = timeLeft;
             element.timeLeft = timeLeftFormat(timeLeft);
-        }
-        else {
+        } else {
             closedAuctions.push(element);
             let auctionId = element.auctionId;
             delete auctionsTimeLeft[auctionId];
@@ -179,14 +185,18 @@ exports.getAuction = (auctionId) => {
 
 exports.active = (auctionId, adminId) => {
     return new Promise((resolve, reject) => {
-        let sql = `UPDATE "Auction"
-                SET state = 1, "activatedDate" = now(), activatedAdminId = $2
-                WHERE "Auction"."auctionId" = $1`;
+        let sql = `WITH activeResult AS (
+            UPDATE "Auction"
+            SET state = 1, "activatedDate" = now(), "activatedAdminId" = $2
+            WHERE "Auction"."auctionId" = $1 AND state = 0
+            RETURNING "sellerAccountId"
+        )
+        SELECT * FROM activeResult`;
         let params = [auctionId, adminId];
         query(sql, params)
             .then(results => {
                 if (results.rowCount > 0) {
-                    resolve();
+                    resolve(results.rows[0].sellerAccountId);
                     loadAuctions();
                 } else {
                     reject({
@@ -371,8 +381,7 @@ exports.insertAuction = (
                 if (value.rowCount > 0) {
                     resolve();
                     loadAuctions();
-                }
-                else
+                } else
                     reject({
                         status: 500,
                         error: ERROR[500][1]
@@ -434,16 +443,19 @@ exports.bid = (auctionId, accountId, price, buyNow) => {
                         auctions.splice(auctionIndex, 1);
                         console.log(`close auction : ${auctionId}`);
                         resolve();
-                    }
-                    else {
+                    } else {
                         auction.highestBidder = result.rows[0].highestBidder;
                         let page = Math.floor(index / 10) + 1;
                         categoryId = auction.product.category.categoryId;
                         pageInCategory = Math.floor(auctions.filter(e => e.product.category.categoryId == categoryId).indexOf(auction) / 10) + 1;
-                        resolve({ auction, page, categoryId, pageInCategory });
+                        resolve({
+                            auction,
+                            page,
+                            categoryId,
+                            pageInCategory
+                        });
                     }
-                }
-                else {
+                } else {
                     reject({
                         status: 500,
                         error: ERROR[500][1]
@@ -495,8 +507,7 @@ exports.buyNow = (accountId, auctionId) => {
                     auctions.splice(auctionIndex, 1);
                     console.log(`close auction : ${auctionId}`);
                     resolve();
-                }
-                else {
+                } else {
                     reject({
                         status: 500,
                         error: ERROR[500][1]
@@ -536,7 +547,7 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
             let sql = `WITH deleteAuctionResult AS (
                 DELETE FROM "Auction"
                 WHERE state=0 AND "auctionId"=$1 AND ("sellerAccountId"=$2 OR $3)
-                RETURNING "auctionId", "productId"
+                RETURNING "auctionId", "productId", "sellerAccountId"
             ), deleteProductResult AS (
                 DELETE FROM "Product"
                 WHERE "productId" = (SELECT "productId" FROM deleteAuctionResult)
@@ -550,7 +561,7 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
                 .then(value => {
                     if (value.rowCount > 0) {
                         console.log(`delete auction : ${auctionId}`);
-                        resolve();
+                        resolve(value.rows[0].sellerAccountId);
                     } else {
                         reject({
                             status: 500,
@@ -597,7 +608,10 @@ exports.selectAuctions = (page, categoryId, accountId, attendedIds) => {
 
 exports.selectAttendedAuctions = (page, attendedIds) => {
     if (page == undefined) return [];
-    let result = { auctions, closedAuctions }
+    let result = {
+        auctions,
+        closedAuctions
+    }
     if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
     result.auctions = result.auctions.slice(0, page * 10 + 9);
     return result;
@@ -605,9 +619,13 @@ exports.selectAttendedAuctions = (page, attendedIds) => {
 
 exports.selectMyAuctions = (page, accountId) => {
     if (page == undefined) return [];
-    let result = { auctions, closedAuctions }
+    let result = {
+        auctions,
+        closedAuctions: []
+    }
     if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId == accountId);
     result.auctions = result.auctions.slice(0, page * 10 + 9);
+    result.closedAuctions = closedAuctions.filter(e => e.seller.accountId == accountId)
     return result;
 };
 

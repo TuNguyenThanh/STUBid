@@ -1,5 +1,6 @@
 const { verify, refreshToken } = require('../../helpers/jwt');
 const { closeAuction } = require('../../models/auction');
+const { sendUnactivated } = require('../../helpers/socket');
 const ERROR = require('../../error.json');
 
 module.exports = (req, res) => {
@@ -19,8 +20,9 @@ module.exports = (req, res) => {
         token = refreshToken(object, sessionId);
         return closeAuction(auctionId, object.accountId, object.isAdmin)
     })
-    .then(result => {
-        res.send({ success: true, token })
+    .then((sellerAccountId) => {
+        res.send({ success: true, token });
+        if (sellerAccountId) sendUnactivated(sellerAccountId);
     })
     .catch(reason => {
         console.log(reason);

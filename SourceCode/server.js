@@ -60,4 +60,4 @@ app.get('*', (req, res) => { res.sendFile(__dirname + '/public/index.html') });
 
 // socket.io configuration
 var io = require('socket.io')(server);
-io.on('connection', require('./controllers/socket'));
+io.on('connection', require('./helpers/socket').connect);
