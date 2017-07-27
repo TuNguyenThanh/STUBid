@@ -187,9 +187,9 @@ connect = (socket) => {
 sendUnactivated = (accountId) => {
     sockets.forEach((e) => {
         if (e.accountId === parseInt(accountId)) {
-            getMyAuctions(object.accountId, [0])
-                .then((value) => socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', { value }))
-                .catch(console.log);
+            getMyAuctions(this.accountId, [0])
+                .then(value => socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', value))
+                .catch(reason => console.log(reason))
         }
     });
 }
