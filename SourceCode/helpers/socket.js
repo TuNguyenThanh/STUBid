@@ -25,7 +25,7 @@ connect = (socket) => {
 
     function setHomeView() {
         console.log(socket.homeViewPage);
-        setTimeout(function () {
+        setTimeout(function() {
             socket.homeViewInterval = setInterval(() => {
                 let auctions = selectAuctions(socket.homeViewPage - 1, socket.homeViewCategoryId, socket.accountId, socket.attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
@@ -81,6 +81,8 @@ connect = (socket) => {
         sendMyClosedAuctions();
         sendMyUnactivatedAuctions();
         setTimeout(() => {
+            socket.myAuctionsViewPage = 1;
+            socket.attendedViewPage = 1;
             socket.myAuctionsViewInterval = setInterval(() => {
                 let {
                     auctions,
@@ -106,7 +108,6 @@ connect = (socket) => {
 
     socket.on('CLIENT-REQUEST-ATTENDED-AUCTIONS-VIEW', data => {
         console.log(data);
-        socket.attendedViewPage = 1;
         socket.accountId = data.accountId;
         setMyAuctionsView();
     })
@@ -118,8 +119,6 @@ connect = (socket) => {
 
     socket.on('CLIENT-REQUEST-MY-AUCTIONS-VIEW', data => {
         console.log(data);
-        socket.myAuctionsViewPage = 1;
-        socket.accountId = data.accountId;
         socket.accountId = data.accountId;
         setMyAuctionsView();
     })
@@ -134,7 +133,7 @@ connect = (socket) => {
     socket.on('CLIENT-REQUEST-SEARCH-VIEW', () => {
         socket.searchViewPage = 1;
         socket.searchKey = '';
-        setTimeout(function () {
+        setTimeout(function() {
             socket.searchViewInterval = setInterval(() => {
                 let auctions = selectSearchAuctions(socket.searchViewPage - 1, socket.searchViewCategoryId, socket.searchKey);
                 socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
@@ -156,16 +155,16 @@ connect = (socket) => {
     });
 
     socket.on('CLIENT-SEND-SEARCH-KEY', data => {
-        console.log(data);
-        socket.searchKey = data.searchKey;
-    })
-    // SEARCH -- end --
+            console.log(data);
+            socket.searchKey = data.searchKey;
+        })
+        // SEARCH -- end --
 
     // AUCTION DETAILS --
     socket.on('CLIENT-REQUEST-AUCTION-TIMELEFT', (data) => {
         if (socket.auctionTimeleftInterval) clearInterval(socket.auctionTimeleftInterval);
         if (data.auctionId) {
-            setTimeout(function () {
+            setTimeout(function() {
                 socket.auctionTimeleftInterval = setInterval(() => {
                     let auctions = selectAuctionTimeleft(data.auctionId);
                     socket.emit('SERVER-SEND-AUCTION-TIMELEFT', auctions);
