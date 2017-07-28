@@ -1,11 +1,14 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import Swiper from 'react-native-swiper'
 import ImageLoad from 'react-native-image-placeholder'
 import QRCode from 'react-native-qrcode'
 import moment from 'moment'
 import 'moment/locale/vi'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import ProductActions from '../Redux/ProductRedux'
+import { Actions as NavigationActions } from 'react-native-router-flux'
 
 //Key ApiConfig
 import ApiConfig from '../Config/ApiConfig'
@@ -18,6 +21,7 @@ import { Colors, Metrics, Images } from '../Themes'
 import I18n from 'react-native-i18n'
 
 class MyAuctionNotActive extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,6 +29,11 @@ class MyAuctionNotActive extends React.Component {
       data: this.props.data,
       text: `${ApiConfig.baseSocketIOURL}dashboard/auction/${this.props.data.auctionId}`,
     };
+    this.actionDelProductUnActivity = false;
+  }
+
+  componentWillMount() {
+    NavigationActions.refresh({ renderRightButton: this.renderRightButton });
   }
 
   componentDidMount() {
@@ -40,6 +49,52 @@ class MyAuctionNotActive extends React.Component {
     }, 100);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.forceUpdate();
+    const { language } = this.props;
+    const { fetching, error, dataDel } = nextProps.productState;
+
+    if(!fetching && this.actionDelProductUnActivity && dataDel) {
+      Alert.alert(
+        I18n.t('success', {locale: language}),
+        '',
+        [
+          {text: I18n.t('ok', {locale: language}), onPress: () => {
+            //NavigationActions.pop()
+            NavigationActions.tab3();
+          }}
+        ],
+        { cancelable: false }
+      );
+      this.actionDelProductUnActivity = false;
+    }
+  }
+
+  renderRightButton = () => {
+    return(
+      <TouchableOpacity onPress={() => this.handleDel() } >
+        <Icon name="trash" size={20} color={Colors.primary} />
+      </TouchableOpacity>
+    );
+  }
+
+  handleDel() {
+    const { language } = this.props;
+    const { token } = this.props.login.user;
+    Alert.alert(
+      I18n.t('delProductUnActivity', {locale: language}),
+      I18n.t('areYouSureDel', {locale: language}),
+      [
+        {text: I18n.t('ok', {locale: language}), onPress: () => {
+          this.props.delProductUnActivity(token, this.props.data.auctionId);
+          this.actionDelProductUnActivity = true;
+        }},
+        {text: I18n.t('cancel', {locale: language}), onPress: () => {}, style: 'cancel'},
+      ],
+      { cancelable: false }
+    );
+  }
+
   render () {
     const { data } = this.state;
     const { language } = this.props;
@@ -53,6 +108,10 @@ class MyAuctionNotActive extends React.Component {
         </Swiper>
         <View style={styles.viewDetail}>
           <View style={[styles.rowItem, { marginTop: 10 }]}>
+            <Text style={styles.textTitleStyle}>{I18n.t('auctionId', {locale: language})}: </Text>
+            <Text style={styles.textStyle}>{data.auctionId}</Text>
+          </View>
+          <View style={styles.rowItem}>
             <Text style={styles.textTitleStyle}>{I18n.t('productId', {locale: language})}: </Text>
             <Text style={styles.textStyle}>{data.product.productId}</Text>
           </View>
@@ -131,11 +190,14 @@ class MyAuctionNotActive extends React.Component {
 const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
+    productState: state.product,
+    login: state.login,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    delProductUnActivity: (token, auctionId) => dispatch(ProductActions.delProductUnActivityRequest(token, auctionId)),
   }
 }
 

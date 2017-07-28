@@ -15,6 +15,10 @@ const { Types, Creators } = createActions({
   getProductUnActivityRequest: ['token'],
   getProductUnActivitySuccess: ['data'],
   getProductUnActivityFailure: ['error'],
+
+  delProductUnActivityRequest: ['token', 'auctionId'],
+  delProductUnActivitySuccess: ['dataDel'],
+  delProductUnActivityFailure: ['error'],
 })
 
 export const ProductTypes = Types
@@ -27,6 +31,7 @@ export const INITIAL_STATE = Immutable({
   fetching: false,
   uploadSuccess: false,
   dataInfo: null,
+  dataDel: false,
   data: [],
 })
 
@@ -44,6 +49,8 @@ export const failure = (state, { error }) => state.merge({ fetching: false, erro
 export const success = (state, { dataInfo }) => state.merge({ fetching: false, dataInfo})
 
 export const getProductUnActivitySuccess = (state, { data }) => state.merge({ fetching: false, data })
+
+export const delProductUnActivitySuccess = (state, { dataDel }) => state.merge({ fetching: false, dataDel })
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -58,6 +65,10 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.GET_PRODUCT_UN_ACTIVITY_REQUEST]: request,
   [Types.GET_PRODUCT_UN_ACTIVITY_SUCCESS]: getProductUnActivitySuccess,
   [Types.GET_PRODUCT_UN_ACTIVITY_FAILURE]: failure,
+
+  [Types.DEL_PRODUCT_UN_ACTIVITY_REQUEST]: request,
+  [Types.DEL_PRODUCT_UN_ACTIVITY_SUCCESS]: delProductUnActivitySuccess,
+  [Types.DEL_PRODUCT_UN_ACTIVITY_FAILURE]: failure,
 })
 
 /* ------------- Selectors ------------- */

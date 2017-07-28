@@ -179,4 +179,7 @@
   "failureUploadProduct": "Sản phẩm tải lên không thành công",
   "tryAgain": "Thử lại",
   "youHaveNoNotificationsAtAll": "Bạn không có thông báo nào cả",
+  "auctionId": "Phiên đấu giá",
+  "delProductUnActivity": "Xóa sản phẩm",
+  "areYouSureDel": "Bạn có chắc là xóa sản phẩm",
 }

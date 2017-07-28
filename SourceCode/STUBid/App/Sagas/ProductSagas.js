@@ -90,3 +90,32 @@ export function * getProductUnActivity(ProductApi, action) {
     console.log(e);
   }
 }
+
+export function * delProductUnActivity(ProductApi, UserApi, action) {
+  try {
+    const { token, auctionId } = action;
+    const response = yield call(ProductApi.delProductUnActivity, token, auctionId);
+    if(response.ok) {
+      const data = response.data.results;
+      yield put(ProductActions.delProductUnActivitySuccess(response.data.success));
+
+      //login from new token
+      const responseLogin = yield call(UserApi.loginToken, response.data.token);
+      if(responseLogin.ok) {
+        const dataLogin = responseLogin.data;
+        if(dataLogin.error) {
+          yield put(LoginActions.loginTokenFailure(dataLogin.error.message));
+        } else {
+          yield put(LoginActions.loginTokenSuccess(dataLogin));
+        }
+      } else {
+        yield put(LoginActions.loginTokenFailure(responseLogin.problem));
+      }
+
+    } else {
+      yield put(ProductActions.delProductUnActivityFailure(response.problem));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

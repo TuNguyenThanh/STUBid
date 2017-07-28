@@ -179,4 +179,7 @@
   "failureUploadProduct": "Failure Upload Product",
   "tryAgain": "Try again",
   "youHaveNoNotificationsAtAll": "You have no notifications at all",
+  "auctionId": "Auction Id",
+  "delProductUnActivity": "Delete Product",
+  "areYouSureDel": "Are you sure delete product ?",
 }

@@ -24,7 +24,7 @@ class MyAuctionTab2 extends React.Component {
     super(props);
 
     this.state = {
-      dataSourceHandling: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      dataSourceHandling: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows([]),
     };
   }
 
@@ -39,10 +39,10 @@ class MyAuctionTab2 extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
-    const { fetching, error, data } = nextProps.product;
-    const { myAuctionsHanding } = nextProps.auctions;
+    //const { fetching, error, data } = nextProps.productState;
+    const { myAuctionsHanding, myAuctionsUnActive } = nextProps.auctions;
 
-    const temp = myAuctionsHanding.concat(data);
+    let temp = myAuctionsHanding.concat(myAuctionsUnActive);
     this.setState({
       dataSourceHandling: this.state.dataSourceHandling.cloneWithRows(temp)
     });
@@ -138,7 +138,7 @@ const mapStateToProps = (state) => {
   return {
     language: state.settings.language,
     login: state.login,
-    product: state.product,
+    productState: state.product,
     auctions: state.auctions,
   }
 }

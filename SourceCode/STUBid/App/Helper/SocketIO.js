@@ -3,7 +3,7 @@ import IO from 'socket.io-client/dist/socket.io'
 
 const socket = IO(ApiConfig.baseSocketIOURL);
 let reConnectHandler = { };
-let homeAuctionHandler, attendedAuctionHandler, attendedCloseAuctionHandler, myAuctionsAuctionHandler, searchAuctionsHandler;
+let homeAuctionHandler, attendedAuctionHandler, attendedCloseAuctionHandler, myAuctionsAuctionHandler, searchAuctionsHandler, myUnActiveAuctionsHandler;
 
 socket.on('reconnect', (data) => {
   if (reConnectHandler.homeView) reConnectHandler.homeView();
@@ -29,6 +29,10 @@ socket.on('SERVER-SEND-MY-AUCTIONS', (data) => {
 
 socket.on('SERVER-SEND-SEARCH-AUCTIONS', (data) => {
   if (searchAuctionsHandler) searchAuctionsHandler(data);
+});
+
+socket.on('SERVER-SEND-UNACTIVATED-AUCTIONS', (data) => {
+  if (myUnActiveAuctionsHandler) myUnActiveAuctionsHandler(data);
 });
 
 const homeHandler = new class {
@@ -117,4 +121,10 @@ const searchAuctions = new class {
   };
 }
 
-module.exports = { homeHandler, attendedHandler, attendedCloseHandler, myAuctionsHandler, searchAuctions }
+const myUnActiveHandler = new class {
+  setMyUnActiveAuctionsHandler = (handler) => {
+    myUnActiveAuctionsHandler = handler;
+  };
+}
+
+module.exports = { homeHandler, attendedHandler, attendedCloseHandler, myAuctionsHandler, searchAuctions, myUnActiveHandler }

@@ -24,7 +24,7 @@ import { getAuctions, bidProduct } from './AuctionsSagas'
 import { searchs } from './SearchSagas'
 import { getCategory, getBankBrands } from './CategorySagas'
 import { login, loginToken } from './LoginSagas'
-import { uploadProduct, getInfoUploadProduct, getProductUnActivity } from './ProductSagas'
+import { uploadProduct, getInfoUploadProduct, getProductUnActivity, delProductUnActivity } from './ProductSagas'
 import { createAcccount, checkCode, getNewCode, forgotPassword, changePassword, editProfile, uploadAvatar } from './AccountSagas'
 
 /* ------------- API ------------- */
@@ -73,5 +73,6 @@ export default function * root () {
     takeLatest(ProductTypes.UPLOAD_PRODUCT_REQUEST, uploadProduct, ProductApi, UserApi),
     takeLatest(ProductTypes.GET_INFO_UPLOAD_REQUEST, getInfoUploadProduct, ProductApi),
     takeLatest(ProductTypes.GET_PRODUCT_UN_ACTIVITY_REQUEST, getProductUnActivity, ProductApi),
+    takeLatest(ProductTypes.DEL_PRODUCT_UN_ACTIVITY_REQUEST, delProductUnActivity, ProductApi, UserApi),
   ]
 }

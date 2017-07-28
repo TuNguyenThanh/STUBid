@@ -36,11 +36,16 @@ const create = (baseURL = ApiConfig.baseURL) => {
     return api.get('Auctions/myUnactivatedAuctions/' + token);
   }
 
+  const delProductUnActivity = (token, auctionId) => {
+    return api.post('Auctions/closeOrDelete', { token, auctionId });
+  }
+
   return {
     // a list of the API functions from step 2
     uploadProduct,
     getInfoUploadProduct,
-    getProductUnActivity
+    getProductUnActivity,
+    delProductUnActivity
   }
 }
 
