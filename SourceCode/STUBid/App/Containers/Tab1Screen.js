@@ -76,7 +76,7 @@ class Tab1 extends React.Component {
     const { data } = this.state;
     return (
       <View style={styles.container}>
-        <Swiper height={(Metrics.screenWidth * 1.8)/3} autoplay>
+        <Swiper height={(Metrics.screenWidth * 1.8)/3} autoplay activeDotColor={Colors.primary}>
           {
             this.renderImage()
           }

@@ -164,7 +164,7 @@ class EditProfile extends React.Component {
           <View style={styles.viewImage}>
             <View style={{ flexDirection: 'row'}}>
               <Image
-                style={styles.imgStyle}
+                style={styles.imgStyle1}
                 source={Images.left}
                 resizeMode="contain"
               />
@@ -188,7 +188,7 @@ class EditProfile extends React.Component {
                 </TouchableOpacity>
               </View>
               <Image
-                style={styles.imgStyle}
+                style={styles.imgStyle1}
                 source={Images.right}
                 resizeMode="contain"
               />

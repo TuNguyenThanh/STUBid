@@ -14,7 +14,8 @@ export default StyleSheet.create({
   },
   imgStyle: {
     width: 80,
-    height: 120
+    height: 120,
+    tintColor: Colors.primary
   },
   imgAvatar: {
     width: Metrics.screenHeight / 5,

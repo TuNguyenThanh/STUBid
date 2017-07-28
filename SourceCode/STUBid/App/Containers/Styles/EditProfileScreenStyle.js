@@ -26,6 +26,11 @@ export default StyleSheet.create({
     borderRadius: (Metrics.screenHeight / 5)/2,
     zIndex: 0
   },
+  imgStyle1: {
+    tintColor: Colors.primary,
+    width: Metrics.screenHeight / 5,
+    height: Metrics.screenHeight / 5
+  },
   rowInput: {
     height: 40,
     flexDirection: 'row'

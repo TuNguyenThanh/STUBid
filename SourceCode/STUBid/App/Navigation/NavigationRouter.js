@@ -81,8 +81,8 @@ class NavigationRouter extends Component {
             </Scene>
             <Scene key="tab4" title="profile" icon={TabIcon}>
               <Scene key='settingsScreen' component={SettingsScreen} hideNavBar/>
-              <Scene key='infoAppScreen' component={InfoAppScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
-              <Scene key='versionAppScreen' component={VersionAppScreen} hideNavBar={false} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+              <Scene key='infoAppScreen' component={InfoAppScreen} hideNavBar={false} leftButtonIconStyle={Styles.leftButton} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
+              <Scene key='versionAppScreen' component={VersionAppScreen} hideNavBar={false} leftButtonIconStyle={Styles.leftButton} titleStyle={Styles.title} navigationBarStyle={Styles.navBarCustom} />
             </Scene>
           </Scene>
 

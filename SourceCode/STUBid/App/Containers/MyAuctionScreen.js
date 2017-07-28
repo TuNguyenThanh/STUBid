@@ -33,10 +33,12 @@ class MyAuction extends React.Component {
   componentDidMount() {
     if(this.props.login.user) {
       myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
+        console.log(data);
         this.props.myAuctionsHanding(data);
       }, this.props.login.user.profile.accountId, 1);
 
       attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
+        console.log(data);
         this.props.myAuctions(data);
       }, this.props.login.user.profile.accountId, 1);
 
@@ -45,7 +47,6 @@ class MyAuction extends React.Component {
       });
 
       myUnActiveHandler.setMyUnActiveAuctionsHandler((data) => {
-        console.log(data);
         this.props.myAuctionsUnActive(data);
       });
       //this.props.getProductUnActivity(this.props.login.user.token);

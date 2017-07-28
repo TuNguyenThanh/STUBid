@@ -26,5 +26,6 @@ export default {
     elevation: 2,
     borderBottomColor: '#FFF',
     backgroundColor: '#FFF',
+    tintColor: Colors.primary
   },
 }
