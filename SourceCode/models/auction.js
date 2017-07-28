@@ -121,9 +121,7 @@ exports.getAuction = (auctionId) => {
         if (auction) {
             resolve(auction);
         } else {
-            let sql = `SELECT "Auction"."auctionId", "Auction"."createdDate", "Auction"."activatedDate",
-                "Auction"."duration", "Auction"."startPrice", "Auction"."ceilingPrice",
-                "Auction"."bidIncreasement", "Auction".state,
+            let sql = `SELECT "Auction".*,
                 (
                     SELECT row_to_json(product)
                     FROM (
@@ -132,14 +130,14 @@ exports.getAuction = (auctionId) => {
                             SELECT array_to_json(array_agg(row_to_json(image)))
                             FROM (
                                 SELECT "imageId", name, CONCAT ('${BUCKET.PUBLIC_URL}/',name) AS url
-                                FROM "Image" AS image
-                                WHERE image."productId" = "Product"."productId"
+                                FROM "Image"
+                                WHERE "Image"."productId" = "Product"."productId"
                             ) AS image
                         ) AS images,
                         (
-                            SELECT row_to_json(category)
-                            FROM "Category" AS category
-                            WHERE category."categoryId" = "Product"."categoryId"
+                            SELECT row_to_json("Category")
+                            FROM "Category"
+                            WHERE "Category"."categoryId" = "Product"."categoryId"
                         ) AS category
                         FROM "Product"
                         WHERE "Product"."productId" = "Auction"."productId"
@@ -159,13 +157,17 @@ exports.getAuction = (auctionId) => {
                     ) AS bid
                 ) AS "highestBidder",
                 (
+                    SELECT row_to_json("UserLevel")
+                    FROM "UserLevel"
+                    WHERE "UserLevel"."userLevelId" = "Auction"."allowedUserLevel"
+                ) AS "allowedUserLevel",
+                (
                     SELECT count("BidHistory"."bidHistoryId")
                     FROM "BidHistory"
                     WHERE "BidHistory"."auctionId" = "Auction"."auctionId"
                 ) AS "bids"
                 FROM "Auction"
-                WHERE "Auction"."auctionId" = $1
-                ORDER BY "createdDate" DESC`;
+                WHERE "Auction"."auctionId" = $1`;
             let params = [auctionId];
             query(sql, params)
                 .then(results => {
@@ -394,23 +396,23 @@ exports.insertAuction = (
 }
 
 exports.bid = (auctionId, accountId, price, buyNow) => {
-    return new Promise((resolve, reject) => {
-        var index, auction;
-        auction = auctions.find((e, i) => {
-            if (e.auctionId == auctionId) {
-                index = i;
-                return true;
-            }
-        });
-        if (!auction) return reject({
-            status: 400,
-            error: ERROR[400][50]
-        });
-        if (auction.highestBidder && auction.highestBidder.price >= price) return reject({
-            status: 400,
-            error: ERROR[400][51]
-        });
-        var sql = `
+        return new Promise((resolve, reject) => {
+                    var index, auction;
+                    auction = auctions.find((e, i) => {
+                        if (e.auctionId == auctionId) {
+                            index = i;
+                            return true;
+                        }
+                    });
+                    if (!auction) return reject({
+                        status: 400,
+                        error: ERROR[400][50]
+                    });
+                    if (auction.highestBidder && auction.highestBidder.price >= price) return reject({
+                        status: 400,
+                        error: ERROR[400][51]
+                    });
+                    var sql = `
         WITH "latestBid" AS (
             INSERT INTO "BidHistory"(timestamp,price,"auctionId","bidderAccountId")
             VALUES (now(),$1,$2,$3)
