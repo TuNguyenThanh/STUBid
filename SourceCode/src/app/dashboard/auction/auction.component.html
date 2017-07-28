@@ -1,17 +1,17 @@
-<div *ngIf="auction">
+<div *ngIf='auction'>
   <div class="text-center images">
-    <img [hidden]="!imageLoaded" [class.appear-fadein]="imageLoaded" [src]="auction.product.images[0].url" (load)="imageComplete()">
+    <img [hidden]='!imageLoaded' [class.appear-fadein]='imageLoaded' [src]='auction.product.images[0].url' (load)='imageComplete()'>
   </div>
 
-  <div *ngIf="imageLoaded" class="text-center appear-top-down" style="color: red">
+  <div *ngIf='imageLoaded' class="text-center appear-top-down" style="color: red">
     <h4>{{timeleft || '00:00:00'}}</h4>
   </div>
 
-  <div *ngIf="imageLoaded" class="container appear-top-down">
+  <div *ngIf='imageLoaded' class="container appear-top-down">
     <div class="row">
       <div class="col-xs-12">
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-          <input class="mdl-textfield__input" id="auctionId" readonly type="text" [value]="auction.auctionId">
+          <input class="mdl-textfield__input" id="auctionId" type="text" readonly [value]='auction.auctionId'>
           <label class="mdl-textfield__label" for="auctionId">Mã sản phẩm</label>
         </div>
       </div>
@@ -20,14 +20,28 @@
     <div class="row">
       <div class="col-xs-12 col-sm-6">
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-          <input class="mdl-textfield__input" id="auctionProductName" readonly type="text" [value]="auction.product.name">
+          <input class="mdl-textfield__input" id="auctionProductName" [readonly]='auction.state > 0 || loading' type="text" [value]='auction.product.name'
+            (keyup.enter)='updateProduct("name", $event?.target?.value)' (blur)='updateProduct("name", $event?.target?.value)'>
           <label class="mdl-textfield__label" for="auctionProductName">Tên sản phẩm</label>
         </div>
       </div>
       <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth text-field">
+          <input class="mdl-textfield__input" type="text" id="demo-menu-lower-left-category" [value]='auction.product.category.name' readonly>
+          <label for="sample1" class="mdl-textfield__label">Loại sản phẩm</label>
+          <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left-category">
+            <li *ngFor='let item of categorys' class="mdl-menu__item" (click)='updateProduct("categoryId", item.categoryId)'>{{item.name}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-          <input class="mdl-textfield__input" id="category" readonly type="text" [value]="auction.product.category.name">
-          <label class="mdl-textfield__label" for="category">Loại sản phẩm</label>
+          <textarea class="mdl-textfield__input" [readonly]='auction.state > 0 || loading' type="text" rows="3" id="auctionDescription"
+            [value]='auction.product.description' (blur)='updateProduct("description", $event?.target?.value)'></textarea>
+          <label class="mdl-textfield__label" for="auctionDescription">Mô tả sản phẩm</label>
         </div>
       </div>
     </div>
@@ -63,10 +77,14 @@
     </div>
 
     <div class="row">
-      <div class="col-xs-12">
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
-          <textarea class="mdl-textfield__input" readonly type="text" rows="3" id="auctionDescription" [value]="auction.product.description"></textarea>
-          <label class="mdl-textfield__label" for="auctionDescription">Mô tả sản phẩm</label>
+      <div class="col-xs-12 col-sm-6">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth text-field">
+          <input class="mdl-textfield__input" type="text" id="demo-menu-lower-left-allowedUserLevel" [value]='auction.allowedUserLevel.name'
+            readonly>
+          <label for="sample1" class="mdl-textfield__label">Cho phép người tham gia</label>
+          <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="demo-menu-lower-left-allowedUserLevel">
+            <li *ngFor='let item of userLevels' class="mdl-menu__item" (click)='updateAuction("allowedUserLevel", item.userLevelId)'>{{item.name}}</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -75,12 +93,13 @@
 
   <div *ngIf="imageLoaded" class="row text-center">
     <button *ngIf="auction.state === 0" [disabled]="loading" (click)="activeAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-      <i class="material-icons">delete</i> Kích hoạt đấu giá
+      <i class="material-icons">play_circle_outline</i> Kích hoạt đấu giá
     </button>
     <button *ngIf="auction.state === 0" [disabled]="loading" (click)="closeOrDeleteAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent btn-cancel">
       <i class="material-icons">delete</i> Xóa đấu giá
     </button>
-    <button *ngIf="auction.state > 0" [disabled]="loading || auction.state > 1" [class.btn-cancel]="auction.state === 1" (click)="closeOrDeleteAuction()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+    <button *ngIf="auction.state > 0" [disabled]="loading || auction.state > 1" [class.btn-cancel]="auction.state === 1" (click)="closeOrDeleteAuction()"
+      class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
       <i class="material-icons">cancel</i> Ngưng đấu giá
     </button>
   </div>

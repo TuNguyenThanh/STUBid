@@ -2,25 +2,38 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoadingBar } from '../../shared/loading-bar/loading-bar';
-import { AuctionService } from '../../service/auction.service';
 import { AuthService } from '../../service/auth.service';
+import { AuctionService } from '../../service/auction.service';
+import { ProductService } from '../../service/product.service';
+import { CategoryService } from '../../service/category.service';
+import { UserLevelService } from '../../service/userLevel.service';
 
 @Component({
   selector: 'app-auction',
   templateUrl: './auction.component.html',
   styleUrls: ['./auction.component.scss'],
-  providers: [AuctionService]
+  providers: [
+    AuctionService,
+    ProductService,
+    CategoryService,
+    UserLevelService
+  ]
 })
 export class AuctionComponent implements OnInit {
   auction: any;
   imageLoaded: boolean;
   loading: boolean;
   timeleft: string;
+  categorys: Array<any>;
+  userLevels: Array<any>;
 
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
     private auctionService: AuctionService,
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private userLevelService: UserLevelService,
     private loadingBar: LoadingBar,
     private router: Router,
   ) {
@@ -28,7 +41,13 @@ export class AuctionComponent implements OnInit {
       this.router.navigate(['/login'], { queryParams: { returnUrl: window.location.pathname } });
     } else {
       this.loadingBar.show();
-      this.getAuctionId()
+      this.getCategorys()
+        .then(() => {
+          return this.getUserLevels();
+        })
+        .then(() => {
+          return this.getAuctionId();
+        })
         .then((auctionId: string) => {
           return this.getAuction(auctionId);
         })
@@ -42,6 +61,38 @@ export class AuctionComponent implements OnInit {
   }
 
   ngOnInit() { }
+
+  getUserLevels() {
+    return new Promise((resolve, reject) => {
+      this.userLevelService.getAll().subscribe(
+        (value: any) => {
+          console.log(value);
+          this.userLevels = value.results;
+          resolve();
+        },
+        (error: any) => {
+          console.log(error);
+          reject();
+        }
+      )
+    });
+  }
+
+  getCategorys() {
+    return new Promise((resolve, reject) => {
+      this.categoryService.getAll().subscribe(
+        (value: any) => {
+          console.log(value);
+          this.categorys = value.result;
+          resolve();
+        },
+        (error: any) => {
+          console.log(error);
+          reject();
+        }
+      )
+    });
+  }
 
   getAuctionId() {
     return new Promise((resolve, reject) => {
@@ -123,6 +174,56 @@ export class AuctionComponent implements OnInit {
         this.loading = false;
       },
       (error: any) => {
+        console.log(error);
+        this.loadingBar.hide();
+        this.loading = false;
+      }
+    );
+  }
+
+  updateProduct(key: string, value: any) {
+    let product = {};
+    product[key] = value;
+    this.loadingBar.show();
+    this.loading = true;
+    if (key === 'categoryId') this.auction.product.category = this.categorys.find(e => e.categoryId === value);
+    this.productService.update(this.auction.product.productId, product, this.authService.getLocalToken()).subscribe(
+      (value) => {
+        if (value.token) {
+          this.authService.updateLocalToken(value.token);
+        }
+        if (value.error) {
+          console.log(value.error);
+        }
+        this.loadingBar.hide();
+        this.loading = false;
+      },
+      (error) => {
+        console.log(error);
+        this.loadingBar.hide();
+        this.loading = false;
+      }
+    );
+  }
+
+  updateAuction(key: string, value: any) {
+    let auction = {};
+    auction[key] = value;
+    this.loadingBar.show();
+    this.loading = true;
+    if (key === 'allowedUserLevel') this.auction.allowedUserLevel = this.userLevels.find(e => e.userLevelId === value);
+    this.auctionService.update(this.auction.auctionId, auction, this.authService.getLocalToken()).subscribe(
+      (value) => {
+        if (value.token) {
+          this.authService.updateLocalToken(value.token);
+        }
+        if (value.error) {
+          console.log(value.error);
+        }
+        this.loadingBar.hide();
+        this.loading = false;
+      },
+      (error) => {
         console.log(error);
         this.loadingBar.hide();
         this.loading = false;

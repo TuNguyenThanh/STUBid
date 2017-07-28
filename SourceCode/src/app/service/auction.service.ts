@@ -60,6 +60,12 @@ export class AuctionService {
     return this.baseService.patchSth(url, body, Constants.commonHeader);
   }
 
+  update(auctionId: string, auction: any, token: string) {
+    let url = `${Constants.baseUrl}/Auctions/${auctionId}`;
+    let body = { token, auction };
+    return this.baseService.patchSth(url, body, Constants.commonHeader);
+  }
+
   closeOrDelete(auctionId: string, token: string) {
     let url = `${Constants.baseUrl}/Auctions/closeOrDelete`;
     let body = {

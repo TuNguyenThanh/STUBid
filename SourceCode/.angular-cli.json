@@ -22,7 +22,8 @@
         "style.scss",
         "assets/css/bootstrap.min.css",
         "assets/css/bootstrap-theme.min.css",
-        "assets/css/material.min.css"
+        "assets/css/material.min.css",
+        "assets/css/getmdl-select.min.css"
       ],
       "scripts": [
         "assets/js/jquery-3.2.1.min.js",

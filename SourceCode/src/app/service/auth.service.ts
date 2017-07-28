@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   updateLocalToken(token) {
-    localStorage.setItem('currentToken', (token));
+    localStorage.setItem('currentToken', token);
   }
 
   updateLocalUser() {
