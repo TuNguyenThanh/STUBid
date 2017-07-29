@@ -42,7 +42,7 @@ class ModalCategory extends React.Component {
         <View style={styles.viewModalImage}>
           <View style={styles.viewImage}>
             <View style={styles.viewBorderImage}>
-              <Icon name="legal" size={60} color={Colors.primary} />
+              <Icon name="legal" size={50} color={Colors.primary} />
             </View>
             <View style={styles.viewBehindImage} />
           </View>

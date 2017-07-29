@@ -76,7 +76,9 @@ class MyAuctionTab2 extends React.Component {
         item.timeLeft ?
         NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTION_TAB2_1' })
         :
-         NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })
+        (
+          NavigationActions.myAuctionNotActiveScreen({ title: item.product.name, data: item })
+        )
       }}>
         {
           item.product.images ?

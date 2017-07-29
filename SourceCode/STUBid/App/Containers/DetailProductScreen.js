@@ -26,6 +26,7 @@ class DetailProduct extends React.Component {
       productSelected: null,
     };
     this.isHandleBid = false;
+    this.isBuyNow = false;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +58,7 @@ class DetailProduct extends React.Component {
         I18n.t('bidSuccess', {locale: language}) + ' ' + bidSuccess.toFixed(3).replace(/(\d)(?=(\d{3})+\.)/g, '$1.') + ' VND',
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {
-            NavigationActions.pop();
+            if(this.isBuyNow) NavigationActions.pop();
           }},
         ],
         { cancelable: false }
@@ -217,6 +218,7 @@ class DetailProduct extends React.Component {
             {text: I18n.t('ok', {locale: language}), onPress: () => {
               this.props.bibProduct(this.props.login.user.token, data.auctionId, this.props.login.user.profile.accountId, data.ceilingPrice, true);
               this.isHandleBid = true;
+              this.isBuyNow = true;
             }},
             {text: I18n.t('cancel', {locale: language}), onPress: () => {}},
           ],

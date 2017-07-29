@@ -69,7 +69,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   viewBorderImage: {
-    padding: 8,
+    padding: 10,
     backgroundColor: '#FFF',
     borderRadius: 43
   },
