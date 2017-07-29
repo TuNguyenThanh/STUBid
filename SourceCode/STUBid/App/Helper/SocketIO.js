@@ -3,7 +3,9 @@ import IO from 'socket.io-client/dist/socket.io'
 
 const socket = IO(ApiConfig.baseSocketIOURL);
 let reConnectHandler = { };
-let homeAuctionHandler, attendedAuctionHandler, attendedCloseAuctionHandler, myAuctionsAuctionHandler, searchAuctionsHandler, myUnActiveAuctionsHandler;
+let homeAuctionHandler, attendedAuctionHandler, attendedCloseAuctionHandler,
+myAuctionsAuctionHandler, searchAuctionsHandler, myUnActiveAuctionsHandler,
+myCloseAuctionsHandler;
 
 socket.on('reconnect', (data) => {
   if (reConnectHandler.homeView) reConnectHandler.homeView();
@@ -33,6 +35,10 @@ socket.on('SERVER-SEND-SEARCH-AUCTIONS', (data) => {
 
 socket.on('SERVER-SEND-UNACTIVATED-AUCTIONS', (data) => {
   if (myUnActiveAuctionsHandler) myUnActiveAuctionsHandler(data);
+});
+
+socket.on('SERVER-SEND-MY-CLOSED-AUCTIONS', (data) => {
+  if (myCloseAuctionsHandler) myCloseAuctionsHandler(data);
 });
 
 const homeHandler = new class {
@@ -127,4 +133,14 @@ const myUnActiveHandler = new class {
   };
 }
 
-module.exports = { homeHandler, attendedHandler, attendedCloseHandler, myAuctionsHandler, searchAuctions, myUnActiveHandler }
+const myCloseActiveAuctionsHandler = new class {
+  setMyCloseActiveAuctionsHandler = (handler) => {
+    myCloseAuctionsHandler = handler;
+  };
+}
+
+module.exports = {
+  homeHandler, attendedHandler, attendedCloseHandler,
+  myAuctionsHandler, searchAuctions, myUnActiveHandler,
+  myCloseActiveAuctionsHandler
+}

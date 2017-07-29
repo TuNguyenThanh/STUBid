@@ -182,4 +182,6 @@
   "auctionId": "Phiên đấu giá",
   "delProductUnActivity": "Xóa sản phẩm",
   "areYouSureDel": "Bạn có chắc là xóa sản phẩm",
+  "TIMEOUT_ERROR": "Không thể kết nối tới máy chủ",
+  "Finished": "Đã kết thúc",
 }

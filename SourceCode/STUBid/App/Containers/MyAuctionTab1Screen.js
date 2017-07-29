@@ -6,6 +6,9 @@ import ImageLoad from 'react-native-image-placeholder'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Actions as NavigationActions } from 'react-native-router-flux'
 
+//I18n
+import I18n from 'react-native-i18n'
+
 // Styles
 import styles from './Styles/MyAuctionTab1ScreenStyle'
 import { Images, Colors } from '../Themes'
@@ -43,6 +46,7 @@ class MyAuctionTab1 extends React.Component {
   }
 
   renderItem(item, rowID) {
+    const { language } = this.state;
     return(
       <TouchableOpacity style={styles.row} onPress={() => NavigationActions.detailProductScreen({ title: item.product.name, data: item, rowID: rowID, screen: 'MYAUCTIONS' })}>
         {
@@ -77,7 +81,7 @@ class MyAuctionTab1 extends React.Component {
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>{item.timeLeft ? item.timeLeft : 'Đã kết thúc'}</Text>
+            <Text style={styles.titleTime}>{item.timeLeft ? item.timeLeft : I18n.t('Finished', {locale: language})}</Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>
@@ -103,6 +107,7 @@ class MyAuctionTab1 extends React.Component {
 const mapStateToProps = (state) => {
   return {
     auctions: state.auctions,
+    language: state.settings.language,
   }
 }
 

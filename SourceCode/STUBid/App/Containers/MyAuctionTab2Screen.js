@@ -40,9 +40,12 @@ class MyAuctionTab2 extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.forceUpdate();
     //const { fetching, error, data } = nextProps.productState;
-    const { myAuctionsHanding, myAuctionsUnActive } = nextProps.auctions;
+    const { myAuctionsHanding, myAuctionsUnActive, myCloseAuctionsActive } = nextProps.auctions;
 
     let temp = myAuctionsHanding.concat(myAuctionsUnActive);
+    if(myCloseAuctionsActive.length != 0) {
+      temp = temp.concat(myCloseAuctionsActive);
+    }
     this.setState({
       dataSourceHandling: this.state.dataSourceHandling.cloneWithRows(temp)
     });
@@ -107,7 +110,11 @@ class MyAuctionTab2 extends React.Component {
             <View style={styles.iconStyle}>
               <Icon name="hourglass-half" size={15} color={Colors.primary} />
             </View>
-            <Text style={styles.titleTime}>{item.timeLeft ? item.timeLeft : I18n.t('notActive', {locale: language})}</Text>
+            <Text style={styles.titleTime}>
+            {
+              item.timeLeft ? item.timeLeft : (item.state >1 ? I18n.t('Finished', {locale: language}) : I18n.t('notActive', {locale: language}))
+            }
+            </Text>
           </View>
           <View style={styles.viewTemp}>
             <View style={styles.iconStyle}>

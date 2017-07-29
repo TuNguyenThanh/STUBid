@@ -18,6 +18,7 @@ const { Types, Creators } = createActions({
   myAuctionsClose: ['myListAuctionClose'],
   myAuctionsHanding: ['myAuctionsHanding'],
   myAuctionsUnActive: ['myAuctionsUnActive'],
+  myCloseAuctionsActive: ['myCloseAuctionsActive'],
 
   searchAuctions: ['searchAuctions'],
 })
@@ -34,6 +35,7 @@ export const INITIAL_STATE = Immutable({
   myListAuctionClose: [],
   myAuctionsHanding: [],
   myAuctionsUnActive: [],
+  myCloseAuctionsActive: [],
   searchAuctions: [],
   error: null,
   fetching: false,
@@ -65,6 +67,8 @@ export const myAuctionHandingSetData = (state, { myAuctionsHanding }) => state.m
 
 export const myAuctionUnActiveSetData = (state, { myAuctionsUnActive }) => state.merge({ myAuctionsUnActive })
 
+export const myCloseAuctionActiveSetData = (state, { myCloseAuctionsActive }) => state.merge({ myCloseAuctionsActive })
+
 export const searchAuctionsSetData = (state, { searchAuctions }) => state.merge({ searchAuctions })
 
 /* ------------- Hookup Reducers To Types ------------- */
@@ -87,6 +91,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.MY_AUCTIONS_HANDING]: myAuctionHandingSetData,
 
   [Types.MY_AUCTIONS_UN_ACTIVE]: myAuctionUnActiveSetData,
+
+  [Types.MY_CLOSE_AUCTIONS_ACTIVE]: myCloseAuctionActiveSetData,
 
   [Types.SEARCH_AUCTIONS]: searchAuctionsSetData,
 })

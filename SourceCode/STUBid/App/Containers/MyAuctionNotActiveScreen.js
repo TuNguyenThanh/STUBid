@@ -60,8 +60,8 @@ class MyAuctionNotActive extends React.Component {
         '',
         [
           {text: I18n.t('ok', {locale: language}), onPress: () => {
-            //NavigationActions.pop()
-            NavigationActions.tab3();
+            NavigationActions.pop();
+            //NavigationActions.tab3();
           }}
         ],
         { cancelable: false }

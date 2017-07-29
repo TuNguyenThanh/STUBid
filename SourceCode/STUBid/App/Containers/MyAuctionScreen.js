@@ -9,7 +9,7 @@ import Header from '../Components/Header'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import MyAuctionTab1 from './MyAuctionTab1Screen'
 import MyAuctionTab2 from './MyAuctionTab2Screen'
-import { attendedHandler, attendedCloseHandler, myAuctionsHandler, myUnActiveHandler } from '../Helper/SocketIO'
+import { attendedHandler, attendedCloseHandler, myAuctionsHandler, myUnActiveHandler, myCloseActiveAuctionsHandler } from '../Helper/SocketIO'
 
 //Key config - AsyncStorage
 import AppConfig from '../Config/AppConfig'
@@ -30,15 +30,13 @@ class MyAuction extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if(this.props.login.user) {
       myAuctionsHandler.setServerSendMyAuctionsHandler((data) => {
-        console.log(data);
         this.props.myAuctionsHanding(data);
       }, this.props.login.user.profile.accountId, 1);
 
       attendedHandler.setServerSendAttendedAuctionsHandler((data) => {
-        console.log(data);
         this.props.myAuctions(data);
       }, this.props.login.user.profile.accountId, 1);
 
@@ -49,6 +47,12 @@ class MyAuction extends React.Component {
       myUnActiveHandler.setMyUnActiveAuctionsHandler((data) => {
         this.props.myAuctionsUnActive(data);
       });
+
+      myCloseActiveAuctionsHandler.setMyCloseActiveAuctionsHandler((data) => {
+        console.log(data);
+        this.props.myCloseAuctionsActive(data);
+      });
+      
       //this.props.getProductUnActivity(this.props.login.user.token);
     }
   }
@@ -137,6 +141,7 @@ const mapDispatchToProps = (dispatch) => {
   //  getProductUnActivity: (token) => dispatch(ProductActions.getProductUnActivityRequest(token)),
     myAuctionsHanding: (data) => dispatch(AuctionsActions.myAuctionsHanding(data)),
     myAuctionsUnActive: (data) => dispatch(AuctionsActions.myAuctionsUnActive(data)),
+    myCloseAuctionsActive: (data) => dispatch(AuctionsActions.myCloseAuctionsActive(data)),
   }
 }
 

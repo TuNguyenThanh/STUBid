@@ -182,4 +182,6 @@
   "auctionId": "Auction Id",
   "delProductUnActivity": "Delete Product",
   "areYouSureDel": "Are you sure delete product ?",
+  "TIMEOUT_ERROR": "Cannot connect server",
+  "Finished": "Finished",
 }
