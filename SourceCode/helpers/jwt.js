@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const KEY = 'SECRET_KEY';
-const expirationTime = 30 * 60;
+const expirationTime = 30 * 120;
 const ERROR = require('../error.json');
 const { query } = require('./db');
 

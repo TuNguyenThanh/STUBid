@@ -25,7 +25,7 @@ connect = (socket) => {
 
     function setHomeView() {
         console.log(socket.homeViewPage);
-        setTimeout(function() {
+        setTimeout(function () {
             socket.homeViewInterval = setInterval(() => {
                 let auctions = selectAuctions(socket.homeViewPage - 1, socket.homeViewCategoryId, socket.accountId, socket.attendedIds);
                 socket.emit('SERVER-SEND-AUCTIONS', auctions);
@@ -133,7 +133,7 @@ connect = (socket) => {
     socket.on('CLIENT-REQUEST-SEARCH-VIEW', () => {
         socket.searchViewPage = 1;
         socket.searchKey = '';
-        setTimeout(function() {
+        setTimeout(function () {
             socket.searchViewInterval = setInterval(() => {
                 let auctions = selectSearchAuctions(socket.searchViewPage - 1, socket.searchViewCategoryId, socket.searchKey);
                 socket.emit('SERVER-SEND-SEARCH-AUCTIONS', auctions);
@@ -155,16 +155,16 @@ connect = (socket) => {
     });
 
     socket.on('CLIENT-SEND-SEARCH-KEY', data => {
-            console.log(data);
-            socket.searchKey = data.searchKey;
-        })
-        // SEARCH -- end --
+        console.log(data);
+        socket.searchKey = data.searchKey;
+    })
+    // SEARCH -- end --
 
     // AUCTION DETAILS --
     socket.on('CLIENT-REQUEST-AUCTION-TIMELEFT', (data) => {
         if (socket.auctionTimeleftInterval) clearInterval(socket.auctionTimeleftInterval);
         if (data.auctionId) {
-            setTimeout(function() {
+            setTimeout(function () {
                 socket.auctionTimeleftInterval = setInterval(() => {
                     let auctions = selectAuctionTimeleft(data.auctionId);
                     socket.emit('SERVER-SEND-AUCTION-TIMELEFT', auctions);
@@ -185,10 +185,15 @@ connect = (socket) => {
 }
 
 sendUnactivated = (accountId) => {
+    console.log('188', accountId);
     sockets.forEach((e) => {
-        if (e.accountId === parseInt(accountId)) {
-            getMyAuctions(socket.accountId, [0])
-                .then(value => socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', value))
+        console.log('190', e.accountId);
+        if (e.accountId === accountId) {
+            getMyAuctions(e.accountId, [0])
+                .then(value => {
+                    console.log(value);
+                    e.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', value);
+                })
                 .catch(reason => console.log(reason))
         }
     });
