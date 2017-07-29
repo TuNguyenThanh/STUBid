@@ -5,6 +5,7 @@ const {
     verify,
     refreshToken
 } = require('../../helpers/jwt');
+const { sendUnactivated } = require('../../helpers/socket');
 const ERROR = require('../../error.json');
 
 module.exports = (req, res) => {
@@ -30,6 +31,7 @@ module.exports = (req, res) => {
                     error: ERROR[400][1]
                 });
             }
+            this.accountId = object.accountId;
             token = refreshToken(object, sessionId);
             return updateProduct(productId, product);
         })
@@ -38,6 +40,7 @@ module.exports = (req, res) => {
                 success: true,
                 token
             });
+            sendUnactivated(this.accountId);
         })
         .catch((reason) => {
             res.send({

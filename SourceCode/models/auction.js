@@ -13,12 +13,12 @@ const latinize = require('latinize');
 
 var auctions = [],
     auctionsTimeLeft = {},
-    closedAuctions = [];
+    isExistClosed;
 loadAuctions();
 setInterval(() => countDown(), 1000);
 
 function countDown() {
-    closedAuctions = [];
+    isExistClosed = false;
     for (var i = auctions.length - 1; i >= 0; i--) {
         let element = auctions[i];
         let timeLeft = auctionsTimeLeft[element.auctionId];
@@ -27,7 +27,7 @@ function countDown() {
             auctionsTimeLeft[element.auctionId] = timeLeft;
             element.timeLeft = timeLeftFormat(timeLeft);
         } else {
-            closedAuctions.push(element);
+            isExistClosed = true;
             let auctionId = element.auctionId;
             delete auctionsTimeLeft[auctionId];
             auctions.splice(i, 1);
@@ -531,10 +531,7 @@ exports.closeAuction = (auctionId, accountId, isAdmin) => {
             query(sql, params)
                 .then(value => {
                     if (value.rowCount > 0) {
-                        closedAuctions.push(element);
-                        let auctionId = element.auctionId;
-                        delete auctionsTimeLeft[auctionId];
-                        auctions.splice(auctions.indexOf(element), 1);
+                        auctionsTimeLeft[auctionId] = 0;
                         console.log(`close auction : ${auctionId}`);
                         resolve();
                     } else {
@@ -612,7 +609,7 @@ exports.selectAttendedAuctions = (page, attendedIds) => {
     if (page == undefined) return [];
     let result = {
         auctions,
-        closedAuctions
+        isExistClosed
     }
     if (attendedIds && attendedIds.length > 0) result.auctions = result.auctions.filter(e => attendedIds.indexOf(e.auctionId) >= 0);
     result.auctions = result.auctions.slice(0, page * 10 + 9);
@@ -623,11 +620,10 @@ exports.selectMyAuctions = (page, accountId) => {
     if (page == undefined) return [];
     let result = {
         auctions,
-        closedAuctions: []
+        isExistClosed
     }
     if (accountId && accountId > 0) result.auctions = result.auctions.filter(e => e.seller.accountId == accountId);
     result.auctions = result.auctions.slice(0, page * 10 + 9);
-    result.closedAuctions = closedAuctions.filter(e => e.seller.accountId == accountId)
     return result;
 };
 

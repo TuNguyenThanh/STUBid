@@ -86,22 +86,19 @@ connect = (socket) => {
             socket.myAuctionsViewInterval = setInterval(() => {
                 let {
                     auctions,
-                    closedAuctions
+                    isExistClosed
                 } = selectMyAuctions(socket.myAuctionsViewPage - 1, socket.accountId);
                 socket.emit('SERVER-SEND-MY-AUCTIONS', auctions);
-                if (closedAuctions && closedAuctions.length > 0)
-                    sendMyClosedAuctions();
+                if (isExistClosed) sendMyClosedAuctions();
             }, 1000);
 
             socket.attendedViewInterval = setInterval(() => {
                 let {
                     auctions,
-                    closedAuctions
+                    isExistClosed
                 } = selectAttendedAuctions(socket.attendedViewPage - 1, socket.attendedIds);
                 socket.emit('SERVER-SEND-ATTENDED-AUCTIONS', auctions);
-                if (closedAuctions && closedAuctions.length > 0) {
-                    sendClosedAttendedAuctions();
-                }
+                if (isExistClosed) sendClosedAttendedAuctions();
             }, 1000);
         }, 1000 - Date.now() % 1000);
     }
