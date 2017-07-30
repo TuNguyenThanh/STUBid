@@ -1,13 +1,6 @@
-const {
-  verify,
-  refreshToken
-} = require('../../helpers/jwt');
-const {
-  active
-} = require('../../models/auction');
-const {
-  sendUnactivated
-} = require('../../helpers/socket');
+const JWT = require('../../helpers/jwt');
+const AUCTION = require('../../models/auction');
+const SOCKET = require('../../helpers/socket');
 const ERROR = require('../../error.json');
 
 module.exports = (req, res) => {
@@ -20,7 +13,7 @@ module.exports = (req, res) => {
       success: false,
       error: ERROR[400][0]
     })
-  verify(token)
+  JWT.verify(token)
     .then(({
       object,
       sessionId
@@ -30,16 +23,16 @@ module.exports = (req, res) => {
           status: 400,
           error: ERROR[400][1]
         });
-      this.accountId = object.accountId;
-      token = refreshToken(object, sessionId);
-      return active(auctionId, object.accountId);
+      this.object = object;
+      this.sessionId = sessionId;
+      return AUCTION.active(auctionId, object.accountId);
     })
     .then((sellerAccountId) => {
       res.send({
         success: true,
-        token
+        token: JWT.refreshToken(this.object, this.sessionId)
       });
-      if (sellerAccountId) sendUnactivated(sellerAccountId);
+      if (sellerAccountId) SOCKET.sendUnactivated(sellerAccountId);
     })
     .catch(reason => {
       console.log(reason);

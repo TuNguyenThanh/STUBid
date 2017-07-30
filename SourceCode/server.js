@@ -31,10 +31,8 @@ server.listen(config.PORT, () => {
 app.get('/api/Auctions/:auctionId', require('./controllers/auction/getAuction'));
 app.patch('/api/Auctions/active/:auctionId', require('./controllers/auction/active'));
 app.get('/api/Auctions/page/:page', require('./controllers/auction/getAuctions'));
-app.get('/api/Auctions/category/:categoryId/page/:page', require('./controllers/auction/getAuctionsByCategory'));
 app.post('/api/Auctions/uploadProduct', require('./controllers/auction/postAuction'));
 app.patch('/api/Auctions/bid', (req, res) => require('./controllers/auction/bid')(req, res));
-app.get('/api/Auctions/myUnactivatedAuctions/:token', require('./controllers/auction/getMyUnactivatedAuctions'));
 app.post('/api/Auctions/closeOrDelete', require('./controllers/auction/closeOrDelete'));
 app.patch('/api/Auctions/:auctionId', require('./controllers/auction/update'));
 
@@ -47,6 +45,8 @@ app.patch('/api/Accounts/changePassword', require('./controllers/account/changeP
 app.patch('/api/Accounts/updateProfile', require('./controllers/account/updateProfile'));
 app.patch('/api/Accounts/updateAvatar', require('./controllers/account/updateAvatar'));
 
+app.get('/api/Products', require('./controllers/product/getAll'));
+app.get('/api/Products/productId/:productId', require('./controllers/product/get'));
 app.patch('/api/Products/:productId', require('./controllers/product/update'));
 
 app.get('/api/BidHistorys/auctionId/:auctionId', require('./controllers/bidHistory/getByAuction'));

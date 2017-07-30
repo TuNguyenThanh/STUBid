@@ -72,17 +72,16 @@ get = (productId) => {
   });
 }
 
-update = (productId, body) => {
+update = (profileId, body) => {
   let keys = Object.keys(body);
   let keysExp = keys.map(e => `"${e}"`).join(',');
   let valuesExp = keys.map((v, i) => `$${i + 1}`).join(',');
-  let sql = `UPDATE "Product" SET (${keysExp})=(${valuesExp}) WHERE "productId" = ${productId}`;
+  let sql = `UPDATE "Profile" SET (${keysExp})=(${valuesExp}) WHERE "profileId" = ${profileId}`;
   let params = keys.map(e => body[e]);
   return new Promise((resolve, reject) => {
     DB.query(sql, params)
       .then((value) => {
         if (value.rowCount > 0) {
-          console.log(`update product : ${productId}`);
           resolve();
         } else {
           reject({
