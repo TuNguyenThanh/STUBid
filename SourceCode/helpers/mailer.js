@@ -9,12 +9,12 @@ var mailOptions = {
 exports.sendResetPasswordEmail = (receiver, firstName, verifyToken) => {
     mailOptions.to = receiver;
     mailOptions.subject = 'Làm mới mật khẩu tài khoản sBid';
-    mailOptions.html = `<div style="width:80%;border:1px solid #444;">
+    mailOptions.html = `<div style="width:100%;border:1px solid #444;">
         <div style="height:50px;background:#0e5aa8;font-size:200%;text-align:center;color:#fff;line-height:50px;">
             sBid
         </div>
         <div style="padding:2%">
-            <div style="font-size:120%;line-height:30px;margin:10px 0;">
+            <div style="font-size:4em;line-height:30px;margin:10px 0;">
                 Chào ${firstName},
                 <br/>Gần đây chúng tôi nhận được yêu cầu làm mới mật khẩu tài khoản sBid của bạn. Chúng tôi ở đây để giúp bạn!
                 <br/>Đơn giản chỉ cần nhấn vào nút bên dưới để nhận mật khẩu mới:

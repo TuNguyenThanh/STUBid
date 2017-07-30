@@ -48,6 +48,7 @@ function loadAuctions() {
       auctions = auctions.map((e) => {
           let timeLeft = e.duration * 60 * 60 - Math.floor((now - new Date(e.activatedDate).getTime()) / 1000);
           e.timeLeft = timeLeft;
+          e.searchKeys = latinize(e.productName).toLowerCase();
           return e;
         })
         .sort((a, b) => a.timeLeft > b.timeLeft)
@@ -403,7 +404,7 @@ var selectAuctions = (page, categoryId, accountId) => {
   return new Promise((resolve) => {
     let keys = Array();
     auctionInfos.forEach((v, k) => {
-      if (!categoryId || categoryId === -1 || (v.categoryId === parseInt(categoryId)))
+      if (!categoryId || categoryId < 0 || (v.categoryId == categoryId))
         keys.push(k);
     });
     getAll(keys)
@@ -437,14 +438,14 @@ var selectSearchAuctions = (page, categoryId, searchKey) => {
     searchKey = searchKey ? latinize(searchKey).toLowerCase() : '';
     auctionInfos.forEach((v, k) => {
       if (
-        (!categoryId || categoryId === -1 || (v.categoryId === parseInt(categoryId))) &&
-        v.productName.indexOf(searchKey) >= 0
+        (!categoryId || categoryId < 0 || (v.categoryId == categoryId)) &&
+        v.searchKeys.indexOf(searchKey) >= 0
       )
         keys.push(k);
     });
     keys = keys.sort((a, b) => {
-      let aResult = latinize(auctionInfos.get(a).productName).toLowerCase().indexOf(searchKey);
-      let bResult = latinize(auctionInfos.get(b).productName).toLowerCase().indexOf(searchKey);
+      let aResult = auctionInfos.get(a).searchKeys.indexOf(searchKey);
+      let bResult = auctionInfos.get(b).searchKeys.indexOf(searchKey);
       return bResult < aResult;
     });
     getAll(keys)

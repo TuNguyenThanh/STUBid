@@ -48,9 +48,11 @@ connect = (socket) => {
         results.forEach((auction) => {
           if (auction.state === 1)
             socket.attendedIds.push(auction.auctionId);
-          else closedAuctions.push(auction);
+          else closedAuctions.push(auction.auctionId);
         });
-        socket.emit('SERVER-SEND-CLOSED-ATTENDED-AUCTIONS', closedAuctions)
+        AUCTION.getAll(closedAuctions)
+          .then((results) => socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', results))
+          .catch(console.log);
       })
       .catch(console.log)
   }
@@ -76,8 +78,12 @@ connect = (socket) => {
               break;
           }
         });
-        socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', closedAuctions);
-        socket.emit('SERVER-SEND-UNACTIVATED-AUCTIONS', pendingAuctions);
+        AUCTION.getAll(closedAuctions)
+          .then((results) => socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', results))
+          .catch(console.log);
+        AUCTION.getAll(pendingAuctions)
+          .then((results) => socket.emit('SERVER-SEND-MY-CLOSED-AUCTIONS', results))
+          .catch(console.log);
       })
       .catch(console.log);
   }
