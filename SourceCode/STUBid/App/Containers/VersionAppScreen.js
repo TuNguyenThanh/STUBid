@@ -20,7 +20,7 @@ class VersionApp extends React.Component {
     const { language } = this.props;
     return (
       <View style={styles.container}>
-        <Text>{I18n.t('versionApp', { locale: language })} 1.0.6</Text>
+        <Text>{I18n.t('versionApp', { locale: language })} 1.0.7</Text>
         {
           this.state.isNewVersion &&
           <View style={styles.contentStyle}>

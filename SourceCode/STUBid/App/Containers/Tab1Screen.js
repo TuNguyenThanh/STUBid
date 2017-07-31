@@ -74,6 +74,7 @@ class Tab1 extends React.Component {
   render () {
     moment.locale(this.props.language);
     const { data } = this.state;
+    const { language } = this.props;
     return (
       <View style={styles.container}>
         <Swiper height={(Metrics.screenWidth * 1.8)/3} autoplay activeDotColor={Colors.primary}>
@@ -104,7 +105,7 @@ class Tab1 extends React.Component {
             <Text style={styles.fontStyle}>
               {
                 data.highestBidder ? data.highestBidder.lastName + data.highestBidder.firstName :
-                'Chua co nguoi dau gia'
+                I18n.t('thereAreNoAuctioneersYet', {locale: language})
               }
             </Text>
             <Icon name="user-secret" size={20} color={Colors.primary} style={styles.iconLeft}/>
@@ -121,7 +122,7 @@ class Tab1 extends React.Component {
           </View>
           <View style={styles.viewCountDown}>
             <Icon name="hourglass-half" size={20} color={Colors.primary} style={styles.iconRight}/>
-            <Text style={styles.fontStyle}>{data.timeLeft ? data.timeLeft : 'Đã kết thúc'}</Text>
+            <Text style={styles.fontStyle}>{data.timeLeft ? data.timeLeft : I18n.t('Finished', {locale: language})}</Text>
           </View>
           <View style={styles.itemCenter}>
             <View style={styles.viewNextPrice}>

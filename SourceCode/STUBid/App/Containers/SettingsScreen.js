@@ -123,7 +123,7 @@ class Settings extends React.Component {
               <TouchableOpacity style={styles.row} onPress={() => NavigationActions.versionAppScreen({ title: I18n.t('version', { locale: language }) })}>
                 <Text style={styles.titleRow}>{I18n.t('version', { locale: language })}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={{marginRight: 10, color: 'gray'}}>1.0.1</Text>
+                  <Text style={{marginRight: 10, color: 'gray'}}>1.0.7</Text>
                   <Icon name="angle-right" size={25} color={'lightgray'} />
                 </View>
               </TouchableOpacity>
